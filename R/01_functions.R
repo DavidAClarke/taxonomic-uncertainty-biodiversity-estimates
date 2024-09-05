@@ -551,7 +551,7 @@ raw_range <- function(raw_df, shp){
 }
 
 ## Calculate hypervolumes----
-## Calculate hypervolumes
+
 calc_hypervolume <- function(df, status, model, species = NULL){
   
   if(status == "genus"){
