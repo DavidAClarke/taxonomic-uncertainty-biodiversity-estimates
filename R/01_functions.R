@@ -1,8 +1,5 @@
 ################################################################################
 ## Script name: 01_functions.R
-## Author: David Clarke
-## Copyright (c) David Clarke, 2024
-## Email: david_anthony_clarke@hotmail.com
 ################################################################################
 
 ## Make occurrence data spatially explicit----

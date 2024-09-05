@@ -1,8 +1,5 @@
 ################################################################################
 ## Script name: 00_fig_2_map.R
-## Author: David Clarke
-## Copyright (c) David Clarke, 2024
-## Email: david_anthony_clarke@hotmail.com
 ################################################################################
 
 ## Prepare data for map

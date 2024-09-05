@@ -1,8 +1,5 @@
 ################################################################################
-## Script name: 00_future_distribution.R
-## Author: David Clarke
-## Copyright (c) David Clarke, 2024
-## Email: david_anthony_clarke@hotmail.com
+## Script name: 07_future_distribution.R
 ################################################################################
 
 ## Prepare future data layers

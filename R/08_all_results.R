@@ -1,8 +1,5 @@
 ################################################################################
-## Script name: 00_all_results.R
-## Author: David Clarke
-## Copyright (c) David Clarke, 2024
-## Email: david_anthony_clarke@hotmail.com
+## Script name: 08_all_results.R
 ################################################################################
 
 ## Predictor variable combinations

@@ -1,8 +1,5 @@
 ################################################################################
-## Script name: 00_hypervolumes.R
-## Author: David Clarke
-## Copyright (C) David Clarke, 2024
-## Email: david_anthony_clarke@hotmail.com
+## Script name: 06_hypervolumes.R
 ################################################################################
 
 ## z-transform climate layers to make axes comparable

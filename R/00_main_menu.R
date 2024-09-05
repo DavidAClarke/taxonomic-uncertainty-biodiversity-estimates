@@ -1,12 +1,8 @@
 ################################################################################
 ## Script name: 00_main_menu.R
-## Author: David Clarke
-## Copyright (C) David Clarke, 2024
-## Email: david_anthony_clarke@hotmail.com
 ################################################################################
 
 ## Load the required libraries 
-# (where is `raster` still a dependency?)
 pkgs <- c("sf","tidyverse","here","terra","raster","sdmpredictors", "usdm", 
           "randomForest", "precrec","lubridate", "parzer", "adehabitatHR", 
           "hypervolume", "caret", "redlistr", "rcartocolor")
@@ -19,6 +15,7 @@ source("R/01_functions.R")
 ################################################################################
 ## File paths
 shared_data <- "C:/Users/dcla0021/Documents/postdoc/projects/shared_data/environmental"
+shared_data <- "path/to/data"
 res_path <- here("data", "biodiversity", "output", "reps_csv")
 sdm_path <- here("data", "biodiversity", "output", "reps_sdm")
 model_path <- here("data", "biodiversity", "output", "models")
