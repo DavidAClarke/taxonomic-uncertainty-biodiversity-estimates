@@ -1,0 +1,26 @@
+{
+    "id": "72182731",
+    "path": "C:/Users/dcla0021/Documents/postdoc/projects/crinoid_distribution/taxonomic-uncertainty-biodiversity-estimates/R/07_future_distribution.R",
+    "project_path": "R/07_future_distribution.R",
+    "type": "r_source",
+    "hash": "481987895",
+    "contents": "",
+    "dirty": false,
+    "created": 1726021041830.0,
+    "source_on_save": false,
+    "relative_order": 5,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "17,0",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1725506834,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1725506834,
+    "read_only": false,
+    "read_only_alternatives": []
+}
