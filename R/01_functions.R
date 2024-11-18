@@ -1,5 +1,8 @@
 ################################################################################
 ## Script name: 01_functions.R
+## Author: David Clarke
+## Copyright (c) David Clarke, 2024
+## Email: david_anthony_clarke@hotmail.com
 ################################################################################
 
 ## Make occurrence data spatially explicit----
@@ -646,6 +649,15 @@ hyper_overlap <- function(hv1, hv2, hv1_name, hv_name2, record = T, path,
   
 }
 
+
+## Standardised effect size----
+ses <- function(observed, nulldist){
+  
+  ses <- (observed - mean(nulldist))/sqrt(var(nulldist))
+  
+  return(ses)
+  
+}
 
 ## Future distribution predictions----
 fut_clim_rf <- function(data, status, species = NULL, bias.cor, n, preds, 
