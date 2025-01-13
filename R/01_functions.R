@@ -1211,3 +1211,52 @@ id_test_info <- function(pth){
   return(list(id_tests_pval_df, id_tests_emp_df))
   
 }
+
+## Hypervolume overlap test information----
+hv_ot_info <- function(fl_names, hv_path, hv_over_stats){
+  
+  hv_ovt_df <- data.frame()
+  
+  for(i in 1:length(fl_names)){
+    
+    hvn <- gsub(".rds", "", fl_names[i])
+    
+    J_obs <- as.numeric(hv_over_stats[[i]][1])
+    S_obs <- as.numeric(hv_over_stats[[i]][2])
+    
+    ot <- readRDS(here(hv_path, fl_names[i]))
+    
+    J_est <- as.numeric(ot$distribution[,1])
+    S_est <- as.numeric(ot$distribution[,2])
+    
+    J_sw <- shapiro.test(J_est)$p.value
+    S_sw <- shapiro.test(S_est)$p.value
+    
+    if(J_sw > 0.05){
+      J_ses <- BAT::ses(J_obs, J_est, param = T, p = F)
+    } else {
+      J_ses <- BAT::ses(J_obs, J_est, param = F, p = F)
+    }
+    
+    if(S_sw > 0.05){
+      S_ses <- BAT::ses(S_obs, S_est, param = T, p = F)
+    } else {
+      S_ses <- BAT::ses(S_obs, S_est, param = F, p = F)
+    }
+    
+    otr <- data.frame(comparison = hvn, 
+                      jac = ot$p_values$jaccard, 
+                      sor = ot$p_values$sorensen, 
+                      fr_un_1 = ot$p_values$frac_unique_1,
+                      fr_un_2 = ot$p_values$frac_unique_2,
+                      jac_ses = J_ses, 
+                      sor_ses = S_ses)
+    
+    hv_ovt_df <- bind_rows(hv_ovt_df, otr)
+    
+    
+  }
+  
+  return(hv_ovt_df)
+  
+}
