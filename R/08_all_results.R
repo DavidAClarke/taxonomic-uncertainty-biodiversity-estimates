@@ -1351,6 +1351,40 @@ for(i in 1:length(id_tests)){
   id_tests_emp_df <- bind_rows(id_tests_emp_df, get(objects()[which(objects() == idt)])$reps.overlap[1,])
   id_tests_pval_df <- bind_rows(id_tests_pval_df, get(objects()[which(objects() == idt)])$p.values)
   
+  D_obs <- get(objects()[which(objects() == idt)])$reps.overlap[1,1]
+  D_est <- get(objects()[which(objects() == idt)])$reps.overlap[-1,1]
+  
+  I_obs <- get(objects()[which(objects() == idt)])$reps.overlap[1,2]
+  I_est <- get(objects()[which(objects() == idt)])$reps.overlap[-1,2]
+  
+  # Calculate standard effect sizes from observed and estimated values
+  # ses follows Cardillo and Warren 2016 (if param=T)
+  
+  D_sw <- shapiro.test(D_est)$p.value
+  I_sw <- shapiro.test(I_est)$p.value
+  
+  if(D_sw > 0.05){
+    
+    D_ses <- BAT::ses(D_obs, D_est, param = T, p = F)
+    
+  } else {
+    
+    D_ses <- BAT::ses(D_obs, D_est, param = F, p = F)
+    
+  }
+  
+  if(I_sw > 0.05){
+    
+    I_ses <- BAT::ses(I_obs, I_est, param = T, p = F)
+    
+  } else {
+    
+    I_ses <- BAT::ses(I_obs, I_est, param = F, p = F)
+    
+  }
+  
+  id_tests_pval_df <- bind_cols(id_tests_pval_df, D_ses, I_ses)
+  
   rm(list=ls(pattern = idt))
   
   gc()
@@ -1360,6 +1394,8 @@ for(i in 1:length(id_tests)){
 
 rownames(id_tests_emp_df) <- id_tests
 rownames(id_tests_pval_df) <- id_tests
+
+id_test_info(pth = here(dirname(here()), "data", "biodiversity", "output", "identity_tests"))
 
 ## Hypervolumes
 hv_pk_comp <- readRDS(here(hypervolume_res_path, "hv_Pk_comp_m50.rds"))
