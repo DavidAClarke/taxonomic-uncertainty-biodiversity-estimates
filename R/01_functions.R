@@ -823,6 +823,7 @@ fut_clim_rf <- function(data, status, species = NULL, bias.cor, n, preds,
 }
 
 ## Identity tests----
+## Adapted from ENMTools R package
 identity.test <- function(species_1_occ, species_2_occ, bg1, bg2, species_1_name, 
                           species_2_name, env, type, nreps = 99,  
                           low.memory = FALSE, rep.dir = NA, verbose = T, 
@@ -1147,5 +1148,66 @@ identity.test <- function(species_1_occ, species_2_occ, bg1, bg2, species_1_name
   #class(output) <- "enmtools.identity.test"
   
   return(output)
+  
+}
+
+## Calculate and return Identity test information (incl. standardised effect sizes) - SDM----
+id_test_info <- function(pth){
+  
+  id_tests <- list.files(pth)
+  
+  id_tests_emp_df <- data.frame()
+  id_tests_pval_df <- data.frame()
+  
+  for(i in 1:length(id_tests)){
+    
+    get(load(here(pth, id_tests[i])))
+    
+    idt <- gsub(".RData", "", id_tests[i])
+    
+    D_obs <- get(objects()[which(objects() == idt)])$reps.overlap[1,1]
+    D_est <- get(objects()[which(objects() == idt)])$reps.overlap[-1,1]
+    
+    I_obs <- get(objects()[which(objects() == idt)])$reps.overlap[1,2]
+    I_est <- get(objects()[which(objects() == idt)])$reps.overlap[-1,2]
+    
+    # Calculate standard effect sizes from observed and estimated values
+    # BAT::ses() follows Cardillo and Warren 2016 (if param=T)
+    
+    D_sw <- shapiro.test(D_est)$p.value
+    I_sw <- shapiro.test(I_est)$p.value
+    
+    if(D_sw > 0.05){
+      D_ses <- BAT::ses(D_obs, D_est, param = T, p = F)
+      } else {
+      D_ses <- BAT::ses(D_obs, D_est, param = F, p = F)
+      }
+    
+    if(I_sw > 0.05){
+      I_ses <- BAT::ses(I_obs, I_est, param = T, p = F)
+      } else {
+      I_ses <- BAT::ses(I_obs, I_est, param = F, p = F)
+      }
+    
+    id_tests_emp_df <- bind_rows(id_tests_emp_df, 
+                                 get(objects()[which(objects() == idt)])$reps.overlap[1,])
+    
+    df <- data.frame(t(get(objects()[which(objects() == idt)])$p.values), 
+                     D_ses = D_ses, 
+                     I_ses = I_ses)
+    
+    id_tests_pval_df <- bind_rows(id_tests_pval_df, df)
+    
+    rm(list=ls(pattern = idt))
+    
+    gc()
+    
+    
+  }
+  
+  rownames(id_tests_emp_df) <- id_tests
+  rownames(id_tests_pval_df) <- id_tests
+  
+  return(list(id_tests_pval_df, id_tests_emp_df))
   
 }
