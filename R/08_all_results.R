@@ -1456,20 +1456,20 @@ species_2 <- c(hv_list[[2]]@Name,hv_list[[3]]@Name,hv_list[[4]]@Name,
                hv_list[[7]]@Name)
 fin_ov_df <- data.frame(species_1, species_2, round(ov_df,2))
 
-minmaxdf <- data.frame("Species 1" = c("min", "max"),
-                       "Species 2" = c("min", "max"),
-                       "Jaccard" = c(0,1),
-                       "Sorensen" = c(0,1),
-                       "Frac unique sp1" = c(0,1),
-                       "Frac unique sp2" = c(0,1)) %>%
-            rename("Species 1" = "Species.1") %>%
-            rename("Species 2" = "Species.2") %>%
-            rename("Frac unique sp1" = "Frac.unique.sp1") %>%
-            rename("Frac unique sp2" = "Frac.unique.sp2") %>%
-            mutate(id1 = c(10,11)) %>%
-            relocate(id1) %>%
-            mutate(id2 = c(10,11)) %>%
-            relocate(id2, .before = "Species 2")
+# minmaxdf <- data.frame("Species 1" = c("min", "max"),
+#                        "Species 2" = c("min", "max"),
+#                        "Jaccard" = c(0,1),
+#                        "Sorensen" = c(0,1),
+#                        "Frac unique sp1" = c(0,1),
+#                        "Frac unique sp2" = c(0,1)) %>%
+#             rename("Species 1" = "Species.1") %>%
+#             rename("Species 2" = "Species.2") %>%
+#             rename("Frac unique sp1" = "Frac.unique.sp1") %>%
+#             rename("Frac unique sp2" = "Frac.unique.sp2") %>%
+#             mutate(id1 = c(10,11)) %>%
+#             relocate(id1) %>%
+#             mutate(id2 = c(10,11)) %>%
+#             relocate(id2, .before = "Species 2")
 
 fin_ov_df_clean <- fin_ov_df %>%
   rename("Species 1" = "species_1") %>%
@@ -1481,42 +1481,27 @@ fin_ov_df_clean <- fin_ov_df %>%
   mutate(id1 = c(rep(1,6),rep(2,5),rep(3,4),rep(4,3),rep(5,2),6)) %>%
   relocate(id1) %>%
   mutate(id2 = c(2,3,4,5,6,7,3,4,5,6,7,4,5,6,7,5,6,7,6,7,7)) %>%
-  relocate(id2, .before = "Species 2") %>%
-  bind_rows(minmaxdf)
+  relocate(id2, .before = "Species 2") #%>%
+  #bind_rows(minmaxdf)
 
 # Overlap tests
-Pk_comp_Pkn_ot <- readRDS(here("data", "biodiversity", "output", "hypervolumes",
-                           "Pk_comp_Pkn_ot.rds"))
-Pk_comp_Pf_ot <- readRDS(here("data", "biodiversity", "output", "hypervolumes",
-                          "Pk_comp_Pf_ot.rds"))
-Pk_comp_Pu_ot <- readRDS(here("data", "biodiversity", "output", "hypervolumes",
-                          "Pk_comp_Pu_ot.rds"))
-Pk_comp_Pus_ot <- readRDS(here("data", "biodiversity", "output", "hypervolumes",
-                           "Pk_comp_Pus_ot.rds"))
-Pk_comp_Pj_ot <- readRDS(here("data", "biodiversity", "output", "hypervolumes",
-                          "Pk_comp_Pj_ot.rds"))
-Pk_comp_Pm_ot <- readRDS(here("data", "biodiversity", "output", "hypervolumes",
-                          "Pk_comp_Pm_ot.rds"))
-
 hv_ovs <- list.files(here("data", "biodiversity", "output", "hypervolumes"))
-hv_ovt <- hv_ovs[str_detect(hv_ovs, "ot")]
+hv_ovt <- hv_ovs[str_detect(hv_ovs, "ot")][str_detect(hv_ovs[str_detect(hv_ovs, "ot")], "Pko", negate = T)]
+hv_ovt <- factor(hv_ovt, levels = c("Pk_comp_Pkn_ot.rds", "Pk_comp_Pf_ot.rds", 
+                            "Pk_comp_Pu_ot.rds", "Pk_comp_Pus_ot.rds",
+                            "Pk_comp_Pj_ot.rds", "Pk_comp_Pm_ot.rds", 
+                            "Pkn_Pf_ot.rds", "Pkn_Pu_ot.rds","Pkn_Pus_ot.rds", 
+                            "Pkn_Pj_ot.rds", "Pkn_Pm_ot.rds", "Pf_Pu_ot.rds", 
+                            "Pf_Pus_ot.rds","Pf_Pj_ot.rds", "Pf_Pm_ot.rds", 
+                            "Pu_Pus_ot.rds", "Pu_Pj_ot.rds", "Pu_Pm_ot.rds", 
+                            "Pus_Pj_ot.rds", "Pus_Pm_ot.rds", "Pj_Pm_ot.rds")) |>
+  sort() |>
+  as.character()
 
-hv_ovt_df <- data.frame()
 
-for(i in 1:length(hv_ovt)){
-  
-  hvn <- gsub(".rds", "", hv_ovt[i])
-  
-  ot <- readRDS(here("data", "biodiversity", "output", "hypervolumes",
-                     hv_ovt[i]))
-  
-  otr <- bind_cols(hvn, ot$p_values$jaccard, ot$p_values$sorensen,
-                   ot$p_values$frac_unique_1,ot$p_values$frac_unique_2)
-  
-  hv_ovt_df <- bind_rows(hv_ovt_df, otr)
-  
-  
-}
+hv_tests <- hv_ot_info(fl_names = hv_ovt, 
+           hv_path = here(dirname(here()),"data", "biodiversity", "output", "hypervolumes"),
+           hv_over_stats = hv_overlaps)
 
 # Agreement between SDM and hypervolumes
 library(irr)
