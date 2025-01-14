@@ -1,6 +1,21 @@
 ################################################################################
 ## Script name: 04_run_rfe_reps.R
 ################################################################################
+status <- c("genus", "comp")
+
+lapply(status, function(x){
+  
+  st <- Sys.time()
+  res_old <- run_rf(data = bio_data, 
+                    status = x, 
+                    bias.cor = T,
+                    n = 20,
+                    preds = pred_list, 
+                    group = c("G1", "G2"))
+  en <- Sys.time()
+  en-st 
+  
+})
 
 st <- Sys.time()
 res_old <- run_rf(data = bio_data, 
@@ -27,7 +42,7 @@ res_new <- run_rf(data = bio_data,
                   status = "new", 
                   bias.cor = F,
                   species = "Promachocrinus kerguelensis",
-                  preds = pred_list[28:72], 
+                  preds = pred_list, 
                   group = c("G1", "G2"))
 en <- Sys.time()
 en-st
