@@ -151,9 +151,9 @@ run_rf <- function(data, status, species = NULL, n, bias.cor, preds, group = c("
     }
     
     
-    write.csv(modEval_data, here("data", "biodiversity", "output", 
+    write.csv(modEval_data, here(dirname(here()),"data", "biodiversity", "output", 
                                  paste0(status,"_",sp,"_",bias.cor,"_model_evaluations.csv")), row.names = F)
-    write.csv(varimp_data, here("data", "biodiversity", "output", 
+    write.csv(varimp_data, here(dirname(here()),"data", "biodiversity", "output", 
                                 paste0(status,"_",sp,"_",bias.cor,"_variable_importance.csv")), row.names = F)
   }
   
@@ -190,9 +190,9 @@ run_rf <- function(data, status, species = NULL, n, bias.cor, preds, group = c("
     }
     
     
-    write.csv(modEval_data, here("data", "biodiversity", "output", 
+    write.csv(modEval_data, here(dirname(here()),"data", "biodiversity", "output", 
                                  paste0(status,"_",sp,"_",bias.cor,"_model_evaluations.csv")), row.names = F)
-    write.csv(varimp_data, here("data", "biodiversity", "output", 
+    write.csv(varimp_data, here(dirname(here()),"data", "biodiversity", "output", 
                                 paste0(status,"_",sp,"_",bias.cor,"_variable_importance.csv")), row.names = F)
   }
   
@@ -223,10 +223,10 @@ run_rf <- function(data, status, species = NULL, n, bias.cor, preds, group = c("
     
     sp <- gsub(" ", "_", species)
     
-    write.csv(modEval_data, here("data", "biodiversity", "output", 
+    write.csv(modEval_data, here(dirname(here()),"data", "biodiversity", "output", 
                                  paste0(status,"_",sp,"_",bias.cor,"_model_evaluations.csv")), row.names = F)
     
-    write.csv(varimp_data, here("data", "biodiversity", "output", 
+    write.csv(varimp_data, here(dirname(here()),"data", "biodiversity", "output", 
                                 paste0(status,"_",sp,"_",bias.cor,"_variable_importance.csv")), row.names = F)
   }
   
@@ -277,12 +277,12 @@ run_rf <- function(data, status, species = NULL, n, bias.cor, preds, group = c("
                   metric = "Accuracy",
                   maximize = "TRUE")
       
-      save(rfe1, file = here("data", "biodiversity", "output", "models", 
+      save(rfe1, file = here(dirname(here()),"data", "biodiversity", "output", "models", 
                              paste0(status,"_",sp,"_",bias.cor,"_rep_",k,"_model_",j,".RData")))
       
       pred_ras <- predict(raster::stack(scale(preds[[j]])), rfe1$fit, type = "prob", index = 2)
       
-      writeRaster(pred_ras, here("data", "biodiversity", "output", "reps_sdm", 
+      writeRaster(pred_ras, here(dirname(here()),"data", "biodiversity", "output", "reps_sdm", 
                                  paste0(status,"_",sp,"_",bias.cor,"_rep_",k,"_model_",j,".tif")),
                   overwrite = T)
       
@@ -300,7 +300,7 @@ run_rf <- function(data, status, species = NULL, n, bias.cor, preds, group = c("
                             KAPPA = kap)
       row.names(eval_df) <- NULL
       
-      write.table(eval_df, here("data", "biodiversity", "output", 
+      write.table(eval_df, here(dirname(here()),"data", "biodiversity", "output", 
                                 paste0(status,"_",sp,"_",bias.cor,"_model_evaluations.csv")), 
                   append = T, col.names = F, sep = ",", row.names = F)
       
@@ -314,7 +314,7 @@ run_rf <- function(data, status, species = NULL, n, bias.cor, preds, group = c("
                            AccScore = rank(as.vector(importance(rfe1$fit)[,3])))
       row.names(var_df) <- NULL
       
-      write.table(var_df, here("data", "biodiversity", "output", 
+      write.table(var_df, here(dirname(here()),"data", "biodiversity", "output", 
                                paste0(status,"_",sp,"_",bias.cor,"_variable_importance.csv")), 
                   append = T, col.names = F, sep = ",", row.names = F)
       
