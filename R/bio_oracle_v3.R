@@ -48,7 +48,7 @@ lapply(terr_ras, function(i){
 })
 
 ## Focus on baseline and mean depth layers
-scenarios <- c("ssp119","ssp126","ssp245","ssp370","ssp460","ssp585")
+scenarios <- c("ssp126","ssp245","ssp370","ssp460","ssp585")
 
 for(s in scenarios){
   
@@ -79,7 +79,7 @@ for(s in scenarios){
     
     lapply(ras, function(j){
       
-      writeRaster(j, here(shared_data, "bio_oracle_v3", "future", paste0(names(j),".tif")))
+      writeRaster(j, here(shared_data, "bio_oracle_v3", "future", paste0(names(j),"_",s,".tif")))
       
     })
     
