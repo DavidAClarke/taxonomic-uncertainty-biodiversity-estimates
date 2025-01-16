@@ -27,7 +27,7 @@ end_time <- my_info$alldata$NC_GLOBAL[which(my_info$alldata$NC_GLOBAL$attribute_
 ## Download topographic layers
 dataset_id <- pull(terr_layers[1,1])
 # Underlying functions require each vector in the constraints list to be length 2
-time <- c(start_time, end_time)
+time <- c(start_time, end_time) #here start and end are the same
 latitude <- c(as.numeric(st_bbox(occs_buff)[2]), as.numeric(st_bbox(occs_buff)[4]))
 longitude <- c(-179.975, 179.975)
 constraints <- list(time, latitude,longitude)
