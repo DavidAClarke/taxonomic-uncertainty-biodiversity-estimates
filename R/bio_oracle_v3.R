@@ -48,7 +48,8 @@ lapply(terr_ras, function(i){
 })
 
 ## Focus on baseline and mean depth layers
-scenarios <- c("ssp126","ssp245","ssp370","ssp460","ssp585")
+#scenarios <- c("ssp126","ssp245","ssp370","ssp460","ssp585")
+scenarios <- c("ssp370","ssp460","ssp585")
 
 for(s in scenarios){
   
@@ -77,15 +78,23 @@ for(s in scenarios){
     ras <- project(ras, y = "ESRI:102019", res = 5500)
     ras[ras < -9999] <- NA
     
-    lapply(ras, function(j){
+    for(j in 1:nlyr(ras)){
       
-      writeRaster(j, here(shared_data, "bio_oracle_v3", "future", paste0(names(j),"_",s,".tif")))
+      nm <- here(shared_data, "bio_oracle_v3", "future", paste0(names(ras[[j]]),"_",s,".tif"))
       
-    })
+      if(file.exists(nm)){
+        
+        next
+        
+      } else {
+      
+      writeRaster(ras[[j]], here(shared_data, "bio_oracle_v3", "future", nm))
+        
+        }
+      
+    }
     
   })
-  
-  gc()
   
 }
 
