@@ -85,6 +85,8 @@ for(s in scenarios){
     
   })
   
+  gc()
+  
 }
 
 
