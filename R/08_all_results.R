@@ -381,7 +381,7 @@ sdm_list[["comp"]] <- rast(pk_comp)
 
 new_species <- lyrs[str_detect(lyrs,"new")]
 
-species_names <- c("kerguelensis", "fragarius", "unruhi", "uskglassi", 
+species_names <- c("kerguelensis", "fragarius", "unruhi", "uskglass", #uskglassi
                    "joubini", "mawsoni")
 
 for(spec in species_names){
@@ -390,6 +390,49 @@ for(spec in species_names){
   sdm_list[[spec]] <- rast(sp)
   
 }
+
+### Working on conversion using virtualspecies::convertToPA()
+## Could keep the random beta selection, do replicates, calc range size for each replicate, then do mean range size
+
+## Mean suitability from 20 replicates of RF SDM
+mpk_comp <- app(sdm_list[[1]], mean)
+
+## Replicate 20 times the conversion to PA, using a random beta each replicate
+pa_list <- replicate(20, 
+                     virtualspecies::convertToPA(mpk_comp, plot = F), 
+                     simplify = F)
+
+## OR
+my_list <- list()
+my_eoo <- c()
+my_betas <- runif(20, 0.25, 0.75)
+
+for(i in seq_along(my_betas)){
+  
+  my_list[[i]] <- convertToPA(mpk_comp, beta = my_betas[i], plot = F)
+  
+  model_EOO <- makeEOO(raster::raster(terra::unwrap(my_list[[i]]$pa.raster)))
+  
+  diffPoly <- st_difference(st_as_sf(model_EOO), coast)
+  
+  #getAreaEOO(diffPoly) is not working properly, thus use st_area() for EOO area
+  areaEOO <- as.vector(st_area(diffPoly)/1e+6) #/1e+6 to get in km2
+  
+  my_eoo <- c(my_eoo, areaEOO)
+  
+}
+
+## Calculate range size metrics for each replicate
+lapply(pa_list, function(i){
+  
+  res <- i
+  bin <- terra::unwrap(res$pa.raster)
+  
+  
+  
+})
+
+
 ## Create range rasters
 pk_comp_bin <- range_rast(bio_data, "Promachocrinus kerguelensis", 
                           sdm_list[[1]], status = "comp", bin_cut_num = 1)
