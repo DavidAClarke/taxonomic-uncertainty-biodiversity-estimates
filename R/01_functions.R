@@ -101,7 +101,7 @@ selectVar = pickVars)
 
 
 ## Run random forest SDMs----
-run_rf <- function(data, status, species = NULL, n, bias.cor, preds, group = c("G1", "G2")){
+run_rf <- function(data, status, species = NULL, n, bias.cor, pr.ov = F, preds, group = c("G1", "G2")){
   
   
   modEval_data <- data.frame(Species = character(),
@@ -152,9 +152,9 @@ run_rf <- function(data, status, species = NULL, n, bias.cor, preds, group = c("
     
     
     write.csv(modEval_data, here(dirname(here()),"data", "biodiversity", "output", 
-                                 paste0(status,"_",sp,"_",bias.cor,"_model_evaluations.csv")), row.names = F)
+                                 paste0(status,"_",sp,"_",bias.cor,"_",pr.ov,"_model_evaluations.csv")), row.names = F)
     write.csv(varimp_data, here(dirname(here()),"data", "biodiversity", "output", 
-                                paste0(status,"_",sp,"_",bias.cor,"_variable_importance.csv")), row.names = F)
+                                paste0(status,"_",sp,"_",bias.cor,"_",pr.ov,"_variable_importance.csv")), row.names = F)
   }
   
   if(status == "comp"){
@@ -191,9 +191,9 @@ run_rf <- function(data, status, species = NULL, n, bias.cor, preds, group = c("
     
     
     write.csv(modEval_data, here(dirname(here()),"data", "biodiversity", "output", 
-                                 paste0(status,"_",sp,"_",bias.cor,"_model_evaluations.csv")), row.names = F)
+                                 paste0(status,"_",sp,"_",bias.cor,"_",pr.ov,"_model_evaluations.csv")), row.names = F)
     write.csv(varimp_data, here(dirname(here()),"data", "biodiversity", "output", 
-                                paste0(status,"_",sp,"_",bias.cor,"_variable_importance.csv")), row.names = F)
+                                paste0(status,"_",sp,"_",bias.cor,"_",pr.ov,"_variable_importance.csv")), row.names = F)
   }
   
   if(status == "new"){
@@ -224,10 +224,10 @@ run_rf <- function(data, status, species = NULL, n, bias.cor, preds, group = c("
     sp <- gsub(" ", "_", species)
     
     write.csv(modEval_data, here(dirname(here()),"data", "biodiversity", "output", 
-                                 paste0(status,"_",sp,"_",bias.cor,"_model_evaluations.csv")), row.names = F)
+                                 paste0(status,"_",sp,"_",bias.cor,"_",pr.ov,"_model_evaluations.csv")), row.names = F)
     
     write.csv(varimp_data, here(dirname(here()),"data", "biodiversity", "output", 
-                                paste0(status,"_",sp,"_",bias.cor,"_variable_importance.csv")), row.names = F)
+                                paste0(status,"_",sp,"_",bias.cor,"_",pr.ov,"_variable_importance.csv")), row.names = F)
   }
   
   cl <- parallel::makeCluster(parallel::detectCores()-4, type='PSOCK')
@@ -238,9 +238,19 @@ run_rf <- function(data, status, species = NULL, n, bias.cor, preds, group = c("
       
       message(paste("Running replicate number",k,"of", n,"for model",j, "out of", length(preds)))
       
-      bg <- dismo::randomPoints(raster::stack(preds[[j]]), n = 50000) %>% 
+      if(pr.ov == T){
+        
+      bg <- dismo::randomPoints(raster::stack(preds[[j]]), p = occurrence, n = 50000) %>% 
         
         as.data.frame()
+      
+      } else {
+        
+      bg <- dismo::randomPoints(raster::stack(preds[[j]]), n = 50000) %>% 
+          
+        as.data.frame()
+        
+      }
       
       
       total <- bind_rows(occurrence, bg) %>% # combine occurrence and background
@@ -278,12 +288,12 @@ run_rf <- function(data, status, species = NULL, n, bias.cor, preds, group = c("
                   maximize = "TRUE")
       
       save(rfe1, file = here(dirname(here()),"data", "biodiversity", "output", "models", 
-                             paste0(status,"_",sp,"_",bias.cor,"_rep_",k,"_model_",j,".RData")))
+                             paste0(status,"_",sp,"_",bias.cor,"_",pr.ov,"_rep_",k,"_model_",j,".RData")))
       
       pred_ras <- predict(raster::stack(scale(preds[[j]])), rfe1$fit, type = "prob", index = 2)
       
       writeRaster(pred_ras, here(dirname(here()),"data", "biodiversity", "output", "reps_sdm", 
-                                 paste0(status,"_",sp,"_",bias.cor,"_rep_",k,"_model_",j,".tif")),
+                                 paste0(status,"_",sp,"_",bias.cor,"_",pr.ov,"_rep_",k,"_model_",j,".tif")),
                   overwrite = T)
       
       # Post prediction
@@ -301,7 +311,7 @@ run_rf <- function(data, status, species = NULL, n, bias.cor, preds, group = c("
       row.names(eval_df) <- NULL
       
       write.table(eval_df, here(dirname(here()),"data", "biodiversity", "output", 
-                                paste0(status,"_",sp,"_",bias.cor,"_model_evaluations.csv")), 
+                                paste0(status,"_",sp,"_",bias.cor,"_",pr.ov,"_model_evaluations.csv")), 
                   append = T, col.names = F, sep = ",", row.names = F)
       
       #Variable importance
@@ -315,7 +325,7 @@ run_rf <- function(data, status, species = NULL, n, bias.cor, preds, group = c("
       row.names(var_df) <- NULL
       
       write.table(var_df, here(dirname(here()),"data", "biodiversity", "output", 
-                               paste0(status,"_",sp,"_",bias.cor,"_variable_importance.csv")), 
+                               paste0(status,"_",sp,"_",bias.cor,"_",pr.ov,"_variable_importance.csv")), 
                   append = T, col.names = F, sep = ",", row.names = F)
       
     }
@@ -660,7 +670,7 @@ ses <- function(observed, nulldist){
 }
 
 ## Future distribution predictions----
-fut_clim_rf <- function(data, status, species = NULL, bias.cor, n, preds, 
+fut_clim_rf <- function(data, status, species = NULL, bias.cor, pr.ov = F, n, preds, 
                         fut_preds, year, scenario, group = c("G1", "G2")){
   
   pred_dws <- list()
@@ -757,9 +767,20 @@ fut_clim_rf <- function(data, status, species = NULL, bias.cor, n, preds,
     
   }
   for(k in 1:n){
-    bg <- dismo::randomPoints(raster::stack(preds), n = 50000) %>% 
+    
+    if(pr.ov == T){
+      
+    bg <- dismo::randomPoints(raster::stack(preds), p = occurrence, n = 50000) %>% 
       
       as.data.frame()
+    
+    } else {
+      
+    bg <- dismo::randomPoints(raster::stack(preds), n = 50000) %>% 
+        
+      as.data.frame()
+      
+    }
     
     total <- bind_rows(occurrence, bg) %>% # combine occurrence and background
       
@@ -779,11 +800,11 @@ fut_clim_rf <- function(data, status, species = NULL, bias.cor, n, preds,
     train_index <- createDataPartition(total$occ, p = 0.70, list = FALSE)[,1]
     train <- total[train_index,]
     write.csv(train, file = here("data","biodiversity","output",
-                                 paste0(status,"_",sp,"_", bias.cor,"_rep_",k,"_for_fut_train.csv")))
+                                 paste0(status,"_",sp,"_", bias.cor,"_",pr.ov,"_rep_",k,"_for_fut_train.csv")))
     
     test <- total[-train_index,]
     write.csv(test, file = here("data","biodiversity","output",
-                                paste0(status,"_",sp,"_", bias.cor,"_rep_",k,"_for_fut_test.csv")))
+                                paste0(status,"_",sp,"_", bias.cor,"_",pr.ov,"_rep_",k,"_for_fut_test.csv")))
     
     prNum <- as.numeric(table(train$occ)["1"]) # number of presence records
     spsize <- c("0" = prNum, "1" = prNum)
@@ -795,13 +816,13 @@ fut_clim_rf <- function(data, status, species = NULL, bias.cor, n, preds,
                                      sampsize = spsize,
                                      replace = TRUE)
     save(rf, file = here("data", "biodiversity", "output", "models", 
-                         paste0(status,"_",sp,"_",bias.cor,"_rep_",k,"_RF_Model_for_fut.RData")))
+                         paste0(status,"_",sp,"_",bias.cor,"_",pr.ov,"_rep_",k,"_RF_Model_for_fut.RData")))
     
     print(postResample(predict(rf, test[,1:ncol(test)-1]), test[,ncol(test)]))
     
     cur_ras <- predict(terra::scale(preds), rf, type = "prob", index = 2)
     writeRaster(cur_ras, here("data", "biodiversity", "output", "reps_sdm", 
-                              paste0(status,"_",sp,"_",bias.cor,"_rep_",k,"_for_fut_model.tif")),
+                              paste0(status,"_",sp,"_",bias.cor,"_",pr.ov,"_rep_",k,"_for_fut_model.tif")),
                 overwrite = T)
     
     for(yr in year){
@@ -815,7 +836,7 @@ fut_clim_rf <- function(data, status, species = NULL, bias.cor, n, preds,
         
         fut_ras <- predict(terra::scale(fut_preds), rf, type = "prob", index = 2)
         writeRaster(fut_ras, here("data", "biodiversity", "output", "reps_sdm", 
-                                  paste0(status,"_",sp,"_",bias.cor,"_rep_",k,"_fut_model_",
+                                  paste0(status,"_",sp,"_",bias.cor,"_",pr.ov,"_rep_",k,"_fut_model_",
                                          yr,sc,".tif")), overwrite = T)
       }
     }
