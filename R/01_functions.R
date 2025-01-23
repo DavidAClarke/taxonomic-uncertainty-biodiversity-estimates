@@ -478,24 +478,28 @@ range.ov <- function(bin_sdm1, bin_sdm2){
   
 }
 ## Calculate range size metrics----
-range_fun <- function(df, species, ras_stack, status, thresh = NULL, bin_cut_num = 1){
+#range_fun <- function(df, species, ras_stack, status, thresh = NULL, bin_cut_num = 1){
+range_fun <- function(ras_stack, beta = 0.5){
   
   eoo <- c()
   aoo <- c()
   
   for(i in 1:nlyr(ras_stack)){
     
-    if(is.null(thresh)){
-      
-      bin_cut <- get_cutoff(df = df, species = species,sdm = 
-                              ras_stack[[i]], status = status)
-      
-      model_bin <- ecospat::ecospat.binary.model(ras_stack[[i]], bin_cut[bin_cut_num])
-      
-    } else {
-      
-      model_bin <- ecospat::ecospat.binary.model(ras_stack[[i]], thresh)
-    }
+    # if(is.null(thresh)){
+    #   
+    #   bin_cut <- get_cutoff(df = df, species = species,sdm = 
+    #                           ras_stack[[i]], status = status)
+    #   
+    #   model_bin <- ecospat::ecospat.binary.model(ras_stack[[i]], bin_cut[bin_cut_num])
+    #   
+    # } else {
+    #   
+    #   model_bin <- ecospat::ecospat.binary.model(ras_stack[[i]], thresh)
+    # }
+    
+    model_bin <- virtualspecies::convertToPA(ras_stack[[i]], beta = beta, plot = F)
+    model_bin <- terra::unwrap(model_bin$pa.raster)
     
     model_bin[model_bin == 0] <- NA
     
