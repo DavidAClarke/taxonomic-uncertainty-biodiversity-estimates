@@ -498,8 +498,7 @@ range_fun <- function(ras_stack, beta = 0.5){
     #   model_bin <- ecospat::ecospat.binary.model(ras_stack[[i]], thresh)
     # }
     
-    model_bin <- virtualspecies::convertToPA(ras_stack[[i]], beta = beta, plot = F)
-    model_bin <- terra::unwrap(model_bin$pa.raster)
+    model_bin <- terra::unwrap(virtualspecies::convertToPA(ras_stack[[i]], beta = beta, plot = F)$pa.raster)
     
     model_bin[model_bin == 0] <- NA
     
