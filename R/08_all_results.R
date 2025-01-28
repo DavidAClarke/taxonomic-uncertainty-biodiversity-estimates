@@ -377,6 +377,7 @@ lyrs <- list.files(here("data", "biodiversity", "output", "reps_sdm"),
 sdm_list <- list()
 
 pk_comp <- lyrs[str_detect(lyrs,"comp")]
+pk_comp <- pk_comp[str_detect(pk_comp, "FALSE")]
 sdm_list[["comp"]] <- rast(pk_comp)
 
 new_species <- lyrs[str_detect(lyrs,"new")]
@@ -391,46 +392,32 @@ for(spec in species_names){
   
 }
 
-### Working on conversion using virtualspecies::convertToPA()
-## Could keep the random beta selection, do replicates, calc range size for each replicate, then do mean range size
+## Calculate range size metrics for each species. Using convertToPA function within
+# range_fun(). Default beta value of 0.5.
 
-## Mean suitability from 20 replicates of RF SDM
-mpk_comp <- app(sdm_list[[1]], mean)
+betas <- c(0.5, 0.75)
 
-## Replicate 20 times the conversion to PA, using a random beta each replicate
-pa_list <- replicate(20, 
-                     virtualspecies::convertToPA(mpk_comp, plot = F), 
-                     simplify = F)
-
-## OR
-my_list <- list()
-my_eoo <- c()
-my_betas <- runif(20, 0.25, 0.75)
-
-for(i in seq_along(my_betas)){
+for(n in betas){
   
-  my_list[[i]] <- convertToPA(mpk_comp, beta = my_betas[i], plot = F)
+  rs_eoo <- c()
+  rs_aoo <- c()
   
-  model_EOO <- makeEOO(raster::raster(terra::unwrap(my_list[[i]]$pa.raster)))
+  for(i in seq_along(sdm_list)){
+    
+    rs_list <- range_fun(sdm_list[[i]], beta = n)
+    rs_eoo <- c(rs_eoo, rs_list[[1]])
+    rs_aoo <- c(rs_aoo, rs_list[[2]])
+    
+  }
   
-  diffPoly <- st_difference(st_as_sf(model_EOO), coast)
-  
-  #getAreaEOO(diffPoly) is not working properly, thus use st_area() for EOO area
-  areaEOO <- as.vector(st_area(diffPoly)/1e+6) #/1e+6 to get in km2
-  
-  my_eoo <- c(my_eoo, areaEOO)
+  save(rs_eoo, file = here("data", "biodiversity", "output", "range_size",
+                           paste0("rs_eoo_b_",n,".RData")))
+  save(rs_aoo, file = here("data", "biodiversity", "output", "range_size",
+                           paste0("rs_aoo_b_",n,".RData")))
   
 }
 
-## Calculate range size metrics for each replicate
-lapply(pa_list, function(i){
-  
-  res <- i
-  bin <- terra::unwrap(res$pa.raster)
-  
-  
-  
-})
+
 
 
 ## Create range rasters
@@ -471,125 +458,125 @@ rownames(ov_mat) <- c("Promachocrinus kerguelensis (s.l.)", "Promachocrinus kerg
                       "Promachocrinus uskglassi", "Promachocrinus joubini",
                       "Promachocrinus mawsoni")
 
-## Range size metrics using cut offs
-pk_comp_range_mtp <- range_fun(bio_data, "Promachocrinus kerguelensis", 
-                               sdm_list[[1]], status = "comp", bin_cut_num = 1)
-pk_comp_range_p10 <- range_fun(bio_data, "Promachocrinus kerguelensis", 
-                               sdm_list[[1]], status = "comp", bin_cut_num = 3)
-pk_range_mtp <- range_fun(bio_data, "Promachocrinus kerguelensis", 
-                          sdm_list[[2]], status = "new", bin_cut_num = 1)
-pk_range_p10 <- range_fun(bio_data, "Promachocrinus kerguelensis", 
-                          sdm_list[[2]], status = "new", bin_cut_num = 3)
-pf_range_mtp <- range_fun(bio_data, "Promachocrinus fragarius", 
-                          sdm_list[[3]], status = "new", bin_cut_num = 1)
-pf_range_p10 <- range_fun(bio_data, "Promachocrinus fragarius", 
-                          sdm_list[[3]], status = "new", bin_cut_num = 3)
-pu_range_mtp <- range_fun(bio_data, "Promachocrinus unruhi", 
-                          sdm_list[[4]], status = "new", bin_cut_num = 1)
-pu_range_p10 <- range_fun(bio_data, "Promachocrinus unruhi", 
-                          sdm_list[[4]], status = "new", bin_cut_num = 3)
-pus_range_mtp <- range_fun(bio_data, "Promachocrinus uskglassi", 
-                           sdm_list[[5]], status = "new", bin_cut_num = 1)
-pus_range_p10 <- range_fun(bio_data, "Promachocrinus uskglassi", 
-                           sdm_list[[5]], status = "new", bin_cut_num = 3)
-pj_range_mtp <- range_fun(bio_data, "Promachocrinus joubini", 
-                          sdm_list[[6]], status = "new", bin_cut_num = 1)
-pj_range_p10 <- range_fun(bio_data, "Promachocrinus joubini", 
-                          sdm_list[[6]], status = "new", bin_cut_num = 3)
-pm_range_mtp <- range_fun(bio_data, "Promachocrinus mawsoni", 
-                          sdm_list[[7]], status = "new", bin_cut_num = 1)
-pm_range_p10 <- range_fun(bio_data, "Promachocrinus mawsoni", 
-                          sdm_list[[7]], status = "new", bin_cut_num = 3)
-
-## Range size metrics using thresholds
-pk_comp_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", 
-                           sdm_list[[1]], status = "comp", thresh = 0.5)
-pk_comp_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", 
-                            sdm_list[[1]], status = "comp", thresh = 0.75)
-pk_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", 
-                          sdm_list[[2]], status = "new", thresh = 0.5)
-pk_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", 
-                           sdm_list[[2]], status = "new", thresh = 0.75)
-pf_range_0.5 <- range_fun(bio_data, "Promachocrinus fragarius", 
-                          sdm_list[[3]], status = "new", thresh = 0.5)
-pf_range_0.75 <- range_fun(bio_data, "Promachocrinus fragarius", 
-                           sdm_list[[3]], status = "new", thresh = 0.75)
-pu_range_0.5 <- range_fun(bio_data, "Promachocrinus unruhi", 
-                          sdm_list[[4]], status = "new", thresh = 0.5)
-pu_range_0.75 <- range_fun(bio_data, "Promachocrinus unruhi", 
-                           sdm_list[[4]], status = "new", thresh = 0.75)
-pus_range_0.5 <- range_fun(bio_data, "Promachocrinus uskglassi", 
-                           sdm_list[[5]], status = "new", thresh = 0.5)
-pus_range_0.75 <- range_fun(bio_data, "Promachocrinus uskglassi", 
-                            sdm_list[[5]], status = "new", thresh = 0.75)
-pj_range_0.5 <- range_fun(bio_data, "Promachocrinus joubini", 
-                          sdm_list[[6]], status = "new", thresh = 0.5)
-pj_range_0.75 <- range_fun(bio_data, "Promachocrinus joubini", 
-                           sdm_list[[6]], status = "new", thresh = 0.75)
-pm_range_0.5 <- range_fun(bio_data, "Promachocrinus mawsoni", 
-                          sdm_list[[7]], status = "new", thresh = 0.5)
-pm_range_0.75 <- range_fun(bio_data, "Promachocrinus mawsoni", 
-                           sdm_list[[7]], status = "new", thresh = 0.75)
-
-## Collect EOO values and write to disk
-eoo_vals_mtp <- c(pk_comp_range_mtp[[1]], pk_range_mtp[[1]], pf_range_mtp[[1]], 
-                  pu_range_mtp[[1]],  pus_range_mtp[[1]], pj_range_mtp[[1]], 
-                  pm_range_mtp[[1]])
-eoo_vals_p10 <- c(pk_comp_range_p10[[1]], pk_range_p10[[1]], pf_range_p10[[1]], 
-                  pu_range_p10[[1]],  pus_range_p10[[1]], pj_range_p10[[1]], 
-                  pm_range_p10[[1]])
-eoo_vals_0.5 <- c(pk_comp_range_0.5[[1]], pk_range_0.5[[1]], pf_range_0.5[[1]], 
-                  pu_range_0.5[[1]], pus_range_0.5[[1]], pj_range_0.5[[1]], 
-                  pm_range_0.5[[1]])
-eoo_vals_0.75 <- c(pk_comp_range_0.75[[1]], pk_range_0.75[[1]], pf_range_0.75[[1]], 
-                   pu_range_0.75[[1]], pus_range_0.75[[1]], pj_range_0.75[[1]], 
-                   pm_range_0.75[[1]])
-
-save(eoo_vals_mtp, file = here("data", "biodiversity", "output", "range_size",
-                               "eoo_vals_mtp.RData"))
-save(eoo_vals_p10, file = here("data", "biodiversity", "output", "range_size",
-                               "eoo_vals_p10.RData"))
-save(eoo_vals_0.5, file = here("data", "biodiversity", "output", "range_size",
-                               "eoo_vals_0.5.RData"))
-save(eoo_vals_0.75, file = here("data", "biodiversity", "output", "range_size",
-                                "eoo_vals_0.75.RData"))
-
-eoo_vals_mtp <- get(load(here("data", "biodiversity", "output", "range_size",
-                              "eoo_vals_mtp.RData")))
-eoo_vals_0.5 <- get(load(here("data", "biodiversity", "output","range_size",
-                              "eoo_vals_0.5.RData")))
-eoo_vals_0.75 <- get(load(here("data", "biodiversity", "output","range_size",
-                              "eoo_vals_0.75.RData")))
-
-## Collect AOO values and write to disk
-aoo_vals_mtp <- c(pk_comp_range_mtp[[2]], pk_range_mtp[[2]], pf_range_mtp[[2]], 
-                  pu_range_mtp[[2]], pus_range_mtp[[2]], pj_range_mtp[[2]], 
-                  pm_range_mtp[[2]])
-aoo_vals_p10 <- c(pk_comp_range_p10[[2]], pk_range_p10[[2]], pf_range_p10[[2]], 
-                  pu_range_p10[[2]], pus_range_p10[[2]], pj_range_p10[[2]], 
-                  pm_range_p10[[2]])
-aoo_vals_0.5 <- c(pk_comp_range_0.5[[2]], pk_range_0.5[[2]], pf_range_0.5[[2]], 
-                  pu_range_0.5[[2]], pus_range_0.5[[2]], pj_range_0.5[[2]], 
-                  pm_range_0.5[[2]])
-aoo_vals_0.75 <- c(pk_comp_range_0.75[[2]], pk_range_0.75[[2]], pf_range_0.75[[2]], 
-                   pu_range_0.75[[2]], pus_range_0.75[[2]], pj_range_0.75[[2]], 
-                   pm_range_0.75[[2]])
-
-save(aoo_vals_mtp, file = here("data", "biodiversity", "output", "range_size",
-                               "aoo_vals_mtp.RData"))
-save(aoo_vals_p10, file = here("data", "biodiversity", "output", "range_size",
-                               "aoo_vals_p10.RData"))
-save(aoo_vals_0.5, file = here("data", "biodiversity", "output", "range_size",
-                               "aoo_vals_0.5.RData"))
-save(aoo_vals_0.75, file = here("data", "biodiversity", "output", "range_size",
-                                "aoo_vals_0.75.RData"))
-
-aoo_vals_mtp <- get(load(here("data", "biodiversity", "output","range_size",
-                              "aoo_vals_mtp.RData")))
-aoo_vals_0.5 <- get(load(here("data", "biodiversity", "output","range_size",
-                              "aoo_vals_0.5.RData")))
-aoo_vals_0.75 <- get(load(here("data", "biodiversity", "output","range_size",
-                              "aoo_vals_0.75.RData")))
+# ## Range size metrics using cut offs
+# pk_comp_range_mtp <- range_fun(bio_data, "Promachocrinus kerguelensis", 
+#                                sdm_list[[1]], status = "comp", bin_cut_num = 1)
+# pk_comp_range_p10 <- range_fun(bio_data, "Promachocrinus kerguelensis", 
+#                                sdm_list[[1]], status = "comp", bin_cut_num = 3)
+# pk_range_mtp <- range_fun(bio_data, "Promachocrinus kerguelensis", 
+#                           sdm_list[[2]], status = "new", bin_cut_num = 1)
+# pk_range_p10 <- range_fun(bio_data, "Promachocrinus kerguelensis", 
+#                           sdm_list[[2]], status = "new", bin_cut_num = 3)
+# pf_range_mtp <- range_fun(bio_data, "Promachocrinus fragarius", 
+#                           sdm_list[[3]], status = "new", bin_cut_num = 1)
+# pf_range_p10 <- range_fun(bio_data, "Promachocrinus fragarius", 
+#                           sdm_list[[3]], status = "new", bin_cut_num = 3)
+# pu_range_mtp <- range_fun(bio_data, "Promachocrinus unruhi", 
+#                           sdm_list[[4]], status = "new", bin_cut_num = 1)
+# pu_range_p10 <- range_fun(bio_data, "Promachocrinus unruhi", 
+#                           sdm_list[[4]], status = "new", bin_cut_num = 3)
+# pus_range_mtp <- range_fun(bio_data, "Promachocrinus uskglassi", 
+#                            sdm_list[[5]], status = "new", bin_cut_num = 1)
+# pus_range_p10 <- range_fun(bio_data, "Promachocrinus uskglassi", 
+#                            sdm_list[[5]], status = "new", bin_cut_num = 3)
+# pj_range_mtp <- range_fun(bio_data, "Promachocrinus joubini", 
+#                           sdm_list[[6]], status = "new", bin_cut_num = 1)
+# pj_range_p10 <- range_fun(bio_data, "Promachocrinus joubini", 
+#                           sdm_list[[6]], status = "new", bin_cut_num = 3)
+# pm_range_mtp <- range_fun(bio_data, "Promachocrinus mawsoni", 
+#                           sdm_list[[7]], status = "new", bin_cut_num = 1)
+# pm_range_p10 <- range_fun(bio_data, "Promachocrinus mawsoni", 
+#                           sdm_list[[7]], status = "new", bin_cut_num = 3)
+# 
+# ## Range size metrics using thresholds
+# pk_comp_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", 
+#                            sdm_list[[1]], status = "comp", thresh = 0.5)
+# pk_comp_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", 
+#                             sdm_list[[1]], status = "comp", thresh = 0.75)
+# pk_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", 
+#                           sdm_list[[2]], status = "new", thresh = 0.5)
+# pk_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", 
+#                            sdm_list[[2]], status = "new", thresh = 0.75)
+# pf_range_0.5 <- range_fun(bio_data, "Promachocrinus fragarius", 
+#                           sdm_list[[3]], status = "new", thresh = 0.5)
+# pf_range_0.75 <- range_fun(bio_data, "Promachocrinus fragarius", 
+#                            sdm_list[[3]], status = "new", thresh = 0.75)
+# pu_range_0.5 <- range_fun(bio_data, "Promachocrinus unruhi", 
+#                           sdm_list[[4]], status = "new", thresh = 0.5)
+# pu_range_0.75 <- range_fun(bio_data, "Promachocrinus unruhi", 
+#                            sdm_list[[4]], status = "new", thresh = 0.75)
+# pus_range_0.5 <- range_fun(bio_data, "Promachocrinus uskglassi", 
+#                            sdm_list[[5]], status = "new", thresh = 0.5)
+# pus_range_0.75 <- range_fun(bio_data, "Promachocrinus uskglassi", 
+#                             sdm_list[[5]], status = "new", thresh = 0.75)
+# pj_range_0.5 <- range_fun(bio_data, "Promachocrinus joubini", 
+#                           sdm_list[[6]], status = "new", thresh = 0.5)
+# pj_range_0.75 <- range_fun(bio_data, "Promachocrinus joubini", 
+#                            sdm_list[[6]], status = "new", thresh = 0.75)
+# pm_range_0.5 <- range_fun(bio_data, "Promachocrinus mawsoni", 
+#                           sdm_list[[7]], status = "new", thresh = 0.5)
+# pm_range_0.75 <- range_fun(bio_data, "Promachocrinus mawsoni", 
+#                            sdm_list[[7]], status = "new", thresh = 0.75)
+# 
+# ## Collect EOO values and write to disk
+# eoo_vals_mtp <- c(pk_comp_range_mtp[[1]], pk_range_mtp[[1]], pf_range_mtp[[1]], 
+#                   pu_range_mtp[[1]],  pus_range_mtp[[1]], pj_range_mtp[[1]], 
+#                   pm_range_mtp[[1]])
+# eoo_vals_p10 <- c(pk_comp_range_p10[[1]], pk_range_p10[[1]], pf_range_p10[[1]], 
+#                   pu_range_p10[[1]],  pus_range_p10[[1]], pj_range_p10[[1]], 
+#                   pm_range_p10[[1]])
+# eoo_vals_0.5 <- c(pk_comp_range_0.5[[1]], pk_range_0.5[[1]], pf_range_0.5[[1]], 
+#                   pu_range_0.5[[1]], pus_range_0.5[[1]], pj_range_0.5[[1]], 
+#                   pm_range_0.5[[1]])
+# eoo_vals_0.75 <- c(pk_comp_range_0.75[[1]], pk_range_0.75[[1]], pf_range_0.75[[1]], 
+#                    pu_range_0.75[[1]], pus_range_0.75[[1]], pj_range_0.75[[1]], 
+#                    pm_range_0.75[[1]])
+# 
+# save(eoo_vals_mtp, file = here("data", "biodiversity", "output", "range_size",
+#                                "eoo_vals_mtp.RData"))
+# save(eoo_vals_p10, file = here("data", "biodiversity", "output", "range_size",
+#                                "eoo_vals_p10.RData"))
+# save(eoo_vals_0.5, file = here("data", "biodiversity", "output", "range_size",
+#                                "eoo_vals_0.5.RData"))
+# save(eoo_vals_0.75, file = here("data", "biodiversity", "output", "range_size",
+#                                 "eoo_vals_0.75.RData"))
+# 
+# eoo_vals_mtp <- get(load(here("data", "biodiversity", "output", "range_size",
+#                               "eoo_vals_mtp.RData")))
+# eoo_vals_0.5 <- get(load(here("data", "biodiversity", "output","range_size",
+#                               "eoo_vals_0.5.RData")))
+# eoo_vals_0.75 <- get(load(here("data", "biodiversity", "output","range_size",
+#                               "eoo_vals_0.75.RData")))
+# 
+# ## Collect AOO values and write to disk
+# aoo_vals_mtp <- c(pk_comp_range_mtp[[2]], pk_range_mtp[[2]], pf_range_mtp[[2]], 
+#                   pu_range_mtp[[2]], pus_range_mtp[[2]], pj_range_mtp[[2]], 
+#                   pm_range_mtp[[2]])
+# aoo_vals_p10 <- c(pk_comp_range_p10[[2]], pk_range_p10[[2]], pf_range_p10[[2]], 
+#                   pu_range_p10[[2]], pus_range_p10[[2]], pj_range_p10[[2]], 
+#                   pm_range_p10[[2]])
+# aoo_vals_0.5 <- c(pk_comp_range_0.5[[2]], pk_range_0.5[[2]], pf_range_0.5[[2]], 
+#                   pu_range_0.5[[2]], pus_range_0.5[[2]], pj_range_0.5[[2]], 
+#                   pm_range_0.5[[2]])
+# aoo_vals_0.75 <- c(pk_comp_range_0.75[[2]], pk_range_0.75[[2]], pf_range_0.75[[2]], 
+#                    pu_range_0.75[[2]], pus_range_0.75[[2]], pj_range_0.75[[2]], 
+#                    pm_range_0.75[[2]])
+# 
+# save(aoo_vals_mtp, file = here("data", "biodiversity", "output", "range_size",
+#                                "aoo_vals_mtp.RData"))
+# save(aoo_vals_p10, file = here("data", "biodiversity", "output", "range_size",
+#                                "aoo_vals_p10.RData"))
+# save(aoo_vals_0.5, file = here("data", "biodiversity", "output", "range_size",
+#                                "aoo_vals_0.5.RData"))
+# save(aoo_vals_0.75, file = here("data", "biodiversity", "output", "range_size",
+#                                 "aoo_vals_0.75.RData"))
+# 
+# aoo_vals_mtp <- get(load(here("data", "biodiversity", "output","range_size",
+#                               "aoo_vals_mtp.RData")))
+# aoo_vals_0.5 <- get(load(here("data", "biodiversity", "output","range_size",
+#                               "aoo_vals_0.5.RData")))
+# aoo_vals_0.75 <- get(load(here("data", "biodiversity", "output","range_size",
+#                               "aoo_vals_0.75.RData")))
 
 species <- c(rep("P. kerguelensis (s.l.)",20), 
              rep("P. kerguelensis",20),
@@ -817,34 +804,36 @@ ggpubr::ggarrange(eoo_kw_0.75, aoo_kw_0.75, ncol = 1, nrow = 2, align = "v")
 fut_lyrs <- list.files(here("data", "biodiversity", "output", "reps_sdm"), 
                        pattern = "fut_model", full.names = T)
 
-# create function for below?
+pk_comp_fut_rasters <- prep_fut_lyrs(fut_lyrs, "comp")
+pk_fut_rasters <- prep_fut_lyrs(fut_lyrs, "new")
 
-fut_pk_comp <- fut_lyrs[str_detect(fut_lyrs,"comp")]
-
-fut_pk_comp_cur <- fut_pk_comp[str_detect(fut_pk_comp,"for_fut")]
-fut_pk_comp_205026 <- fut_pk_comp[str_detect(fut_pk_comp,"2050RCP26")]
-fut_pk_comp_205045 <- fut_pk_comp[str_detect(fut_pk_comp,"2050RCP45")]
-fut_pk_comp_205060 <- fut_pk_comp[str_detect(fut_pk_comp,"2050RCP60")]
-fut_pk_comp_205085 <- fut_pk_comp[str_detect(fut_pk_comp,"2050RCP85")]
-
-fut_pk_comp_sdm <- rast(fut_pk_comp_cur)
-fut_pk_comp_205026_sdm <- rast(fut_pk_comp_205026)
-fut_pk_comp_205045_sdm <- rast(fut_pk_comp_205045)
-fut_pk_comp_205060_sdm <- rast(fut_pk_comp_205060)
-fut_pk_comp_205085_sdm <- rast(fut_pk_comp_205085)
-
-fut_pk_comp_210026 <- fut_pk_comp[str_detect(fut_pk_comp,"2100RCP26")]
-fut_pk_comp_210045 <- fut_pk_comp[str_detect(fut_pk_comp,"2100RCP45")]
-fut_pk_comp_210060 <- fut_pk_comp[str_detect(fut_pk_comp,"2100RCP60")]
-fut_pk_comp_210085 <- fut_pk_comp[str_detect(fut_pk_comp,"2100RCP85")]
-
-fut_pk_comp_210026_sdm <- rast(fut_pk_comp_210026)
-fut_pk_comp_210045_sdm <- rast(fut_pk_comp_210045)
-fut_pk_comp_210060_sdm <- rast(fut_pk_comp_210060)
-fut_pk_comp_210085_sdm <- rast(fut_pk_comp_210085)
-
-
-# pk_comp_fut_rasters <- c(fut_pk_comp_sdm, fut_pk_comp_205026_sdm,
+# 
+# fut_pk_comp <- fut_lyrs[str_detect(fut_lyrs,"comp")]
+# 
+# fut_pk_comp_cur <- fut_pk_comp[str_detect(fut_pk_comp,"for_fut")]
+# fut_pk_comp_205026 <- fut_pk_comp[str_detect(fut_pk_comp,"2050RCP26")]
+# fut_pk_comp_205045 <- fut_pk_comp[str_detect(fut_pk_comp,"2050RCP45")]
+# fut_pk_comp_205060 <- fut_pk_comp[str_detect(fut_pk_comp,"2050RCP60")]
+# fut_pk_comp_205085 <- fut_pk_comp[str_detect(fut_pk_comp,"2050RCP85")]
+# 
+# fut_pk_comp_sdm <- rast(fut_pk_comp_cur)
+# fut_pk_comp_205026_sdm <- rast(fut_pk_comp_205026)
+# fut_pk_comp_205045_sdm <- rast(fut_pk_comp_205045)
+# fut_pk_comp_205060_sdm <- rast(fut_pk_comp_205060)
+# fut_pk_comp_205085_sdm <- rast(fut_pk_comp_205085)
+# 
+# fut_pk_comp_210026 <- fut_pk_comp[str_detect(fut_pk_comp,"2100RCP26")]
+# fut_pk_comp_210045 <- fut_pk_comp[str_detect(fut_pk_comp,"2100RCP45")]
+# fut_pk_comp_210060 <- fut_pk_comp[str_detect(fut_pk_comp,"2100RCP60")]
+# fut_pk_comp_210085 <- fut_pk_comp[str_detect(fut_pk_comp,"2100RCP85")]
+# 
+# fut_pk_comp_210026_sdm <- rast(fut_pk_comp_210026)
+# fut_pk_comp_210045_sdm <- rast(fut_pk_comp_210045)
+# fut_pk_comp_210060_sdm <- rast(fut_pk_comp_210060)
+# fut_pk_comp_210085_sdm <- rast(fut_pk_comp_210085)
+# 
+# 
+# pk_comp_fut_rasters <- list(fut_pk_comp_sdm, fut_pk_comp_205026_sdm,
 #                          fut_pk_comp_205045_sdm,fut_pk_comp_205060_sdm,
 #                          fut_pk_comp_205085_sdm, fut_pk_comp_210026_sdm,
 #                          fut_pk_comp_210045_sdm,fut_pk_comp_210060_sdm,
@@ -854,29 +843,72 @@ fut_pk_comp_210085_sdm <- rast(fut_pk_comp_210085)
 #    fut_pk_comp_205060_sdm,fut_pk_comp_205085_sdm, fut_pk_comp_210026_sdm,
 #    fut_pk_comp_210045_sdm,fut_pk_comp_210060_sdm, fut_pk_comp_210085_sdm)
 
-fut_pk <- fut_lyrs[str_detect(fut_lyrs,"new")]
+betas <- c(0.5, 0.75)
 
-fut_pk_cur <- fut_pk[str_detect(fut_pk,"for_fut")]
-fut_pk_205026 <- fut_pk[str_detect(fut_pk,"2050RCP26")]
-fut_pk_205045 <- fut_pk[str_detect(fut_pk,"2050RCP45")]
-fut_pk_205060 <- fut_pk[str_detect(fut_pk,"2050RCP60")]
-fut_pk_205085 <- fut_pk[str_detect(fut_pk,"2050RCP85")]
+for(n in betas){
+  
+  rs_eoo <- c()
+  rs_aoo <- c()
+  
+  for(i in seq_along(pk_comp_fut_rasters)){
+    
+    rs_list <- range_fun(pk_comp_fut_rasters[[i]], beta = n)
+    rs_eoo <- c(rs_eoo, rs_list[[1]])
+    rs_aoo <- c(rs_aoo, rs_list[[2]])
+    
+  }
+  
+  save(rs_eoo, file = here("data", "biodiversity", "output", "range_size",
+                           paste0("fut_rs_eoo_pkcomp_b_",n,".RData")))
+  save(rs_aoo, file = here("data", "biodiversity", "output", "range_size",
+                           paste0("fut_rs_aoo_pkcomp_b_",n,".RData")))
+  
+}
 
-fut_pk_sdm <- rast(fut_pk_cur)
-fut_pk_205026_sdm <-rast(fut_pk_205026)
-fut_pk_205045_sdm <- rast(fut_pk_205045)
-fut_pk_205060_sdm <- rast(fut_pk_205060)
-fut_pk_205085_sdm <- rast(fut_pk_205085)
+for(n in betas){
+  
+  rs_eoo <- c()
+  rs_aoo <- c()
+  
+  for(i in seq_along(pk_fut_rasters)){
+    
+    rs_list <- range_fun(pk_fut_rasters[[i]], beta = n)
+    rs_eoo <- c(rs_eoo, rs_list[[1]])
+    rs_aoo <- c(rs_aoo, rs_list[[2]])
+    
+  }
+  
+  save(rs_eoo, file = here("data", "biodiversity", "output", "range_size",
+                           paste0("fut_rs_eoo_pk_b_",n,".RData")))
+  save(rs_aoo, file = here("data", "biodiversity", "output", "range_size",
+                           paste0("fut_rs_aoo_pk_b_",n,".RData")))
+  
+}
 
-fut_pk_210026 <- fut_pk[str_detect(fut_pk,"2100RCP26")]
-fut_pk_210045 <- fut_pk[str_detect(fut_pk,"2100RCP45")]
-fut_pk_210060 <- fut_pk[str_detect(fut_pk,"2100RCP60")]
-fut_pk_210085 <- fut_pk[str_detect(fut_pk,"2100RCP85")]
-
-fut_pk_210026_sdm <- rast(fut_pk_210026)
-fut_pk_210045_sdm <- rast(fut_pk_210045)
-fut_pk_210060_sdm <- rast(fut_pk_210060)
-fut_pk_210085_sdm <- rast(fut_pk_210085)
+# 
+# fut_pk <- fut_lyrs[str_detect(fut_lyrs,"new")]
+# 
+# fut_pk_cur <- fut_pk[str_detect(fut_pk,"for_fut")]
+# fut_pk_205026 <- fut_pk[str_detect(fut_pk,"2050RCP26")]
+# fut_pk_205045 <- fut_pk[str_detect(fut_pk,"2050RCP45")]
+# fut_pk_205060 <- fut_pk[str_detect(fut_pk,"2050RCP60")]
+# fut_pk_205085 <- fut_pk[str_detect(fut_pk,"2050RCP85")]
+# 
+# fut_pk_sdm <- rast(fut_pk_cur)
+# fut_pk_205026_sdm <-rast(fut_pk_205026)
+# fut_pk_205045_sdm <- rast(fut_pk_205045)
+# fut_pk_205060_sdm <- rast(fut_pk_205060)
+# fut_pk_205085_sdm <- rast(fut_pk_205085)
+# 
+# fut_pk_210026 <- fut_pk[str_detect(fut_pk,"2100RCP26")]
+# fut_pk_210045 <- fut_pk[str_detect(fut_pk,"2100RCP45")]
+# fut_pk_210060 <- fut_pk[str_detect(fut_pk,"2100RCP60")]
+# fut_pk_210085 <- fut_pk[str_detect(fut_pk,"2100RCP85")]
+# 
+# fut_pk_210026_sdm <- rast(fut_pk_210026)
+# fut_pk_210045_sdm <- rast(fut_pk_210045)
+# fut_pk_210060_sdm <- rast(fut_pk_210060)
+# fut_pk_210085_sdm <- rast(fut_pk_210085)
 
 
 # pk_fut_rasters <- c(fut_pk_sdm, fut_pk_205026_sdm,
@@ -889,100 +921,102 @@ fut_pk_210085_sdm <- rast(fut_pk_210085)
 #    fut_pk_205085_sdm, fut_pk_210026_sdm,fut_pk_210045_sdm,fut_pk_210060_sdm,
 #    fut_pk_210085_sdm)
 
-# P. kerguelensis (sensu lato)
-fut_pk_comp_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_sdm, status = "comp")
-fut_pk_comp_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_sdm, status = "comp", thresh = 0.5)
-fut_pk_comp_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_sdm, status = "comp", thresh = 0.75)
-fut_pk_comp_205026_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205026_sdm, status = "comp")
-fut_pk_comp_205026_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205026_sdm, status = "comp", thresh = 0.5)
-fut_pk_comp_205026_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205026_sdm, status = "comp", thresh = 0.75)
-fut_pk_comp_205045_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205045_sdm, status = "comp")
-fut_pk_comp_205045_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205045_sdm, status = "comp", thresh = 0.5)
-fut_pk_comp_205045_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205045_sdm, status = "comp", thresh = 0.75)
-fut_pk_comp_205060_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205060_sdm, status = "comp")
-fut_pk_comp_205060_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205060_sdm, status = "comp", thresh = 0.5)
-fut_pk_comp_205060_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205060_sdm, status = "comp", thresh = 0.75)
-fut_pk_comp_205085_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205085_sdm, status = "comp")
-fut_pk_comp_205085_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205085_sdm, status = "comp", thresh = 0.5)
-fut_pk_comp_205085_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205085_sdm, status = "comp", thresh = 0.75)
-fut_pk_comp_210026_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210026_sdm, status = "comp")
-fut_pk_comp_210026_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210026_sdm, status = "comp", thresh = 0.5)
-fut_pk_comp_210026_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210026_sdm, status = "comp", thresh = 0.75)
-fut_pk_comp_210045_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210045_sdm, status = "comp")
-fut_pk_comp_210045_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210045_sdm, status = "comp", thresh = 0.5)
-fut_pk_comp_210045_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210045_sdm, status = "comp", thresh = 0.75)
-fut_pk_comp_210060_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210060_sdm, status = "comp")
-fut_pk_comp_210060_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210060_sdm, status = "comp", thresh = 0.5)
-fut_pk_comp_210060_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210060_sdm, status = "comp", thresh = 0.75)
-fut_pk_comp_210085_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210085_sdm, status = "comp")
-fut_pk_comp_210085_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210085_sdm, status = "comp", thresh = 0.5)
-fut_pk_comp_210085_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210085_sdm, status = "comp", thresh = 0.75)
 
 
+# # P. kerguelensis (sensu lato)
+# fut_pk_comp_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_sdm, status = "comp")
+# fut_pk_comp_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_sdm, status = "comp", thresh = 0.5)
+# fut_pk_comp_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_sdm, status = "comp", thresh = 0.75)
+# fut_pk_comp_205026_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205026_sdm, status = "comp")
+# fut_pk_comp_205026_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205026_sdm, status = "comp", thresh = 0.5)
+# fut_pk_comp_205026_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205026_sdm, status = "comp", thresh = 0.75)
+# fut_pk_comp_205045_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205045_sdm, status = "comp")
+# fut_pk_comp_205045_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205045_sdm, status = "comp", thresh = 0.5)
+# fut_pk_comp_205045_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205045_sdm, status = "comp", thresh = 0.75)
+# fut_pk_comp_205060_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205060_sdm, status = "comp")
+# fut_pk_comp_205060_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205060_sdm, status = "comp", thresh = 0.5)
+# fut_pk_comp_205060_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205060_sdm, status = "comp", thresh = 0.75)
+# fut_pk_comp_205085_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205085_sdm, status = "comp")
+# fut_pk_comp_205085_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205085_sdm, status = "comp", thresh = 0.5)
+# fut_pk_comp_205085_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205085_sdm, status = "comp", thresh = 0.75)
+# fut_pk_comp_210026_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210026_sdm, status = "comp")
+# fut_pk_comp_210026_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210026_sdm, status = "comp", thresh = 0.5)
+# fut_pk_comp_210026_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210026_sdm, status = "comp", thresh = 0.75)
+# fut_pk_comp_210045_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210045_sdm, status = "comp")
+# fut_pk_comp_210045_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210045_sdm, status = "comp", thresh = 0.5)
+# fut_pk_comp_210045_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210045_sdm, status = "comp", thresh = 0.75)
+# fut_pk_comp_210060_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210060_sdm, status = "comp")
+# fut_pk_comp_210060_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210060_sdm, status = "comp", thresh = 0.5)
+# fut_pk_comp_210060_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210060_sdm, status = "comp", thresh = 0.75)
+# fut_pk_comp_210085_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210085_sdm, status = "comp")
+# fut_pk_comp_210085_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210085_sdm, status = "comp", thresh = 0.5)
+# fut_pk_comp_210085_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210085_sdm, status = "comp", thresh = 0.75)
+# 
+# 
+# 
+# # P. kerguelensis
+# fut_pk_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_sdm, status = "new")
+# fut_pk_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_sdm, status = "new", thresh = 0.5)
+# fut_pk_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_sdm, status = "new", thresh = 0.75)
+# fut_pk_205026_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205026_sdm, status = "new")
+# fut_pk_205026_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205026_sdm, status = "new", thresh = 0.5)
+# fut_pk_205026_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205026_sdm, status = "new", thresh = 0.75)
+# fut_pk_205045_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205045_sdm, status = "new")
+# fut_pk_205045_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205045_sdm, status = "new", thresh = 0.5)
+# fut_pk_205045_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205045_sdm, status = "new", thresh = 0.75)
+# fut_pk_205060_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205060_sdm, status = "new")
+# fut_pk_205060_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205060_sdm, status = "new", thresh = 0.5)
+# fut_pk_205060_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205060_sdm, status = "new", thresh = 0.75)
+# fut_pk_205085_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205085_sdm, status = "new")
+# fut_pk_205085_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205085_sdm, status = "new", thresh = 0.5)
+# fut_pk_205085_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205085_sdm, status = "new", thresh = 0.75)
+# fut_pk_210026_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210026_sdm, status = "new")
+# fut_pk_210026_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210026_sdm, status = "new", thresh = 0.5)
+# fut_pk_210026_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210026_sdm, status = "new", thresh = 0.75)
+# fut_pk_210045_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210045_sdm, status = "new")
+# fut_pk_210045_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210045_sdm, status = "new", thresh = 0.5)
+# fut_pk_210045_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210045_sdm, status = "new", thresh = 0.75)
+# fut_pk_210060_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210060_sdm, status = "new")
+# fut_pk_210060_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210060_sdm, status = "new", thresh = 0.5)
+# fut_pk_210060_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210060_sdm, status = "new", thresh = 0.75)
+# fut_pk_210085_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210085_sdm, status = "new")
+# fut_pk_210085_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210085_sdm, status = "new", thresh = 0.5)
+# fut_pk_210085_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210085_sdm, status = "new", thresh = 0.75)
+# 
+# fut_eoo_vals <- c(fut_pk_comp_range[[1]], fut_pk_comp_205026_range[[1]],
+#                   fut_pk_comp_205045_range[[1]], fut_pk_comp_205060_range[[1]],
+#                   fut_pk_comp_205085_range[[1]], fut_pk_comp_210026_range[[1]],
+#                   fut_pk_comp_210045_range[[1]], fut_pk_comp_210060_range[[1]],
+#                   fut_pk_comp_210085_range[[1]], fut_pk_range[[1]],
+#                   fut_pk_205026_range[[1]], fut_pk_205045_range[[1]],
+#                   fut_pk_205060_range[[1]], fut_pk_205085_range[[1]],
+#                   fut_pk_210026_range[[1]], fut_pk_210045_range[[1]],
+#                   fut_pk_210060_range[[1]], fut_pk_210085_range[[1]])
+# save(fut_eoo_vals, file = here("data", "biodiversity", "output", "range_size", "fut_eoo_vals.RData"))
+load(file = here("data", "biodiversity", "output", "range_size", "fut_rs_eoo_pkcomp_b_0.5.RData"))
 
-# P. kerguelensis
-fut_pk_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_sdm, status = "new")
-fut_pk_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_sdm, status = "new", thresh = 0.5)
-fut_pk_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_sdm, status = "new", thresh = 0.75)
-fut_pk_205026_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205026_sdm, status = "new")
-fut_pk_205026_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205026_sdm, status = "new", thresh = 0.5)
-fut_pk_205026_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205026_sdm, status = "new", thresh = 0.75)
-fut_pk_205045_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205045_sdm, status = "new")
-fut_pk_205045_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205045_sdm, status = "new", thresh = 0.5)
-fut_pk_205045_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205045_sdm, status = "new", thresh = 0.75)
-fut_pk_205060_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205060_sdm, status = "new")
-fut_pk_205060_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205060_sdm, status = "new", thresh = 0.5)
-fut_pk_205060_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205060_sdm, status = "new", thresh = 0.75)
-fut_pk_205085_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205085_sdm, status = "new")
-fut_pk_205085_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205085_sdm, status = "new", thresh = 0.5)
-fut_pk_205085_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205085_sdm, status = "new", thresh = 0.75)
-fut_pk_210026_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210026_sdm, status = "new")
-fut_pk_210026_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210026_sdm, status = "new", thresh = 0.5)
-fut_pk_210026_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210026_sdm, status = "new", thresh = 0.75)
-fut_pk_210045_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210045_sdm, status = "new")
-fut_pk_210045_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210045_sdm, status = "new", thresh = 0.5)
-fut_pk_210045_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210045_sdm, status = "new", thresh = 0.75)
-fut_pk_210060_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210060_sdm, status = "new")
-fut_pk_210060_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210060_sdm, status = "new", thresh = 0.5)
-fut_pk_210060_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210060_sdm, status = "new", thresh = 0.75)
-fut_pk_210085_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210085_sdm, status = "new")
-fut_pk_210085_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210085_sdm, status = "new", thresh = 0.5)
-fut_pk_210085_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210085_sdm, status = "new", thresh = 0.75)
+# fut_eoo_vals_0.5 <- c(fut_pk_comp_range_0.5[[1]], fut_pk_comp_205026_range_0.5[[1]],
+#                   fut_pk_comp_205045_range_0.5[[1]], fut_pk_comp_205060_range_0.5[[1]],
+#                   fut_pk_comp_205085_range_0.5[[1]], fut_pk_comp_210026_range_0.5[[1]],
+#                   fut_pk_comp_210045_range_0.5[[1]], fut_pk_comp_210060_range_0.5[[1]],
+#                   fut_pk_comp_210085_range_0.5[[1]], fut_pk_range_0.5[[1]],
+#                   fut_pk_205026_range_0.5[[1]], fut_pk_205045_range_0.5[[1]],
+#                   fut_pk_205060_range_0.5[[1]], fut_pk_205085_range_0.5[[1]],
+#                   fut_pk_210026_range_0.5[[1]], fut_pk_210045_range_0.5[[1]],
+#                   fut_pk_210060_range_0.5[[1]], fut_pk_210085_range_0.5[[1]])
+# save(fut_eoo_vals_0.5, file = here("data", "biodiversity", "output", "range_size", "fut_eoo_vals_0.5.RData"))
+load(file = here("data", "biodiversity", "output", "range_size", "fut_rs_eoo_pkcomp_b_0.75.RData"))
 
-fut_eoo_vals <- c(fut_pk_comp_range[[1]], fut_pk_comp_205026_range[[1]],
-                  fut_pk_comp_205045_range[[1]], fut_pk_comp_205060_range[[1]],
-                  fut_pk_comp_205085_range[[1]], fut_pk_comp_210026_range[[1]],
-                  fut_pk_comp_210045_range[[1]], fut_pk_comp_210060_range[[1]],
-                  fut_pk_comp_210085_range[[1]], fut_pk_range[[1]],
-                  fut_pk_205026_range[[1]], fut_pk_205045_range[[1]],
-                  fut_pk_205060_range[[1]], fut_pk_205085_range[[1]],
-                  fut_pk_210026_range[[1]], fut_pk_210045_range[[1]],
-                  fut_pk_210060_range[[1]], fut_pk_210085_range[[1]])
-save(fut_eoo_vals, file = here("data", "biodiversity", "output", "range_size", "fut_eoo_vals.RData"))
-#load(file = here("data", "biodiversity", "output", "range_size", "fut_eoo_vals.RData"))
-
-fut_eoo_vals_0.5 <- c(fut_pk_comp_range_0.5[[1]], fut_pk_comp_205026_range_0.5[[1]],
-                  fut_pk_comp_205045_range_0.5[[1]], fut_pk_comp_205060_range_0.5[[1]],
-                  fut_pk_comp_205085_range_0.5[[1]], fut_pk_comp_210026_range_0.5[[1]],
-                  fut_pk_comp_210045_range_0.5[[1]], fut_pk_comp_210060_range_0.5[[1]],
-                  fut_pk_comp_210085_range_0.5[[1]], fut_pk_range_0.5[[1]],
-                  fut_pk_205026_range_0.5[[1]], fut_pk_205045_range_0.5[[1]],
-                  fut_pk_205060_range_0.5[[1]], fut_pk_205085_range_0.5[[1]],
-                  fut_pk_210026_range_0.5[[1]], fut_pk_210045_range_0.5[[1]],
-                  fut_pk_210060_range_0.5[[1]], fut_pk_210085_range_0.5[[1]])
-save(fut_eoo_vals_0.5, file = here("data", "biodiversity", "output", "range_size", "fut_eoo_vals_0.5.RData"))
-#load(file = here("data", "biodiversity", "output", "range_size", "fut_eoo_vals_0.5.RData"))
-
-fut_eoo_vals_0.75 <- c(fut_pk_comp_range_0.75[[1]], fut_pk_comp_205026_range_0.75[[1]],
-                      fut_pk_comp_205045_range_0.75[[1]], fut_pk_comp_205060_range_0.75[[1]],
-                      fut_pk_comp_205085_range_0.75[[1]], fut_pk_comp_210026_range_0.75[[1]],
-                      fut_pk_comp_210045_range_0.75[[1]], fut_pk_comp_210060_range_0.75[[1]],
-                      fut_pk_comp_210085_range_0.75[[1]], fut_pk_range_0.75[[1]],
-                      fut_pk_205026_range_0.75[[1]], fut_pk_205045_range_0.75[[1]],
-                      fut_pk_205060_range_0.75[[1]], fut_pk_205085_range_0.75[[1]],
-                      fut_pk_210026_range_0.75[[1]], fut_pk_210045_range_0.75[[1]],
-                      fut_pk_210060_range_0.75[[1]], fut_pk_210085_range_0.75[[1]])
-save(fut_eoo_vals_0.75, file = here("data", "biodiversity", "output", "range_size", "fut_eoo_vals_0.75.RData"))
+# fut_eoo_vals_0.75 <- c(fut_pk_comp_range_0.75[[1]], fut_pk_comp_205026_range_0.75[[1]],
+#                       fut_pk_comp_205045_range_0.75[[1]], fut_pk_comp_205060_range_0.75[[1]],
+#                       fut_pk_comp_205085_range_0.75[[1]], fut_pk_comp_210026_range_0.75[[1]],
+#                       fut_pk_comp_210045_range_0.75[[1]], fut_pk_comp_210060_range_0.75[[1]],
+#                       fut_pk_comp_210085_range_0.75[[1]], fut_pk_range_0.75[[1]],
+#                       fut_pk_205026_range_0.75[[1]], fut_pk_205045_range_0.75[[1]],
+#                       fut_pk_205060_range_0.75[[1]], fut_pk_205085_range_0.75[[1]],
+#                       fut_pk_210026_range_0.75[[1]], fut_pk_210045_range_0.75[[1]],
+#                       fut_pk_210060_range_0.75[[1]], fut_pk_210085_range_0.75[[1]])
+# save(fut_eoo_vals_0.75, file = here("data", "biodiversity", "output", "range_size", "fut_eoo_vals_0.75.RData"))
 #load(file = here("data", "biodiversity", "output", "range_size", "fut_eoo_vals_0.75.RData"))
 
 fut_aoo_vals <- c(fut_pk_comp_range[[2]], fut_pk_comp_205026_range[[2]],
