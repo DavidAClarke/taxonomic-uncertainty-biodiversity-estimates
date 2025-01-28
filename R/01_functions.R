@@ -442,6 +442,28 @@ get_cutoff <- function(df, species = NULL, sdm, status){
   
   return(cutoff)
 }
+
+# Prepare future layers for range size metrics----
+prep_fut_lyrs <- function(files, species){
+  
+  ll <- list()
+  nms <- c("for_fut", "2050RCP26", "2050RCP45", "2050RCP60", "2050RCP85",
+           "2100RCP26", "2100RCP45","2100RCP60","2100RCP85")
+  
+  spec_files <- fut_lyrs[str_detect(fut_lyrs,species)]
+  
+  for(i in nms){
+    
+    ind <- which(nms == i)
+    ff <- fut_pk_comp[str_detect(fut_pk_comp,i)]
+    ll[[ind]] <- rast(ff)
+    
+  }
+  
+  return(ll)
+  
+}
+
 ## Create range raster----
 range_rast <- function(df, species, ras_stack, status, thresh = NULL, bin_cut_num){
   
@@ -486,35 +508,25 @@ range_fun <- function(ras_stack, beta = 0.5){
   
   for(i in 1:nlyr(ras_stack)){
     
-    # if(is.null(thresh)){
-    #   
-    #   bin_cut <- get_cutoff(df = df, species = species,sdm = 
-    #                           ras_stack[[i]], status = status)
-    #   
-    #   model_bin <- ecospat::ecospat.binary.model(ras_stack[[i]], bin_cut[bin_cut_num])
-    #   
-    # } else {
-    #   
-    #   model_bin <- ecospat::ecospat.binary.model(ras_stack[[i]], thresh)
-    # }
-    
     model_bin <- terra::unwrap(virtualspecies::convertToPA(ras_stack[[i]], beta = beta, plot = F)$pa.raster)
     
     model_bin[model_bin == 0] <- NA
     
-    model_EOO <- makeEOO(raster::raster(model_bin))
+    model_EOO <- makeEOO(model_bin)
     
     diffPoly <- st_difference(st_as_sf(model_EOO), coast)
     
-    #getAreaEOO(diffPoly) is not working properly, thus use st_area() for EOO area
-    AreaEOO <- as.vector(st_area(diffPoly)/1e+6) #/1e+6 to get in km2
+    areaEOO <- getAreaEOO(vect(diffPoly)) 
+    #AreaEOO <- as.vector(st_area(diffPoly)/1e+6) #/1e+6 to get in km2
     
-    AOO <- getAOO(raster(model_bin), grid.size = 4000,min.percent.rule = F)
+    AOO <- getAOO(raster(model_bin), grid.size = 4000, min.percent.rule = F)
     
-    eoo <- c(eoo, AreaEOO)
+    eoo <- c(eoo, areaEOO)
     aoo <- c(aoo, AOO)
   }
+  
   return(list(eoo,aoo))
+  
 }
 ## Prepare data for raw data range size metrics----
 range_prepare <- function(df, status, species){
