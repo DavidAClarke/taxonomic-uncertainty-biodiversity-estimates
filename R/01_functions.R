@@ -5,6 +5,14 @@
 ## Email: david_anthony_clarke@hotmail.com
 ################################################################################
 
+## Load an Rdata file so to load it under a different name----
+#https://stackoverflow.com/questions/5577221/can-i-load-a-saved-r-object-into-a-new-object-name
+loadRData <- function(fileName){
+  #loads an RData file, and returns it
+  load(fileName)
+  get(ls()[ls() != "fileName"])
+}
+
 ## Make occurrence data spatially explicit----
 spatially_explicit <- function(df, x, y, to_epsg, jit = 0){
   
@@ -501,7 +509,9 @@ range.ov <- function(bin_sdm1, bin_sdm2){
 }
 ## Calculate range size metrics----
 #range_fun <- function(df, species, ras_stack, status, thresh = NULL, bin_cut_num = 1){
-range_fun <- function(ras_stack, beta = 0.5){
+range_fun <- function(ras_stack, beta = 0.5, seed = 1234){
+  
+  set.seed(seed)
   
   eoo <- c()
   aoo <- c()
