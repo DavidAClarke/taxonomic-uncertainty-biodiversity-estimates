@@ -653,12 +653,8 @@ write.csv(aoo_b075_es, file = here(dirname(here()), "data", "biodiversity", "out
 # rl_med_eoo <-  rl_df %>% filter(name == "med_eoo")
 # rl_med_aoo <-  rl_df %>% filter(name == "med_aoo")
 
-expSup <- function(w, digits=2) {
-  sprintf(paste0("%.", digits, "f x 10^%d"), w/10^floor(log10(abs(w))), floor(log10(abs(w))))
-}
 
 # Could remove x axis text for EOO plots and just use AOO text when combining figures
-
 eoo_b05_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b05, 
                                       y = rs_eoo_b0.5, 
                                       x = species, 
