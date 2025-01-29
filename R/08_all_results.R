@@ -663,8 +663,8 @@ eoo_b05_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b05,
                                       y = rs_eoo_b0.5, 
                                       x = species, 
                                       type = "nonparametric",
-                                      pairwise.display = "none", # "none"
-                                      results.subtitle = FALSE,
+                                      pairwise.display = "significant", # "none"
+                                      results.subtitle = T,
                                       p.adjust.method = "holm",
                                       nboot = 200,
                                       xlab = "Species",
@@ -683,8 +683,10 @@ eoo_b05_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b05,
         axis.text.x = element_text(vjust = 0.5, face = "italic")) +
   guides(x = guide_axis(n.dodge = 2))
 
+# Note: need to display statistics in figure in order to extract them.
 eoo_b05_kw_stats <- ggstatsplot::extract_stats(eoo_b05_kw)$subtitle_data
-eoo_b05_ph_stats <- ggstatsplot::extract_stats(eoo_b05_kw)$pairwise_comparisons_data
+eoo_b05_ph_stats <- ggstatsplot::extract_stats(eoo_b05_kw)$pairwise_comparisons_data %>%
+  mutate(metric = "EOO") %>% mutate(beta = 0.5)
 
 eoo_b075_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b075, 
                                           y = rs_eoo_b0.75, 
