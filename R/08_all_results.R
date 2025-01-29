@@ -613,8 +613,12 @@ rl_df_b05 <- rl_df %>%
   mutate(mean_aoo = mean(rs_aoo_b0.5)) %>%
   mutate(sd_aoo = sqrt(var(rs_aoo_b0.5))) 
 
-rcompanion::multiVDA(rs_eoo_b0.5 ~ species, data = rl_df_b05)
-rcompanion::multiVDA(rs_aoo_b0.5 ~ species, data = rl_df_b05)
+eoo_b05_es <- rcompanion::multiVDA(rs_eoo_b0.5 ~ species, data = rl_df_b05)$pairs
+write.csv(eoo_b05_es, file = here(dirname(here()), "data", "biodiversity", "output",
+                                  "eoo_b05_es.csv"))
+aoo_b05_es <- rcompanion::multiVDA(rs_aoo_b0.5 ~ species, data = rl_df_b05)$pairs
+write.csv(aoo_b05_es, file = here(dirname(here()), "data", "biodiversity", "output",
+                                  "aoo_b05_es.csv"))
 
 rl_df_b075 <- rl_df %>%
   group_by(species) %>%
@@ -626,8 +630,12 @@ rl_df_b075 <- rl_df %>%
   mutate(mean_aoo = mean(rs_aoo_b0.5)) %>%
   mutate(sd_aoo = sqrt(var(rs_aoo_b0.5))) 
 
-rcompanion::multiVDA(rs_eoo_b0.75 ~ species, data = rl_df_b075)
-rcompanion::multiVDA(rs_aoo_b0.75 ~ species, data = rl_df_b075)
+eoo_b075_es <- rcompanion::multiVDA(rs_eoo_b0.75 ~ species, data = rl_df_b075)$pairs
+write.csv(eoo_b075_es, file = here(dirname(here()), "data", "biodiversity", "output",
+                                  "eoo_b075_es.csv"))
+aoo_b075_es <- rcompanion::multiVDA(rs_aoo_b0.75 ~ species, data = rl_df_b075)$pairs
+write.csv(aoo_b075_es, file = here(dirname(here()), "data", "biodiversity", "output",
+                                   "aoo_b075_es.csv"))
 
 
 
@@ -651,7 +659,7 @@ expSup <- function(w, digits=2) {
 
 # Could remove x axis text for EOO plots and just use AOO text when combining figures
 
-eoo_kw <- ggstatsplot::ggbetweenstats(data = rl_df, 
+eoo_b05_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b05, 
                                       y = rs_eoo_b0.5, 
                                       x = species, 
                                       type = "nonparametric",
@@ -668,38 +676,18 @@ eoo_kw <- ggstatsplot::ggbetweenstats(data = rl_df,
                                       centrality.label.args = list(size = 4),
                                       centrality.plotting = F) +
   scale_colour_manual(values = unlist(cartocolors[cartocolors$Name == "Safe",8]),
-                      breaks = unique(rl_df$species)) +
+                      breaks = unique(rl_df_b05$species)) +
   scale_y_continuous(labels = expSup) +
   theme(axis.title = element_text(size = 18),
         axis.text = element_text(size = 14),
         axis.text.x = element_text(vjust = 0.5, face = "italic")) +
   guides(x = guide_axis(n.dodge = 2))
 
-eoo_kw_0.5 <- ggstatsplot::ggbetweenstats(data = rl_eoo_0.5, 
-                                      y = value, 
-                                      x = species, 
-                                      type = "nonparametric",
-                                      pairwise.display = "none", # "none"
-                                      results.subtitle = FALSE,
-                                      p.adjust.method = "holm",
-                                      nboot = 200,
-                                      xlab = "Species",
-                                      ylab = bquote("Extent of occurrence " (km^2)),
-                                      ggtheme = ggplot2::theme_bw(),
-                                      point.args = list(alpha = 1),
-                                      ggsignif.args = list(textsize = 4, vjust = 0.5),
-                                      centrality.label.args = list(size = 4),
-                                      centrality.plotting = F) +
-  scale_colour_manual(values = unlist(cartocolors[cartocolors$Name == "Safe",8]),
-                      breaks = unique(rl_df_0.5$species)) +
-  scale_y_continuous(labels = expSup) +
-  theme(axis.title = element_text(size = 18),
-        axis.text = element_text(size = 14),
-        axis.text.x = element_text(vjust = 0.5, face = "italic")) +
-  guides(x = guide_axis(n.dodge = 2))
+eoo_b05_kw_stats <- ggstatsplot::extract_stats(eoo_b05_kw)$subtitle_data
+eoo_b05_ph_stats <- ggstatsplot::extract_stats(eoo_b05_kw)$pairwise_comparisons_data
 
-eoo_kw_0.75 <- ggstatsplot::ggbetweenstats(data = rl_eoo_0.75, 
-                                          y = value, 
+eoo_b075_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b075, 
+                                          y = rs_eoo_b0.75, 
                                           x = species, 
                                           type = "nonparametric",
                                           pairwise.display = "none", # "none"
@@ -714,15 +702,18 @@ eoo_kw_0.75 <- ggstatsplot::ggbetweenstats(data = rl_eoo_0.75,
                                           centrality.label.args = list(size = 4),
                                           centrality.plotting = F) +
   scale_colour_manual(values = unlist(cartocolors[cartocolors$Name == "Safe",8]),
-                      breaks = unique(rl_df_0.75$species)) +
+                      breaks = unique(rl_df_b075$species)) +
   scale_y_continuous(labels = expSup) +
   theme(axis.title = element_text(size = 18),
         axis.text = element_text(size = 14),
         axis.text.x = element_text(vjust = 0.5, face = "italic")) +
   guides(x = guide_axis(n.dodge = 2))
 
-aoo_kw <- ggstatsplot::ggbetweenstats(data = rl_aoo, 
-                                      y = logv, 
+eoo_b075_kw_stats <- ggstatsplot::extract_stats(eoo_b075_kw)$subtitle_data
+eoo_b075_ph_stats <- ggstatsplot::extract_stats(eoo_b075_kw)$pairwise_comparisons_data
+
+aoo_b05_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b05, 
+                                      y = rs_aoo_b0.5, 
                                       x = species, 
                                       type = "nonparametric",
                                       pairwise.display = "none", # "none"
@@ -730,22 +721,25 @@ aoo_kw <- ggstatsplot::ggbetweenstats(data = rl_aoo,
                                       p.adjust.method = "holm",
                                       nboot = 200,
                                       xlab = "Species",
-                                      ylab = bquote("Log area of occupancy " (km^2)),
+                                      ylab = bquote("Area of occupancy " (km^2)),
                                       ggtheme = ggplot2::theme_bw(),
                                       point.args = list(alpha = 1),
                                       ggsignif.args = list(textsize = 4, vjust = 0.5),
                                       centrality.label.args = list(size = 4),
                                       centrality.plotting = F) +
   scale_colour_manual(values = unlist(cartocolors[cartocolors$Name == "Safe",8]),
-                      breaks = unique(rl_df_mtp$species)) +
-  #scale_y_continuous(labels = expSup) +
+                      breaks = unique(rl_df_b05$species)) +
+  scale_y_continuous(labels = expSup) +
   theme(axis.title = element_text(size = 18),
         axis.text = element_text(size = 14),
         axis.text.x = element_text(vjust = 0.5, face = "italic")) +
   guides(x = guide_axis(n.dodge = 2))
 
-aoo_kw_0.5 <- ggstatsplot::ggbetweenstats(data = rl_aoo_0.5, 
-                                           y = logv, 
+aoo_b05_kw_stats <- ggstatsplot::extract_stats(aoo_b05_kw)$subtitle_data
+aoo_b05_ph_stats <- ggstatsplot::extract_stats(aoo_b05_kw)$pairwise_comparisons_data
+
+aoo_b075_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b075, 
+                                           y = rs_aoo_b0.75, 
                                            x = species, 
                                            type = "nonparametric",
                                           pairwise.display = "none", # "none"
@@ -753,46 +747,25 @@ aoo_kw_0.5 <- ggstatsplot::ggbetweenstats(data = rl_aoo_0.5,
                                            p.adjust.method = "holm",
                                            nboot = 200,
                                            xlab = "Species",
-                                           ylab = bquote("Log area of occupancy " (km^2)),
+                                           ylab = bquote("Area of occupancy " (km^2)),
                                            ggtheme = ggplot2::theme_bw(),
                                            point.args = list(alpha = 1),
                                            ggsignif.args = list(textsize = 4, vjust = 0.5),
                                            centrality.label.args = list(size = 4),
                                           centrality.plotting = F) +
   scale_colour_manual(values = unlist(cartocolors[cartocolors$Name == "Safe",8]),
-                      breaks = unique(rl_df_0.5$species)) +
-  #scale_y_continuous(labels = expSup) +
+                      breaks = unique(rl_df_b075$species)) +
+  scale_y_continuous(labels = expSup) +
   theme(axis.title = element_text(size = 18),
         axis.text = element_text(size = 14),
         axis.text.x = element_text(vjust = 0.5, face = "italic")) +
   guides(x = guide_axis(n.dodge = 2))
 
-aoo_kw_0.75 <- ggstatsplot::ggbetweenstats(data = rl_aoo_0.75, 
-                                           y = logv, 
-                                           x = species, 
-                                           type = "nonparametric",
-                                           pairwise.display = "none", # "none"
-                                           results.subtitle = FALSE,
-                                           p.adjust.method = "holm",
-                                           nboot = 200,
-                                           xlab = "Species",
-                                           ylab = bquote("Log area of occupancy " (km^2)),
-                                           ggtheme = ggplot2::theme_bw(),
-                                           point.args = list(alpha = 1),
-                                           ggsignif.args = list(textsize = 4, vjust = 0.5),
-                                           centrality.label.args = list(size = 4),
-                                           centrality.plotting = F) +
-  scale_colour_manual(values = unlist(cartocolors[cartocolors$Name == "Safe",8]),
-                      breaks = unique(rl_df_0.75$species)) +
-  #scale_y_continuous(labels = expSup) +
-  theme(axis.title = element_text(size = 18),
-        axis.text = element_text(size = 14),
-        axis.text.x = element_text(vjust = 0.5, face = "italic")) +
-  guides(x = guide_axis(n.dodge = 2))
+aoo_b075_kw_stats <- ggstatsplot::extract_stats(aoo_b075_kw)$subtitle_data
+aoo_b075_ph_stats <- ggstatsplot::extract_stats(aoo_b075_kw)$pairwise_comparisons_data
 
-ggpubr::ggarrange(eoo_kw, aoo_kw, ncol = 1, nrow = 2, align = "v")
-ggpubr::ggarrange(eoo_kw_0.5, aoo_kw_0.5, ncol = 1, nrow = 2, align = "v")
-ggpubr::ggarrange(eoo_kw_0.75, aoo_kw_0.75, ncol = 1, nrow = 2, align = "v")
+ggpubr::ggarrange(eoo_b05_kw, aoo_b05_kw, ncol = 1, nrow = 2, align = "v")
+ggpubr::ggarrange(eoo_b075_kw, aoo_b075_kw, ncol = 1, nrow = 2, align = "v")
 
 # Future
 fut_lyrs <- list.files(here("data", "biodiversity", "output", "reps_sdm"), 
