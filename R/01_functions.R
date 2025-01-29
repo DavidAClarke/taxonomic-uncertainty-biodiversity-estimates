@@ -1327,3 +1327,8 @@ plot_suit_to_pa <- function(pa, add = F,...){
     lines(x = x, y = y,...)
   }
 }
+
+## For writing scientific notation in the ggbetweenstats plots
+expSup <- function(w, digits=2) {
+  sprintf(paste0("%.", digits, "f x 10^%d"), w/10^floor(log10(abs(w))), floor(log10(abs(w))))
+}
