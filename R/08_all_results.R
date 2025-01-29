@@ -417,7 +417,10 @@ for(n in betas){
   
 }
 
-
+rs_aoo_b0.5 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size",
+                 paste0("rs_aoo_b_",0.5,".RData")))
+rs_aoo_b0.75 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size",
+                                     paste0("rs_aoo_b_",0.75,".RData")))
 
 
 ## Create range rasters
