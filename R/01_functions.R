@@ -1309,6 +1309,7 @@ hv_ot_info <- function(fl_names, hv_path, hv_over_stats){
 
 
 ## Adapting function from virtualspecies::plotSuitabilityToProba
+# could also try using ggplot instead of base R
 plot_suit_to_pa <- function(pa, add = F,...){
   
   x <- seq(global(unwrap(pa$suitab.raster), min, na.rm = TRUE)[1, 1],
