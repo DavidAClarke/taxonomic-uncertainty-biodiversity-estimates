@@ -1306,3 +1306,23 @@ hv_ot_info <- function(fl_names, hv_path, hv_over_stats){
   return(hv_ovt_df)
   
 }
+
+
+## Adapting function from virtualspecies::plotSuitabilityToProba
+plot_suit_to_pa <- function(pa, add = F,...){
+  
+  x <- seq(global(unwrap(pa$suitab.raster), min, na.rm = TRUE)[1, 1],
+           global(unwrap(pa$suitab.raster), max, na.rm = TRUE)[1, 1], length = 100)
+  
+  y <- logisticFun(x, alpha = as.numeric(pa$PA.conversion["alpha"]),
+                   beta =  as.numeric(pa$PA.conversion["beta"]))
+  
+  if(!add){
+  plot(x = x, y = y, type = "l", bty = "l", las = 1, cex.axis = .8, 
+       ylim = c(0, 1), xlab = "Environmental suitability",
+       ylab = "Probability of ocurrence",...)
+  } else {
+    
+    lines(x = x, y = y,...)
+  }
+}
