@@ -417,49 +417,53 @@ for(n in betas){
   
 }
 
+rs_eoo_b0.5 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size",
+                 paste0("rs_eoo_b_",0.5,".RData")))
+rs_eoo_b0.75 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size",
+                                     paste0("rs_eoo_b_",0.75,".RData")))
 rs_aoo_b0.5 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size",
-                 paste0("rs_aoo_b_",0.5,".RData")))
+                                     paste0("rs_aoo_b_",0.5,".RData")))
 rs_aoo_b0.75 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size",
-                                     paste0("rs_aoo_b_",0.75,".RData")))
+                                      paste0("rs_aoo_b_",0.75,".RData")))
 
 
-## Create range rasters
-pk_comp_bin <- range_rast(bio_data, "Promachocrinus kerguelensis", 
-                          sdm_list[[1]], status = "comp", bin_cut_num = 1)
-pk_bin <- range_rast(bio_data, "Promachocrinus kerguelensis", sdm_list[[2]], 
-                     status = "new", bin_cut_num = 1)
-pf_bin <- range_rast(bio_data, "Promachocrinus fragarius", sdm_list[[3]], 
-                     status = "new", bin_cut_num = 1)
-pu_bin <- range_rast(bio_data, "Promachocrinus unruhi", sdm_list[[4]], 
-                     status = "new", bin_cut_num = 1)
-pus_bin <- range_rast(bio_data, "Promachocrinus uskglassi", sdm_list[[5]], 
-                      status = "new", bin_cut_num = 1)
-pj_bin <- range_rast(bio_data, "Promachocrinus joubini", sdm_list[[6]], 
-                     status = "new", bin_cut_num = 1)
-pm_bin <- range_rast(bio_data, "Promachocrinus mawsoni", sdm_list[[7]], 
-                     status = "new", bin_cut_num = 1)
-
-bin_stack <- c(pk_comp_bin, pk_bin, pf_bin, pu_bin, pus_bin, pj_bin, pm_bin)
-
-overlaps <- c()
-for(i in 1:nlyr(bin_stack)){
-  for(j in 1:nlyr(bin_stack)){
-    
-    ov <- range.ov(bin_stack[[i]], bin_stack[[j]])
-    overlaps <- c(overlaps, ov)
-    
-  }
-}
-
-ov_mat <- matrix(overlaps, nrow = 7, ncol = 7)
-colnames(ov_mat) <- c("Promachocrinus kerguelensis (s.l.)", "Promachocrinus kerguelensis",
-                      "Promachocrinus fragarius", "Promachocrinus unruhi",
-                      "Promachocrinus uskglassi", "Promachocrinus joubini",
-                      "Promachocrinus mawsoni")
-rownames(ov_mat) <- c("Promachocrinus kerguelensis (s.l.)", "Promachocrinus kerguelensis",
-                      "Promachocrinus fragarius", "Promachocrinus unruhi",
-                      "Promachocrinus uskglassi", "Promachocrinus joubini",
-                      "Promachocrinus mawsoni")
+# ## Create range rasters
+# pk_comp_bin <- range_rast(bio_data, "Promachocrinus kerguelensis", 
+#                           sdm_list[[1]], status = "comp", bin_cut_num = 1)
+# pk_bin <- range_rast(bio_data, "Promachocrinus kerguelensis", sdm_list[[2]], 
+#                      status = "new", bin_cut_num = 1)
+# pf_bin <- range_rast(bio_data, "Promachocrinus fragarius", sdm_list[[3]], 
+#                      status = "new", bin_cut_num = 1)
+# pu_bin <- range_rast(bio_data, "Promachocrinus unruhi", sdm_list[[4]], 
+#                      status = "new", bin_cut_num = 1)
+# pus_bin <- range_rast(bio_data, "Promachocrinus uskglassi", sdm_list[[5]], 
+#                       status = "new", bin_cut_num = 1)
+# pj_bin <- range_rast(bio_data, "Promachocrinus joubini", sdm_list[[6]], 
+#                      status = "new", bin_cut_num = 1)
+# pm_bin <- range_rast(bio_data, "Promachocrinus mawsoni", sdm_list[[7]], 
+#                      status = "new", bin_cut_num = 1)
+# 
+# bin_stack <- c(pk_comp_bin, pk_bin, pf_bin, pu_bin, pus_bin, pj_bin, pm_bin)
+# 
+# overlaps <- c()
+# for(i in 1:nlyr(bin_stack)){
+#   for(j in 1:nlyr(bin_stack)){
+#     
+#     ov <- range.ov(bin_stack[[i]], bin_stack[[j]])
+#     overlaps <- c(overlaps, ov)
+#     
+#   }
+# }
+# 
+# ov_mat <- matrix(overlaps, nrow = 7, ncol = 7)
+# colnames(ov_mat) <- c("Promachocrinus kerguelensis (s.l.)", "Promachocrinus kerguelensis",
+#                       "Promachocrinus fragarius", "Promachocrinus unruhi",
+#                       "Promachocrinus uskglassi", "Promachocrinus joubini",
+#                       "Promachocrinus mawsoni")
+# rownames(ov_mat) <- c("Promachocrinus kerguelensis (s.l.)", "Promachocrinus kerguelensis",
+#                       "Promachocrinus fragarius", "Promachocrinus unruhi",
+#                       "Promachocrinus uskglassi", "Promachocrinus joubini",
+#                       "Promachocrinus mawsoni")
 
 # ## Range size metrics using cut offs
 # pk_comp_range_mtp <- range_fun(bio_data, "Promachocrinus kerguelensis", 
@@ -585,71 +589,58 @@ species <- c(rep("P. kerguelensis (s.l.)",20),
              rep("P. kerguelensis",20),
              rep("P. fragarius",20),
              rep("P. unruhi",20),
-             rep("P. uskglass",20),
+             rep("P. uskglassi",20),
              rep("P. joubini",20),
              rep("P. mawsoni",20))
 
-rl_df <- data.frame(species, eoo_vals_mtp, eoo_vals_0.5, eoo_vals_0.75,
-                    aoo_vals_mtp, aoo_vals_0.5, aoo_vals_0.75)
-
-rl_df_mtp <- rl_df %>%
-  group_by(species) %>%
-  dplyr::select(species, eoo_vals_mtp, aoo_vals_mtp) %>%
-  mutate(med_eoo = median(eoo_vals_mtp)) %>%
-  mutate(mean_eoo = mean(eoo_vals_mtp)) %>%
-  mutate(sd_eoo = sqrt(var(eoo_vals_mtp))) %>%
-  mutate(med_aoo = median(aoo_vals_mtp)) %>%
-  mutate(mean_aoo = mean(aoo_vals_mtp)) %>%
-  mutate(sd_aoo = sqrt(var(aoo_vals_mtp))) %>%
-  pivot_longer(!species) %>%
+# rl_df <- data.frame(species, eoo_vals_mtp, eoo_vals_0.5, eoo_vals_0.75,
+#                     aoo_vals_mtp, aoo_vals_0.5, aoo_vals_0.75)
+rl_df <- data.frame(species, 
+                    rs_eoo_b0.5, rs_aoo_b0.5, 
+                    rs_eoo_b0.75, rs_aoo_b0.75) %>%
   mutate(species = factor(species, levels = c("P. kerguelensis (s.l.)", "P. kerguelensis",
                                               "P. fragarius", "P. unruhi",
                                               "P. uskglassi", "P. joubini",
                                               "P. mawsoni")))
 
-rl_df_0.5 <- rl_df %>%
+rl_df_b05 <- rl_df %>%
   group_by(species) %>%
-  dplyr::select(species, eoo_vals_0.5, aoo_vals_0.5) %>%
-  mutate(med_eoo_0.5 = median(eoo_vals_0.5)) %>%
-  mutate(mean_eoo_0.5 = mean(eoo_vals_0.5)) %>%
-  mutate(sd_eoo_0.5 = sqrt(var(eoo_vals_0.5))) %>%
-  mutate(med_aoo_0.5 = median(aoo_vals_0.5)) %>%
-  mutate(mean_aoo_0.5 = mean(aoo_vals_0.5)) %>%
-  mutate(sd_aoo_0.5 = sqrt(var(aoo_vals_0.5))) %>%
-  pivot_longer(!species) %>%
-  mutate(species = factor(species, levels = c("P. kerguelensis (s.l.)", 
-                                              "P. kerguelensis",
-                                              "P. fragarius", "P. unruhi",
-                                              "P. uskglassi", "P. joubini",
-                                              "P. mawsoni")))
+  dplyr::select(species, rs_eoo_b0.5, rs_aoo_b0.5) %>%
+  mutate(med_eoo = median(rs_eoo_b0.5)) %>%
+  mutate(mean_eoo = mean(rs_eoo_b0.5)) %>%
+  mutate(sd_eoo = sqrt(var(rs_eoo_b0.5))) %>%
+  mutate(med_aoo = median(rs_aoo_b0.5)) %>%
+  mutate(mean_aoo = mean(rs_aoo_b0.5)) %>%
+  mutate(sd_aoo = sqrt(var(rs_aoo_b0.5))) 
 
-rl_df_0.75 <- rl_df %>%
+rcompanion::multiVDA(rs_eoo_b0.5 ~ species, data = rl_df_b05)
+rcompanion::multiVDA(rs_aoo_b0.5 ~ species, data = rl_df_b05)
+
+rl_df_b075 <- rl_df %>%
   group_by(species) %>%
-  dplyr::select(species, eoo_vals_0.75, aoo_vals_0.75) %>%
-  mutate(med_eoo_0.75 = median(eoo_vals_0.75)) %>%
-  mutate(mean_eoo_0.75 = mean(eoo_vals_0.75)) %>%
-  mutate(sd_eoo_0.75 = sqrt(var(eoo_vals_0.75))) %>%
-  mutate(med_aoo_0.75 = median(aoo_vals_0.75)) %>%
-  mutate(mean_aoo_0.75 = mean(aoo_vals_0.75)) %>%
-  mutate(sd_aoo_0.75 = sqrt(var(aoo_vals_0.75))) %>%
-  pivot_longer(!species) %>%
-  mutate(species = factor(species, levels = c("P. kerguelensis (s.l.)", 
-                                              "P. kerguelensis",
-                                              "P. fragarius", "P. unruhi",
-                                              "P. uskglassi", "P. joubini",
-                                              "P. mawsoni")))
+  dplyr::select(species, rs_eoo_b0.75, rs_aoo_b0.75) %>%
+  mutate(med_eoo = median(rs_eoo_b0.5)) %>%
+  mutate(mean_eoo = mean(rs_eoo_b0.5)) %>%
+  mutate(sd_eoo = sqrt(var(rs_eoo_b0.5))) %>%
+  mutate(med_aoo = median(rs_aoo_b0.5)) %>%
+  mutate(mean_aoo = mean(rs_aoo_b0.5)) %>%
+  mutate(sd_aoo = sqrt(var(rs_aoo_b0.5))) 
+
+rcompanion::multiVDA(rs_eoo_b0.75 ~ species, data = rl_df_b075)
+rcompanion::multiVDA(rs_aoo_b0.75 ~ species, data = rl_df_b075)
 
 
-rl_eoo <- rl_df_mtp %>% filter(name == "eoo_vals_mtp")
-rl_eoo_0.5 <- rl_df_0.5 %>% filter(name == "eoo_vals_0.5")
-rl_eoo_0.75 <- rl_df_0.75 %>% filter(name == "eoo_vals_0.75")
 
-rl_aoo <- rl_df_mtp %>% filter(name == "aoo_vals_mtp") %>% 
-  mutate(logv = log(value))
-rl_aoo_0.5 <- rl_df_0.5 %>% filter(name == "aoo_vals_0.5") %>% 
-  mutate(logv = log(value))
-rl_aoo_0.75 <- rl_df_0.75 %>% filter(name == "aoo_vals_0.75") %>% 
-  mutate(logv = log(value))
+# rl_eoo <- rl_df_mtp %>% filter(name == "eoo_vals_mtp")
+# rl_eoo_0.5 <- rl_df_0.5 %>% filter(name == "eoo_vals_0.5")
+# rl_eoo_0.75 <- rl_df_0.75 %>% filter(name == "eoo_vals_0.75")
+# 
+# rl_aoo <- rl_df_mtp %>% filter(name == "aoo_vals_mtp") %>% 
+#   mutate(logv = log(value))
+# rl_aoo_0.5 <- rl_df_0.5 %>% filter(name == "aoo_vals_0.5") %>% 
+#   mutate(logv = log(value))
+# rl_aoo_0.75 <- rl_df_0.75 %>% filter(name == "aoo_vals_0.75") %>% 
+#   mutate(logv = log(value))
 
 # rl_med_eoo <-  rl_df %>% filter(name == "med_eoo")
 # rl_med_aoo <-  rl_df %>% filter(name == "med_aoo")
@@ -660,8 +651,8 @@ expSup <- function(w, digits=2) {
 
 # Could remove x axis text for EOO plots and just use AOO text when combining figures
 
-eoo_kw <- ggstatsplot::ggbetweenstats(data = rl_eoo, 
-                                      y = value, 
+eoo_kw <- ggstatsplot::ggbetweenstats(data = rl_df, 
+                                      y = rs_eoo_b0.5, 
                                       x = species, 
                                       type = "nonparametric",
                                       pairwise.display = "none", # "none"
@@ -677,7 +668,7 @@ eoo_kw <- ggstatsplot::ggbetweenstats(data = rl_eoo,
                                       centrality.label.args = list(size = 4),
                                       centrality.plotting = F) +
   scale_colour_manual(values = unlist(cartocolors[cartocolors$Name == "Safe",8]),
-                      breaks = unique(rl_df_mtp$species)) +
+                      breaks = unique(rl_df$species)) +
   scale_y_continuous(labels = expSup) +
   theme(axis.title = element_text(size = 18),
         axis.text = element_text(size = 14),
