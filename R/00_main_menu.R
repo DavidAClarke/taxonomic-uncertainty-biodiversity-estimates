@@ -15,6 +15,7 @@ source("R/01_functions.R")
 ################################################################################
 ## File paths
 shared_data <- "C:/Users/dcla0021/Documents/postdoc/projects/shared_data/environmental"
+shared_data <- "C:/Users/david/Documents/postdoc/projects/shared_data/environmental"
 #shared_data <- "path/to/data"
 res_path <- here("data", "biodiversity", "output", "reps_csv")
 sdm_path <- here("data", "biodiversity", "output", "reps_sdm")
