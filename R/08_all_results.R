@@ -6,7 +6,7 @@
 pred_combs <- read.csv(here("data", "environmental", "pred_vars.csv"))
 
 # Union of coast for EOO calculations
-coast <- st_read(here(shared_data, "coastline", "coastline.shp")) %>%
+coast <- st_read(here(shared_data, "coastline", "Coastline.shp")) %>%
   st_transform("ESRI:102019")  %>% 
   st_union()
 
@@ -1540,6 +1540,7 @@ hv_ovt <- factor(hv_ovt, levels = c("Pk_comp_Pkn_ot.rds", "Pk_comp_Pf_ot.rds",
   sort() |>
   as.character()
 
+hv_overlaps <- loadRData(here("data", "biodiversity", "output", "hypervolumes", "hv_overlaps.RData"))
 
 hv_tests <- hv_ot_info(fl_names = hv_ovt, 
                        hv_path = here(dirname(here()),"data", "biodiversity", 
