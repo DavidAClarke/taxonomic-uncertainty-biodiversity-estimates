@@ -371,8 +371,11 @@ ggplot(var_df, aes(x = Var_name, y = var_rank, fill = Cor_group))+
 
 ## 3.2 | Range size----
 # Current
+#Use model 50 for niche coparisons, different models for range sizes
 lyrs <- list.files(here("data", "biodiversity", "output", "reps_sdm"), 
                    pattern = "model_50", full.names = T)
+pk_comp <- list.files(here("data", "biodiversity", "output", "reps_sdm"), 
+                   pattern = glob2rx("*comp*model_16*"), full.names = T)
 
 sdm_list <- list()
 
@@ -385,10 +388,22 @@ new_species <- lyrs[str_detect(lyrs,"new")]
 species_names <- c("kerguelensis", "fragarius", "unruhi", "uskglass", #uskglassi
                    "joubini", "mawsoni")
 
+species_models <- c(72,40,50,54,54,5) #model with highest mean AUC for each species
+
 for(spec in species_names){
   
   sp <- new_species[str_detect(new_species,spec)]
   sdm_list[[spec]] <- rast(sp)
+  
+}
+
+## Only for range sizes, not niche comparisons
+for(i in seq_along(species_names)){
+  
+  #sp <- new_species[str_detect(new_species,glob2rx(paste0("*",species_names[i],"*",paste0("model_",species_models[i],"*"))))]
+  sp_lyrs <- list.files(here(dirname(here()),"data", "biodiversity", "output", "reps_sdm"), 
+                           pattern = glob2rx(paste0("*new*",species_names[i],"*",paste0("model_",species_models[i],"."),"*")), full.names = T)
+  sdm_list[[species_names[i]]] <- rast(sp_lyrs)
   
 }
 
@@ -410,10 +425,10 @@ for(n in betas){
     
   }
   
-  save(rs_eoo, file = here("data", "biodiversity", "output", "range_size",
-                           paste0("rs_eoo_b_",n,".RData")))
-  save(rs_aoo, file = here("data", "biodiversity", "output", "range_size",
-                           paste0("rs_aoo_b_",n,".RData")))
+  save(rs_eoo, file = here(dirname(here()),"data", "biodiversity", "output", "range_size",
+                           paste0("rs_eoo_b_",n,"_diff_models.RData")))
+  save(rs_aoo, file = here(dirname(here()),"data", "biodiversity", "output", "range_size",
+                           paste0("rs_aoo_b_",n,"_diff_models.RData")))
   
 }
 
@@ -659,8 +674,8 @@ eoo_b05_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b05,
                                       y = rs_eoo_b0.5, 
                                       x = species, 
                                       type = "nonparametric",
-                                      pairwise.display = "significant", # "none"
-                                      results.subtitle = T,
+                                      pairwise.display = "none", # "none"
+                                      results.subtitle = F,
                                       p.adjust.method = "holm",
                                       nboot = 200,
                                       xlab = "Species",
@@ -689,7 +704,7 @@ eoo_b075_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b075,
                                           x = species, 
                                           type = "nonparametric",
                                           pairwise.display = "none", # "none"
-                                          results.subtitle = FALSE,
+                                          results.subtitle = F,
                                           p.adjust.method = "holm",
                                           nboot = 200,
                                           xlab = "Species",
@@ -708,14 +723,15 @@ eoo_b075_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b075,
   guides(x = guide_axis(n.dodge = 2))
 
 eoo_b075_kw_stats <- ggstatsplot::extract_stats(eoo_b075_kw)$subtitle_data
-eoo_b075_ph_stats <- ggstatsplot::extract_stats(eoo_b075_kw)$pairwise_comparisons_data
+eoo_b075_ph_stats <- ggstatsplot::extract_stats(eoo_b075_kw)$pairwise_comparisons_data %>%
+  mutate(metric = "EOO") %>% mutate(beta = 0.75)
 
 aoo_b05_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b05, 
                                       y = rs_aoo_b0.5, 
                                       x = species, 
                                       type = "nonparametric",
                                       pairwise.display = "none", # "none"
-                                      results.subtitle = FALSE,
+                                      results.subtitle = F,
                                       p.adjust.method = "holm",
                                       nboot = 200,
                                       xlab = "Species",
@@ -734,15 +750,15 @@ aoo_b05_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b05,
   guides(x = guide_axis(n.dodge = 2))
 
 aoo_b05_kw_stats <- ggstatsplot::extract_stats(aoo_b05_kw)$subtitle_data
-aoo_b05_ph_stats <- ggstatsplot::extract_stats(aoo_b05_kw)$pairwise_comparisons_data
+aoo_b05_ph_stats <- ggstatsplot::extract_stats(aoo_b05_kw)$pairwise_comparisons_data %>%
+  mutate(metric = "AOO") %>% mutate(beta = 0.5)
 
 aoo_b075_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b075, 
                                            y = rs_aoo_b0.75, 
                                            x = species, 
                                            type = "nonparametric",
                                           pairwise.display = "none", # "none"
-                                          results.subtitle = FALSE,
-                                           p.adjust.method = "holm",
+                                          results.subtitle = F,
                                            nboot = 200,
                                            xlab = "Species",
                                            ylab = bquote("Area of occupancy " (km^2)),
@@ -760,8 +776,20 @@ aoo_b075_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b075,
   guides(x = guide_axis(n.dodge = 2))
 
 aoo_b075_kw_stats <- ggstatsplot::extract_stats(aoo_b075_kw)$subtitle_data
-aoo_b075_ph_stats <- ggstatsplot::extract_stats(aoo_b075_kw)$pairwise_comparisons_data
+aoo_b075_ph_stats <- ggstatsplot::extract_stats(aoo_b075_kw)$pairwise_comparisons_data %>%
+  mutate(metric = "AOO") %>% mutate(beta = 0.75)
 
+kw_stats <- as.data.frame(bind_rows(eoo_b05_kw_stats, eoo_b075_kw_stats, 
+                      aoo_b05_kw_stats, aoo_b075_kw_stats)) %>%
+  dplyr::select(-ncol(.))
+write.csv(kw_stats, file = here(dirname(here()),"data", "biodiversity", "output", "range_size", "kw_stats.csv"))
+
+ph_stats <- as.data.frame(bind_rows(eoo_b05_ph_stats, eoo_b075_ph_stats,
+                                    aoo_b05_ph_stats, aoo_b075_ph_stats)) %>%
+  dplyr::select(-9)
+write.csv(ph_stats, file = here(dirname(here()),"data", "biodiversity", "output", "range_size", "ph_stats.csv"))
+
+## Need figures made without stats
 ggpubr::ggarrange(eoo_b05_kw, aoo_b05_kw, ncol = 1, nrow = 2, align = "v")
 ggpubr::ggarrange(eoo_b075_kw, aoo_b075_kw, ncol = 1, nrow = 2, align = "v")
 
@@ -958,7 +986,8 @@ for(n in betas){
 #                   fut_pk_210026_range[[1]], fut_pk_210045_range[[1]],
 #                   fut_pk_210060_range[[1]], fut_pk_210085_range[[1]])
 # save(fut_eoo_vals, file = here("data", "biodiversity", "output", "range_size", "fut_eoo_vals.RData"))
-load(file = here("data", "biodiversity", "output", "range_size", "fut_rs_eoo_pkcomp_b_0.5.RData"))
+pkcomp_rs_eoo_b0.5 <- loadRData(file = here("data", "biodiversity", "output", "range_size", "fut_rs_eoo_pkcomp_b_0.5.RData"))
+pk_rs_eoo_b0.5 <- loadRData(file = here("data", "biodiversity", "output", "range_size", "fut_rs_eoo_pk_b_0.5.RData"))
 
 # fut_eoo_vals_0.5 <- c(fut_pk_comp_range_0.5[[1]], fut_pk_comp_205026_range_0.5[[1]],
 #                   fut_pk_comp_205045_range_0.5[[1]], fut_pk_comp_205060_range_0.5[[1]],
@@ -970,7 +999,8 @@ load(file = here("data", "biodiversity", "output", "range_size", "fut_rs_eoo_pkc
 #                   fut_pk_210026_range_0.5[[1]], fut_pk_210045_range_0.5[[1]],
 #                   fut_pk_210060_range_0.5[[1]], fut_pk_210085_range_0.5[[1]])
 # save(fut_eoo_vals_0.5, file = here("data", "biodiversity", "output", "range_size", "fut_eoo_vals_0.5.RData"))
-load(file = here("data", "biodiversity", "output", "range_size", "fut_rs_eoo_pkcomp_b_0.75.RData"))
+pkcomp_rs_eoo_b0.75 <- loadRData(file = here("data", "biodiversity", "output", "range_size", "fut_rs_eoo_pkcomp_b_0.75.RData"))
+pk_rs_eoo_b0.75 <- loadRData(file = here("data", "biodiversity", "output", "range_size", "fut_rs_eoo_pk_b_0.75.RData"))
 
 # fut_eoo_vals_0.75 <- c(fut_pk_comp_range_0.75[[1]], fut_pk_comp_205026_range_0.75[[1]],
 #                       fut_pk_comp_205045_range_0.75[[1]], fut_pk_comp_205060_range_0.75[[1]],
@@ -1028,6 +1058,9 @@ scenario <- rep(c(rep("Current",20),
                         rep("RCP 6.0",20), 
                         rep("RCP 8.5",20)),2)),2)
 
+fut_eoo_vals_0.5 <- c(pkcomp_rs_eoo_b0.5, pk_rs_eoo_b0.5)
+fut_eoo_vals_0.75 <- c(pkcomp_rs_eoo_b0.75, pk_rs_eoo_b0.75)
+
 range_df <- data.frame(species = sp,
                  year = year,
                  scenario = scenario,
@@ -1037,6 +1070,12 @@ range_df <- data.frame(species = sp,
                  AOO_0.5 = fut_aoo_vals_0.5,
                  EOO_0.75 = fut_eoo_vals_0.75,
                  AOO_0.75 = fut_aoo_vals_0.75)
+
+range_df <- data.frame(species = sp,
+                       year = year,
+                       scenario = scenario,
+                       eoo_0.5 = fut_eoo_vals_0.5,
+                       eoo_0.75 = fut_eoo_vals_0.75)
 
 ## Boxplots for supplementary information
 # EOO
@@ -1147,6 +1186,24 @@ eoo_df <- range_df %>%
   distinct(eoo_mean, .keep_all = T) %>%
   ungroup()
 
+eoo_0.5_df <- range_df %>% 
+  group_by(species , year, scenario) %>%
+  mutate(eoo_mean = mean(eoo_0.5)) %>%
+  mutate(eoo_med = median(eoo_0.5)) %>%
+  mutate(eoo_sd = sd(eoo_0.5)) %>%
+  dplyr::select(-eoo_0.75) %>%
+  distinct(eoo_mean, .keep_all = T) %>%
+  ungroup()
+
+eoo_0.75_df <- range_df %>% 
+  group_by(species , year, scenario) %>%
+  mutate(eoo_mean = mean(eoo_0.75)) %>%
+  mutate(eoo_med = median(eoo_0.75)) %>%
+  mutate(eoo_sd = sd(eoo_0.75)) %>%
+  dplyr::select(-eoo_0.5) %>%
+  distinct(eoo_mean, .keep_all = T) %>%
+  ungroup()
+
 #s.l. to 2050
 mean(c(abs(38521081 - 53077517),abs(38521081 - 53664054),abs(38521081 - 48997523),
      abs(38521081 - 52326581)))
@@ -1167,14 +1224,14 @@ abs(51943832-51364727) #579 105
 #s.s. 2050 to 2100 rcp 2.6
 abs(53077517-43449857) #8 493 975
 
-nr1 <- eoo_df %>% slice(rep(1, each = 3))
-eoo_df <- eoo_df %>% add_row(nr1, .before = 2)
-nr2 <- eoo_df %>% slice(rep(13, each = 3))
-eoo_df <- eoo_df %>% add_row(nr2, .before = 14)
-eoo_df <- eoo_df %>%
+nr1 <- eoo_0.5_df %>% slice(rep(1, each = 3))
+eoo_0.5_df <- eoo_0.5_df %>% add_row(nr1, .before = 2)
+nr2 <- eoo_0.5_df %>% slice(rep(13, each = 3))
+eoo_0.5_df <- eoo_0.5_df %>% add_row(nr2, .before = 14)
+eoo_0.5_df <- eoo_0.5_df %>%
   mutate(scenario = rep(c("RCP 2.6", "RCP 4.5", "RCP 6.0", "RCP 8.5"),6))
 
-eoo_plot_MTP <- ggplot(eoo_df, aes(x = as.numeric(year), y = eoo_mean))+
+eoo_plot_0.5 <- ggplot(eoo_0.5_df, aes(x = as.numeric(year), y = eoo_mean))+
   geom_point(aes(col = scenario, pch = species), size = 2) +
   geom_line(aes(col = scenario, linetype = species), linewidth = 1) +
   theme_bw() +
@@ -1201,14 +1258,14 @@ eoo_df <- range_df %>%
   distinct(eoo_mean, .keep_all = T) %>%
   ungroup()
 
-nr1 <- eoo_df %>% slice(rep(1, each = 3))
-eoo_df <- eoo_df %>% add_row(nr1, .before = 2)
-nr2 <- eoo_df %>% slice(rep(13, each = 3))
-eoo_df <- eoo_df %>% add_row(nr2, .before = 14)
-eoo_df <- eoo_df %>%
+nr1 <- eoo_0.75_df %>% slice(rep(1, each = 3))
+eoo_0.75_df <- eoo_0.75_df %>% add_row(nr1, .before = 2)
+nr2 <- eoo_0.75_df %>% slice(rep(13, each = 3))
+eoo_0.75_df <- eoo_0.75_df %>% add_row(nr2, .before = 14)
+eoo_0.75_df <- eoo_0.75_df %>%
   mutate(scenario = rep(c("RCP 2.6", "RCP 4.5", "RCP 6.0", "RCP 8.5"),6))
 
-eoo_plot_0.5 <- ggplot(eoo_df, aes(x = as.numeric(year), y = eoo_mean))+
+eoo_plot_0.75 <- ggplot(eoo_0.75_df, aes(x = as.numeric(year), y = eoo_mean))+
   geom_point(aes(col = scenario, pch = species), size = 2) +
   geom_line(aes(col = scenario, linetype = species), linewidth = 1) +
   theme_bw() +
