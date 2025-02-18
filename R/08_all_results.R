@@ -989,6 +989,9 @@ for(n in betas){
 pkcomp_rs_eoo_b0.5 <- loadRData(file = here("data", "biodiversity", "output", "range_size", "fut_rs_eoo_pkcomp_b_0.5.RData"))
 pk_rs_eoo_b0.5 <- loadRData(file = here("data", "biodiversity", "output", "range_size", "fut_rs_eoo_pk_b_0.5.RData"))
 
+pkcomp_rs_aoo_b0.5 <- loadRData(file = here("data", "biodiversity", "output", "range_size", "fut_rs_aoo_pkcomp_b_0.5.RData"))
+pk_rs_aoo_b0.5 <- loadRData(file = here("data", "biodiversity", "output", "range_size", "fut_rs_aoo_pk_b_0.5.RData"))
+
 # fut_eoo_vals_0.5 <- c(fut_pk_comp_range_0.5[[1]], fut_pk_comp_205026_range_0.5[[1]],
 #                   fut_pk_comp_205045_range_0.5[[1]], fut_pk_comp_205060_range_0.5[[1]],
 #                   fut_pk_comp_205085_range_0.5[[1]], fut_pk_comp_210026_range_0.5[[1]],
@@ -1002,6 +1005,9 @@ pk_rs_eoo_b0.5 <- loadRData(file = here("data", "biodiversity", "output", "range
 pkcomp_rs_eoo_b0.75 <- loadRData(file = here("data", "biodiversity", "output", "range_size", "fut_rs_eoo_pkcomp_b_0.75.RData"))
 pk_rs_eoo_b0.75 <- loadRData(file = here("data", "biodiversity", "output", "range_size", "fut_rs_eoo_pk_b_0.75.RData"))
 
+pkcomp_rs_aoo_b0.75 <- loadRData(file = here("data", "biodiversity", "output", "range_size", "fut_rs_aoo_pkcomp_b_0.75.RData"))
+pk_rs_aoo_b0.75 <- loadRData(file = here("data", "biodiversity", "output", "range_size", "fut_rs_aoo_pk_b_0.75.RData"))
+
 # fut_eoo_vals_0.75 <- c(fut_pk_comp_range_0.75[[1]], fut_pk_comp_205026_range_0.75[[1]],
 #                       fut_pk_comp_205045_range_0.75[[1]], fut_pk_comp_205060_range_0.75[[1]],
 #                       fut_pk_comp_205085_range_0.75[[1]], fut_pk_comp_210026_range_0.75[[1]],
@@ -1014,41 +1020,41 @@ pk_rs_eoo_b0.75 <- loadRData(file = here("data", "biodiversity", "output", "rang
 # save(fut_eoo_vals_0.75, file = here("data", "biodiversity", "output", "range_size", "fut_eoo_vals_0.75.RData"))
 #load(file = here("data", "biodiversity", "output", "range_size", "fut_eoo_vals_0.75.RData"))
 
-fut_aoo_vals <- c(fut_pk_comp_range[[2]], fut_pk_comp_205026_range[[2]],
-                  fut_pk_comp_205045_range[[2]], fut_pk_comp_205060_range[[2]],
-                  fut_pk_comp_205085_range[[2]], fut_pk_comp_210026_range[[2]],
-                  fut_pk_comp_210045_range[[2]], fut_pk_comp_210060_range[[2]],
-                  fut_pk_comp_210085_range[[2]], fut_pk_range[[2]],
-                  fut_pk_205026_range[[2]], fut_pk_205045_range[[2]],
-                  fut_pk_205060_range[[2]], fut_pk_205085_range[[2]],
-                  fut_pk_210026_range[[2]], fut_pk_210045_range[[2]],
-                  fut_pk_210060_range[[2]], fut_pk_210085_range[[2]])
-save(fut_aoo_vals, file = here("data", "biodiversity", "output", "range_size", "fut_aoo_vals.RData"))
-#load(file = here("data", "biodiversity", "output", "range_size", "fut_aoo_vals.RData"))
-
-fut_aoo_vals_0.5 <- c(fut_pk_comp_range_0.5[[2]], fut_pk_comp_205026_range_0.5[[2]],
-                      fut_pk_comp_205045_range_0.5[[2]], fut_pk_comp_205060_range_0.5[[2]],
-                      fut_pk_comp_205085_range_0.5[[2]], fut_pk_comp_210026_range_0.5[[2]],
-                      fut_pk_comp_210045_range_0.5[[2]], fut_pk_comp_210060_range_0.5[[2]],
-                      fut_pk_comp_210085_range_0.5[[2]], fut_pk_range_0.5[[2]],
-                      fut_pk_205026_range_0.5[[2]], fut_pk_205045_range_0.5[[2]],
-                      fut_pk_205060_range_0.5[[2]], fut_pk_205085_range_0.5[[2]],
-                      fut_pk_210026_range_0.5[[2]], fut_pk_210045_range_0.5[[2]],
-                      fut_pk_210060_range_0.5[[2]], fut_pk_210085_range_0.5[[2]])
-save(fut_aoo_vals_0.5, file = here("data", "biodiversity", "output", "range_size", "fut_aoo_vals_0.5.RData"))
-#load(file = here("data", "biodiversity", "output", "range_size", "fut_aoo_vals_0.5.RData"))
-
-fut_aoo_vals_0.75 <- c(fut_pk_comp_range_0.75[[2]], fut_pk_comp_205026_range_0.75[[2]],
-                       fut_pk_comp_205045_range_0.75[[2]], fut_pk_comp_205060_range_0.75[[2]],
-                       fut_pk_comp_205085_range_0.75[[2]], fut_pk_comp_210026_range_0.75[[2]],
-                       fut_pk_comp_210045_range_0.75[[2]], fut_pk_comp_210060_range_0.75[[2]],
-                       fut_pk_comp_210085_range_0.75[[2]], fut_pk_range_0.75[[2]],
-                       fut_pk_205026_range_0.75[[2]], fut_pk_205045_range_0.75[[2]],
-                       fut_pk_205060_range_0.75[[2]], fut_pk_205085_range_0.75[[2]],
-                       fut_pk_210026_range_0.75[[2]], fut_pk_210045_range_0.75[[2]],
-                       fut_pk_210060_range_0.75[[2]], fut_pk_210085_range_0.75[[2]])
-save(fut_aoo_vals_0.75, file = here("data", "biodiversity", "output", "range_size", "fut_aoo_vals_0.75.RData"))
-#load(file = here("data", "biodiversity", "output", "range_size", "fut_aoo_vals_0.75.RData"))
+# fut_aoo_vals <- c(fut_pk_comp_range[[2]], fut_pk_comp_205026_range[[2]],
+#                   fut_pk_comp_205045_range[[2]], fut_pk_comp_205060_range[[2]],
+#                   fut_pk_comp_205085_range[[2]], fut_pk_comp_210026_range[[2]],
+#                   fut_pk_comp_210045_range[[2]], fut_pk_comp_210060_range[[2]],
+#                   fut_pk_comp_210085_range[[2]], fut_pk_range[[2]],
+#                   fut_pk_205026_range[[2]], fut_pk_205045_range[[2]],
+#                   fut_pk_205060_range[[2]], fut_pk_205085_range[[2]],
+#                   fut_pk_210026_range[[2]], fut_pk_210045_range[[2]],
+#                   fut_pk_210060_range[[2]], fut_pk_210085_range[[2]])
+# save(fut_aoo_vals, file = here("data", "biodiversity", "output", "range_size", "fut_aoo_vals.RData"))
+# #load(file = here("data", "biodiversity", "output", "range_size", "fut_aoo_vals.RData"))
+# 
+# fut_aoo_vals_0.5 <- c(fut_pk_comp_range_0.5[[2]], fut_pk_comp_205026_range_0.5[[2]],
+#                       fut_pk_comp_205045_range_0.5[[2]], fut_pk_comp_205060_range_0.5[[2]],
+#                       fut_pk_comp_205085_range_0.5[[2]], fut_pk_comp_210026_range_0.5[[2]],
+#                       fut_pk_comp_210045_range_0.5[[2]], fut_pk_comp_210060_range_0.5[[2]],
+#                       fut_pk_comp_210085_range_0.5[[2]], fut_pk_range_0.5[[2]],
+#                       fut_pk_205026_range_0.5[[2]], fut_pk_205045_range_0.5[[2]],
+#                       fut_pk_205060_range_0.5[[2]], fut_pk_205085_range_0.5[[2]],
+#                       fut_pk_210026_range_0.5[[2]], fut_pk_210045_range_0.5[[2]],
+#                       fut_pk_210060_range_0.5[[2]], fut_pk_210085_range_0.5[[2]])
+# save(fut_aoo_vals_0.5, file = here("data", "biodiversity", "output", "range_size", "fut_aoo_vals_0.5.RData"))
+# #load(file = here("data", "biodiversity", "output", "range_size", "fut_aoo_vals_0.5.RData"))
+# 
+# fut_aoo_vals_0.75 <- c(fut_pk_comp_range_0.75[[2]], fut_pk_comp_205026_range_0.75[[2]],
+#                        fut_pk_comp_205045_range_0.75[[2]], fut_pk_comp_205060_range_0.75[[2]],
+#                        fut_pk_comp_205085_range_0.75[[2]], fut_pk_comp_210026_range_0.75[[2]],
+#                        fut_pk_comp_210045_range_0.75[[2]], fut_pk_comp_210060_range_0.75[[2]],
+#                        fut_pk_comp_210085_range_0.75[[2]], fut_pk_range_0.75[[2]],
+#                        fut_pk_205026_range_0.75[[2]], fut_pk_205045_range_0.75[[2]],
+#                        fut_pk_205060_range_0.75[[2]], fut_pk_205085_range_0.75[[2]],
+#                        fut_pk_210026_range_0.75[[2]], fut_pk_210045_range_0.75[[2]],
+#                        fut_pk_210060_range_0.75[[2]], fut_pk_210085_range_0.75[[2]])
+# save(fut_aoo_vals_0.75, file = here("data", "biodiversity", "output", "range_size", "fut_aoo_vals_0.75.RData"))
+# #load(file = here("data", "biodiversity", "output", "range_size", "fut_aoo_vals_0.75.RData"))
 
 sp <- c(rep("P. kerguelensis (s.l.)", 180), rep("P. kerguelensis", 180))
 year <- rep(c(rep("2023",20), rep("2050", 80), rep("2100", 80)),2)
@@ -1060,39 +1066,43 @@ scenario <- rep(c(rep("Current",20),
 
 fut_eoo_vals_0.5 <- c(pkcomp_rs_eoo_b0.5, pk_rs_eoo_b0.5)
 fut_eoo_vals_0.75 <- c(pkcomp_rs_eoo_b0.75, pk_rs_eoo_b0.75)
+fut_aoo_vals_0.5 <- c(pkcomp_rs_aoo_b0.5, pk_rs_aoo_b0.5)
+fut_aoo_vals_0.75 <- c(pkcomp_rs_aoo_b0.75, pk_rs_aoo_b0.75)
 
-range_df <- data.frame(species = sp,
-                 year = year,
-                 scenario = scenario,
-                 EOO_mtp = fut_eoo_vals,
-                 AOO_mtp = fut_aoo_vals,
-                 EOO_0.5 = fut_eoo_vals_0.5,
-                 AOO_0.5 = fut_aoo_vals_0.5,
-                 EOO_0.75 = fut_eoo_vals_0.75,
-                 AOO_0.75 = fut_aoo_vals_0.75)
+# range_df <- data.frame(species = sp,
+#                  year = year,
+#                  scenario = scenario,
+#                  EOO_mtp = fut_eoo_vals,
+#                  AOO_mtp = fut_aoo_vals,
+#                  EOO_0.5 = fut_eoo_vals_0.5,
+#                  AOO_0.5 = fut_aoo_vals_0.5,
+#                  EOO_0.75 = fut_eoo_vals_0.75,
+#                  AOO_0.75 = fut_aoo_vals_0.75)
 
 range_df <- data.frame(species = sp,
                        year = year,
                        scenario = scenario,
                        eoo_0.5 = fut_eoo_vals_0.5,
-                       eoo_0.75 = fut_eoo_vals_0.75)
+                       eoo_0.75 = fut_eoo_vals_0.75,
+                       aoo_0.5 = fut_aoo_vals_0.5,
+                       aoo_0.75 = fut_aoo_vals_0.75)
 
 ## Boxplots for supplementary information
 # EOO
-eoo_mtp_box <- ggplot(range_df, aes(y = EOO_mtp, x = scenario, fill = species)) +
-  geom_boxplot() +
-  scale_fill_carto_d(name = "Species", labels = c("P. kerguelensis (s.s.)", "P. kerguelensis (s.l.)")) +
-  facet_wrap(~year) +
-  theme_bw() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 0.5),
-        legend.text = element_text(face = "italic", size = 16),
-        legend.title = element_text(size = 18),
-        axis.text = element_text(size = 16),
-        axis.title = element_text(size = 18),
-        strip.text = element_text(size = 16)) +
-  xlab("Scenario") +
-  ylab(bquote("EOO " (km^2))) +
-  scale_y_continuous(labels = expSup)
+# eoo_mtp_box <- ggplot(range_df, aes(y = EOO_mtp, x = scenario, fill = species)) +
+#   geom_boxplot() +
+#   scale_fill_carto_d(name = "Species", labels = c("P. kerguelensis (s.s.)", "P. kerguelensis (s.l.)")) +
+#   facet_wrap(~year) +
+#   theme_bw() +
+#   theme(axis.text.x = element_text(angle = 45, vjust = 0.5),
+#         legend.text = element_text(face = "italic", size = 16),
+#         legend.title = element_text(size = 18),
+#         axis.text = element_text(size = 16),
+#         axis.title = element_text(size = 18),
+#         strip.text = element_text(size = 16)) +
+#   xlab("Scenario") +
+#   ylab(bquote("EOO " (km^2))) +
+#   scale_y_continuous(labels = expSup)
 
 eoo_0.5_box <- ggplot(range_df, aes(y = EOO_0.5, x = scenario, fill = species)) +
   geom_boxplot() +
@@ -1129,19 +1139,19 @@ ggpubr::ggarrange(eoo_mtp_box, eoo_0.5_box, eoo_0.75_box,
                   ncol = 1, nrow = 3, common.legend = T)
 
 # AOO
-aoo_mtp_box <- ggplot(range_df, aes(y = AOO_mtp, x = scenario, fill = species)) +
-  geom_boxplot() +
-  scale_fill_carto_d(name = "Species", labels = c("P. kerguelensis (s.s.)", "P. kerguelensis (s.l.)")) +
-  facet_wrap(~year) +
-  theme_bw() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 0.5),
-        legend.text = element_text(face = "italic", size = 16),
-        legend.title = element_text(size = 18),
-        axis.text = element_text(size = 16),
-        axis.title = element_text(size = 18),
-        strip.text = element_text(size = 16)) +
-  xlab("Scenario") +
-  ylab(bquote("AOO " (km^2)))
+# aoo_mtp_box <- ggplot(range_df, aes(y = AOO_mtp, x = scenario, fill = species)) +
+#   geom_boxplot() +
+#   scale_fill_carto_d(name = "Species", labels = c("P. kerguelensis (s.s.)", "P. kerguelensis (s.l.)")) +
+#   facet_wrap(~year) +
+#   theme_bw() +
+#   theme(axis.text.x = element_text(angle = 45, vjust = 0.5),
+#         legend.text = element_text(face = "italic", size = 16),
+#         legend.title = element_text(size = 18),
+#         axis.text = element_text(size = 16),
+#         axis.title = element_text(size = 18),
+#         strip.text = element_text(size = 16)) +
+#   xlab("Scenario") +
+#   ylab(bquote("AOO " (km^2)))
 
 aoo_0.5_box <- ggplot(range_df, aes(y = AOO_0.5, x = scenario, fill = species)) +
   geom_boxplot() +
@@ -1176,16 +1186,6 @@ ggpubr::ggarrange(aoo_mtp_box, aoo_0.5_box, aoo_0.75_box,
                   ncol = 1, nrow = 3, common.legend = T, align = "v")
 
 # Line plots using median/mean
-## MTP
-eoo_df <- range_df %>% 
-  group_by(species , year, scenario) %>%
-  mutate(eoo_mean = mean(EOO_mtp)) %>%
-  mutate(eoo_med = median(EOO_mtp)) %>%
-  mutate(eoo_sd = sd(EOO_mtp)) %>%
-  dplyr::select(-c(EOO_mtp, EOO_0.5, EOO_0.75,AOO_mtp, AOO_0.5, AOO_0.75)) %>%
-  distinct(eoo_mean, .keep_all = T) %>%
-  ungroup()
-
 eoo_0.5_df <- range_df %>% 
   group_by(species , year, scenario) %>%
   mutate(eoo_mean = mean(eoo_0.5)) %>%
@@ -1204,25 +1204,25 @@ eoo_0.75_df <- range_df %>%
   distinct(eoo_mean, .keep_all = T) %>%
   ungroup()
 
-#s.l. to 2050
-mean(c(abs(38521081 - 53077517),abs(38521081 - 53664054),abs(38521081 - 48997523),
-     abs(38521081 - 52326581)))
-
-sqrt(var(c(abs(38521081 - 53077517),abs(38521081 - 53664054),abs(38521081 - 48997523),
-       abs(38521081 - 52326581))))
-
-#s.s. to 2050
-mean(c(abs(30536741 - 51943832),abs(30536741 - 52206623),abs(30536741 - 44388853),
-       abs(30536741 - 46536201)))
-
-sqrt(var(c(abs(30536741 - 51943832),abs(30536741 - 52206623),abs(30536741 - 44388853),
-       abs(30536741 - 46536201))))
-
-#s.s. 2050 to 2100 rcp 2.6
-abs(51943832-51364727) #579 105
-
-#s.s. 2050 to 2100 rcp 2.6
-abs(53077517-43449857) #8 493 975
+# #s.l. to 2050
+# mean(c(abs(38521081 - 53077517),abs(38521081 - 53664054),abs(38521081 - 48997523),
+#      abs(38521081 - 52326581)))
+# 
+# sqrt(var(c(abs(38521081 - 53077517),abs(38521081 - 53664054),abs(38521081 - 48997523),
+#        abs(38521081 - 52326581))))
+# 
+# #s.s. to 2050
+# mean(c(abs(30536741 - 51943832),abs(30536741 - 52206623),abs(30536741 - 44388853),
+#        abs(30536741 - 46536201)))
+# 
+# sqrt(var(c(abs(30536741 - 51943832),abs(30536741 - 52206623),abs(30536741 - 44388853),
+#        abs(30536741 - 46536201))))
+# 
+# #s.s. 2050 to 2100 rcp 2.6
+# abs(51943832-51364727) #579 105
+# 
+# #s.s. 2050 to 2100 rcp 2.6
+# abs(53077517-43449857) #8 493 975
 
 nr1 <- eoo_0.5_df %>% slice(rep(1, each = 3))
 eoo_0.5_df <- eoo_0.5_df %>% add_row(nr1, .before = 2)
