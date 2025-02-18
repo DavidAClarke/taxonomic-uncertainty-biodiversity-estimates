@@ -1104,7 +1104,7 @@ range_df <- data.frame(species = sp,
 #   ylab(bquote("EOO " (km^2))) +
 #   scale_y_continuous(labels = expSup)
 
-eoo_0.5_box <- ggplot(range_df, aes(y = EOO_0.5, x = scenario, fill = species)) +
+eoo_0.5_box <- ggplot(range_df, aes(y = eoo_0.5, x = scenario, fill = species)) +
   geom_boxplot() +
   scale_fill_carto_d(name = "Species", labels = c("P. kerguelensis (s.s.)", "P. kerguelensis (s.l.)")) +
   facet_wrap(~year) +
@@ -1119,7 +1119,7 @@ eoo_0.5_box <- ggplot(range_df, aes(y = EOO_0.5, x = scenario, fill = species)) 
   ylab(bquote("EOO " (km^2))) +
   scale_y_continuous(labels = expSup)
 
-eoo_0.75_box <- ggplot(range_df, aes(y = EOO_0.75, x = scenario, fill = species)) +
+eoo_0.75_box <- ggplot(range_df, aes(y = eoo_0.75, x = scenario, fill = species)) +
   geom_boxplot() +
   scale_fill_carto_d(name = "Species", labels = c("P. kerguelensis (s.s.)", "P. kerguelensis (s.l.)")) +
   facet_wrap(~year) +
@@ -1134,9 +1134,9 @@ eoo_0.75_box <- ggplot(range_df, aes(y = EOO_0.75, x = scenario, fill = species)
   ylab(bquote("EOO " (km^2))) +
   scale_y_continuous(labels = expSup)
 
-ggpubr::ggarrange(eoo_mtp_box, eoo_0.5_box, eoo_0.75_box, 
-                  labels = c("A", "B", "C"),
-                  ncol = 1, nrow = 3, common.legend = T)
+ggpubr::ggarrange(eoo_0.5_box, eoo_0.75_box, 
+                  labels = c("A", "B"),
+                  ncol = 1, nrow = 2, common.legend = T)
 
 # AOO
 # aoo_mtp_box <- ggplot(range_df, aes(y = AOO_mtp, x = scenario, fill = species)) +
@@ -1153,7 +1153,7 @@ ggpubr::ggarrange(eoo_mtp_box, eoo_0.5_box, eoo_0.75_box,
 #   xlab("Scenario") +
 #   ylab(bquote("AOO " (km^2)))
 
-aoo_0.5_box <- ggplot(range_df, aes(y = AOO_0.5, x = scenario, fill = species)) +
+aoo_0.5_box <- ggplot(range_df, aes(y = aoo_0.5, x = scenario, fill = species)) +
   geom_boxplot() +
   scale_fill_carto_d(name = "Species", labels = c("P. kerguelensis (s.s.)", "P. kerguelensis (s.l.)")) +
   facet_wrap(~year) +
@@ -1167,7 +1167,7 @@ aoo_0.5_box <- ggplot(range_df, aes(y = AOO_0.5, x = scenario, fill = species)) 
   xlab("Scenario") +
   ylab(bquote("AOO " (km^2)))
 
-aoo_0.75_box <- ggplot(range_df, aes(y = AOO_0.75, x = scenario, fill = species)) +
+aoo_0.75_box <- ggplot(range_df, aes(y = aoo_0.75, x = scenario, fill = species)) +
   geom_boxplot() +
   scale_fill_carto_d(name = "Species", labels = c("P. kerguelensis (s.s.)", "P. kerguelensis (s.l.)")) +
   facet_wrap(~year) +
@@ -1181,9 +1181,9 @@ aoo_0.75_box <- ggplot(range_df, aes(y = AOO_0.75, x = scenario, fill = species)
   xlab("Scenario") +
   ylab(bquote("AOO " (km^2)))
 
-ggpubr::ggarrange(aoo_mtp_box, aoo_0.5_box, aoo_0.75_box, 
-                  labels = c("A", "B", "C"),
-                  ncol = 1, nrow = 3, common.legend = T, align = "v")
+ggpubr::ggarrange(aoo_0.5_box, aoo_0.75_box, 
+                  labels = c("A", "B"),
+                  ncol = 1, nrow = 2, common.legend = T, align = "v")
 
 # Line plots using median/mean
 eoo_0.5_df <- range_df %>% 
@@ -1191,7 +1191,7 @@ eoo_0.5_df <- range_df %>%
   mutate(eoo_mean = mean(eoo_0.5)) %>%
   mutate(eoo_med = median(eoo_0.5)) %>%
   mutate(eoo_sd = sd(eoo_0.5)) %>%
-  dplyr::select(-eoo_0.75) %>%
+  dplyr::select(-c(eoo_0.75, aoo_0.5, aoo_0.75)) %>%
   distinct(eoo_mean, .keep_all = T) %>%
   ungroup()
 
@@ -1200,7 +1200,7 @@ eoo_0.75_df <- range_df %>%
   mutate(eoo_mean = mean(eoo_0.75)) %>%
   mutate(eoo_med = median(eoo_0.75)) %>%
   mutate(eoo_sd = sd(eoo_0.75)) %>%
-  dplyr::select(-eoo_0.5) %>%
+  dplyr::select(-eoo_0.5, aoo_0.5, aoo_0.75) %>%
   distinct(eoo_mean, .keep_all = T) %>%
   ungroup()
 
@@ -1248,15 +1248,6 @@ eoo_plot_0.5 <- ggplot(eoo_0.5_df, aes(x = as.numeric(year), y = eoo_mean))+
   xlab("Year") +
   ylab(bquote("Mean EOO " (km^2)))
 
-## 0.5
-eoo_df <- range_df %>% 
-  group_by(species , year, scenario) %>%
-  mutate(eoo_mean = mean(EOO_0.5)) %>%
-  mutate(eoo_med = median(EOO_0.5)) %>%
-  mutate(eoo_sd = sd(EOO_0.5)) %>%
-  dplyr::select(-c(EOO_mtp, EOO_0.5, EOO_0.75,AOO_mtp, AOO_0.5, AOO_0.75)) %>%
-  distinct(eoo_mean, .keep_all = T) %>%
-  ungroup()
 
 nr1 <- eoo_0.75_df %>% slice(rep(1, each = 3))
 eoo_0.75_df <- eoo_0.75_df %>% add_row(nr1, .before = 2)
@@ -1282,51 +1273,17 @@ eoo_plot_0.75 <- ggplot(eoo_0.75_df, aes(x = as.numeric(year), y = eoo_mean))+
   xlab("Year") +
   ylab(bquote("Mean EOO " (km^2)))
 
-## 0.75
-eoo_df <- range_df %>% 
-  group_by(species , year, scenario) %>%
-  mutate(eoo_mean = mean(EOO_0.75)) %>%
-  mutate(eoo_med = median(EOO_0.75)) %>%
-  mutate(eoo_sd = sd(EOO_0.75)) %>%
-  dplyr::select(-c(EOO_mtp, EOO_0.5, EOO_0.75,AOO_mtp, AOO_0.5, AOO_0.75)) %>%
-  distinct(eoo_mean, .keep_all = T) %>%
-  ungroup()
-
-nr1 <- eoo_df %>% slice(rep(1, each = 3))
-eoo_df <- eoo_df %>% add_row(nr1, .before = 2)
-nr2 <- eoo_df %>% slice(rep(13, each = 3))
-eoo_df <- eoo_df %>% add_row(nr2, .before = 14)
-eoo_df <- eoo_df %>%
-  mutate(scenario = rep(c("RCP 2.6", "RCP 4.5", "RCP 6.0", "RCP 8.5"),6))
-
-eoo_plot_0.75 <- ggplot(eoo_df, aes(x = as.numeric(year), y = eoo_mean))+
-  geom_point(aes(col = scenario, pch = species), size = 2) +
-  geom_line(aes(col = scenario, linetype = species), linewidth = 1) +
-  theme_bw() +
-  scale_color_manual(values = rev(PNWColors::pnw_palette("Moth", 4, type = "discrete"))) +
-  scale_y_continuous(labels = expSup) +
-  theme(legend.text = element_text(size = 12),
-        legend.title = element_text(size = 14),
-        axis.text = element_text(size = 14),
-        axis.title = element_text(size = 16),
-        panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(),
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black")) +
-  xlab("Year") +
-  ylab(bquote("Mean EOO " (km^2)))
-
 # ggpubr::ggarrange(eoo_plot_MTP, eoo_plot_0.5, eoo_plot_0.75,
 #                   labels = c("A", "B", "C"),
 #                   ncol = 3, nrow = 1, common.legend = T)
 
 
-aoo_df <- range_df %>% 
+aoo_0.5_df <- range_df %>% 
   group_by(species , year, scenario) %>%
-  mutate(aoo_mean = mean(AOO_mtp)) %>%
-  mutate(aoo_med = median(AOO_mtp)) %>%
-  mutate(aoo_sd = sd(AOO_mtp)) %>%
-  dplyr::select(-c(EOO_mtp, EOO_0.5, EOO_0.75,AOO_mtp, AOO_0.5, AOO_0.75)) %>%
+  mutate(aoo_mean = mean(aoo_0.5)) %>%
+  mutate(aoo_med = median(aoo_0.5)) %>%
+  mutate(aoo_sd = sd(aoo_0.5)) %>%
+  dplyr::select(-c(eoo_0.5, eoo_0.75, aoo_0.75)) %>%
   distinct(aoo_mean, .keep_all = T) %>%
   ungroup()
 
