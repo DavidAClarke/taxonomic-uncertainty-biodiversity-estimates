@@ -458,12 +458,12 @@ prep_fut_lyrs <- function(files, species){
   nms <- c("for_fut", "2050RCP26", "2050RCP45", "2050RCP60", "2050RCP85",
            "2100RCP26", "2100RCP45","2100RCP60","2100RCP85")
   
-  spec_files <- fut_lyrs[str_detect(fut_lyrs,species)]
+  spec_files <- files[str_detect(files,species)]
   
   for(i in nms){
     
     ind <- which(nms == i)
-    ff <- fut_pk_comp[str_detect(fut_pk_comp,i)]
+    ff <- spec_files[str_detect(spec_files,i)]
     ll[[ind]] <- rast(ff)
     
   }
