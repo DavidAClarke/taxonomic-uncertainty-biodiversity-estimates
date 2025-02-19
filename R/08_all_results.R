@@ -442,6 +442,16 @@ rs_aoo_b0.75 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "o
                                       paste0("rs_aoo_b_",0.75,".RData")))
 
 
+## From different models
+rs_eoo_b0.5 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size",
+                                     "rs_eoo_b_0.5diff_models.RData"))
+rs_eoo_b0.75 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size",
+                                      "rs_eoo_b_0.75diff_models.RData"))
+rs_aoo_b0.5 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size",
+                                     "rs_aoo_b_0.5diff_models.RData"))
+rs_aoo_b0.75 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size",
+                                      "rs_aoo_b_0.75diff_models.RData"))
+
 # ## Create range rasters
 # pk_comp_bin <- range_rast(bio_data, "Promachocrinus kerguelensis", 
 #                           sdm_list[[1]], status = "comp", bin_cut_num = 1)
@@ -674,8 +684,8 @@ eoo_b05_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b05,
                                       y = rs_eoo_b0.5, 
                                       x = species, 
                                       type = "nonparametric",
-                                      pairwise.display = "none", # "none"
-                                      results.subtitle = F,
+                                      pairwise.display = "significant", # "none"
+                                      results.subtitle = T,
                                       p.adjust.method = "holm",
                                       nboot = 200,
                                       xlab = "Species",
@@ -703,8 +713,8 @@ eoo_b075_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b075,
                                           y = rs_eoo_b0.75, 
                                           x = species, 
                                           type = "nonparametric",
-                                          pairwise.display = "none", # "none"
-                                          results.subtitle = F,
+                                          pairwise.display = "significant", # "none"
+                                          results.subtitle = T,
                                           p.adjust.method = "holm",
                                           nboot = 200,
                                           xlab = "Species",
@@ -730,8 +740,8 @@ aoo_b05_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b05,
                                       y = rs_aoo_b0.5, 
                                       x = species, 
                                       type = "nonparametric",
-                                      pairwise.display = "none", # "none"
-                                      results.subtitle = F,
+                                      pairwise.display = "significant", # "none"
+                                      results.subtitle = T,
                                       p.adjust.method = "holm",
                                       nboot = 200,
                                       xlab = "Species",
@@ -757,8 +767,8 @@ aoo_b075_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b075,
                                            y = rs_aoo_b0.75, 
                                            x = species, 
                                            type = "nonparametric",
-                                          pairwise.display = "none", # "none"
-                                          results.subtitle = F,
+                                          pairwise.display = "significant", # "none"
+                                          results.subtitle = T,
                                            nboot = 200,
                                            xlab = "Species",
                                            ylab = bquote("Area of occupancy " (km^2)),
@@ -782,12 +792,16 @@ aoo_b075_ph_stats <- ggstatsplot::extract_stats(aoo_b075_kw)$pairwise_comparison
 kw_stats <- as.data.frame(bind_rows(eoo_b05_kw_stats, eoo_b075_kw_stats, 
                       aoo_b05_kw_stats, aoo_b075_kw_stats)) %>%
   dplyr::select(-ncol(.))
-write.csv(kw_stats, file = here(dirname(here()),"data", "biodiversity", "output", "range_size", "kw_stats.csv"))
+
+write.csv(kw_stats, file = here(dirname(here()),"data", "biodiversity", 
+                                "output", "range_size", "kw_stats.csv"))
 
 ph_stats <- as.data.frame(bind_rows(eoo_b05_ph_stats, eoo_b075_ph_stats,
                                     aoo_b05_ph_stats, aoo_b075_ph_stats)) %>%
   dplyr::select(-9)
-write.csv(ph_stats, file = here(dirname(here()),"data", "biodiversity", "output", "range_size", "ph_stats.csv"))
+
+write.csv(ph_stats, file = here(dirname(here()),"data", "biodiversity", 
+                                "output", "range_size", "ph_stats.csv"))
 
 ## Need figures made without stats
 ggpubr::ggarrange(eoo_b05_kw, aoo_b05_kw, ncol = 1, nrow = 2, align = "v")
@@ -1287,14 +1301,14 @@ aoo_0.5_df <- range_df %>%
   distinct(aoo_mean, .keep_all = T) %>%
   ungroup()
 
-nr1 <- aoo_df %>% slice(rep(1, each = 3))
-aoo_df <- aoo_df %>% add_row(nr1, .before = 2)
-nr2 <- aoo_df %>% slice(rep(13, each = 3))
-aoo_df <- aoo_df %>% add_row(nr2, .before = 14)
-aoo_df <- aoo_df %>%
+nr1 <- aoo_0.5_df %>% slice(rep(1, each = 3))
+aoo_0.5_df <- aoo_0.5_df %>% add_row(nr1, .before = 2)
+nr2 <- aoo_0.5_df %>% slice(rep(13, each = 3))
+aoo_0.5_df <- aoo_0.5_df %>% add_row(nr2, .before = 14)
+aoo_0.5_df <- aoo_0.5_df %>%
   mutate(scenario = rep(c("RCP 2.6", "RCP 4.5", "RCP 6.0", "RCP 8.5"),6))
 
-aoo_plot_MTP <- ggplot(aoo_df, aes(x = as.numeric(year), y = aoo_mean))+
+aoo_plot_0.5 <- ggplot(aoo_0.5_df, aes(x = as.numeric(year), y = aoo_mean))+
   geom_point(aes(col = scenario, pch = species), size = 2) +
   geom_line(aes(col = scenario, linetype = species), linewidth = 1) +
   scale_color_manual(values = rev(PNWColors::pnw_palette("Moth", 4, type = "discrete"))) +
@@ -1311,56 +1325,23 @@ aoo_plot_MTP <- ggplot(aoo_df, aes(x = as.numeric(year), y = aoo_mean))+
   xlab("Year") +
   ylab(bquote("Mean AOO " (km^2)))
 
-aoo_df <- range_df %>% 
+aoo_0.75_df <- range_df %>% 
   group_by(species , year, scenario) %>%
-  mutate(aoo_mean = mean(AOO_0.5)) %>%
-  mutate(aoo_med = median(AOO_0.5)) %>%
-  mutate(aoo_sd = sd(AOO_0.5)) %>%
-  dplyr::select(-c(EOO_mtp, EOO_0.5, EOO_0.75,AOO_mtp, AOO_0.5, AOO_0.75)) %>%
+  mutate(aoo_mean = mean(aoo_0.75)) %>%
+  mutate(aoo_med = median(aoo_0.75)) %>%
+  mutate(aoo_sd = sd(aoo_0.75)) %>%
+  dplyr::select(-c(aoo_0.5, eoo_0.5, eoo_0.75)) %>%
   distinct(aoo_mean, .keep_all = T) %>%
   ungroup()
 
-nr1 <- aoo_df %>% slice(rep(1, each = 3))
-aoo_df <- aoo_df %>% add_row(nr1, .before = 2)
-nr2 <- aoo_df %>% slice(rep(13, each = 3))
-aoo_df <- aoo_df %>% add_row(nr2, .before = 14)
-aoo_df <- aoo_df %>%
+nr1 <- aoo_0.75_df %>% slice(rep(1, each = 3))
+aoo_0.75_df <- aoo_0.75_df %>% add_row(nr1, .before = 2)
+nr2 <- aoo_0.75_df %>% slice(rep(13, each = 3))
+aoo_0.75_df <- aoo_0.75_df %>% add_row(nr2, .before = 14)
+aoo_0.75_df <- aoo_0.75_df %>%
   mutate(scenario = rep(c("RCP 2.6", "RCP 4.5", "RCP 6.0", "RCP 8.5"),6))
 
-aoo_plot_0.5 <- ggplot(aoo_df, aes(x = as.numeric(year), y = aoo_mean))+
-  geom_point(aes(col = scenario, pch = species), size = 2) +
-  geom_line(aes(col = scenario, linetype = species), linewidth = 1) +
-  scale_color_manual(values = rev(PNWColors::pnw_palette("Moth", 4, type = "discrete"))) +
-  scale_y_continuous(labels = expSup) +
-  theme_bw() +
-  theme(legend.text = element_text(size = 12),
-        legend.title = element_text(size = 14),
-        axis.text = element_text(size = 14),
-        axis.title = element_text(size = 16),
-        panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(),
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black")) +
-  xlab("Year") +
-  ylab(bquote("Mean AOO " (km^2)))
-
-aoo_df <- range_df %>% 
-  group_by(species , year, scenario) %>%
-  mutate(aoo_mean = mean(AOO_0.75)) %>%
-  mutate(aoo_med = median(AOO_0.75)) %>%
-  mutate(aoo_sd = sd(AOO_0.75)) %>%
-  dplyr::select(-c(EOO_mtp, EOO_0.5, EOO_0.75,AOO_mtp, AOO_0.5, AOO_0.75)) %>%
-  distinct(aoo_mean, .keep_all = T) %>%
-  ungroup()
-
-nr1 <- aoo_df %>% slice(rep(1, each = 3))
-aoo_df <- aoo_df %>% add_row(nr1, .before = 2)
-nr2 <- aoo_df %>% slice(rep(13, each = 3))
-aoo_df <- aoo_df %>% add_row(nr2, .before = 14)
-aoo_df <- aoo_df %>%
-  mutate(scenario = rep(c("RCP 2.6", "RCP 4.5", "RCP 6.0", "RCP 8.5"),6))
-
-aoo_plot_0.75 <- ggplot(aoo_df, aes(x = as.numeric(year), y = aoo_mean))+
+aoo_plot_0.75 <- ggplot(aoo_0.75_df, aes(x = as.numeric(year), y = aoo_mean))+
   geom_point(aes(col = scenario, pch = species), size = 2) +
   geom_line(aes(col = scenario, linetype = species), linewidth = 1) +
   scale_color_manual(values = rev(PNWColors::pnw_palette("Moth", 4, type = "discrete"))) +
@@ -1382,11 +1363,10 @@ aoo_plot_0.75 <- ggplot(aoo_df, aes(x = as.numeric(year), y = aoo_mean))+
 #                   #labels = c("A", "B", "C", "D", "E", "F"),
 #                   ncol = 3, nrow = 2, common.legend = T)
 
-ggpubr::ggarrange(eoo_plot_MTP, aoo_plot_MTP,
-                  eoo_plot_0.5, aoo_plot_0.5,
+ggpubr::ggarrange(eoo_plot_0.5, aoo_plot_0.5,
                   eoo_plot_0.75,aoo_plot_0.75,
-                  labels = c("A", "D", "B", "E", "C", "F"),
-                  ncol = 2, nrow = 3, common.legend = T,
+                  labels = c("A", "C", "B", "D"),
+                  ncol = 2, nrow = 2, common.legend = T,
                   legend = "top")
 
 
