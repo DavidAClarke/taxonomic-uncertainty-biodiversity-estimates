@@ -5,7 +5,7 @@
 ## Load the required libraries 
 pkgs <- c("sf","tidyverse","here","terra","raster","sdmpredictors", "usdm", 
           "randomForest", "precrec","lubridate", "parzer", "adehabitatHR", 
-          "hypervolume", "caret", "redlistr", "rcartocolor")
+          "hypervolume", "caret", "redlistr", "rcartocolor", "ENMTools")
 lapply(pkgs, require, character.only = T)
 cat("\014")
 ################################################################################
