@@ -684,8 +684,8 @@ eoo_b05_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b05,
                                       y = rs_eoo_b0.5, 
                                       x = species, 
                                       type = "nonparametric",
-                                      pairwise.display = "significant", # "none"
-                                      results.subtitle = T,
+                                      pairwise.display = "none", # "none"
+                                      results.subtitle = F,
                                       p.adjust.method = "holm",
                                       nboot = 200,
                                       xlab = "Species",
@@ -713,8 +713,8 @@ eoo_b075_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b075,
                                           y = rs_eoo_b0.75, 
                                           x = species, 
                                           type = "nonparametric",
-                                          pairwise.display = "significant", # "none"
-                                          results.subtitle = T,
+                                          pairwise.display = "none", # "none"
+                                          results.subtitle = F,
                                           p.adjust.method = "holm",
                                           nboot = 200,
                                           xlab = "Species",
@@ -740,8 +740,8 @@ aoo_b05_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b05,
                                       y = rs_aoo_b0.5, 
                                       x = species, 
                                       type = "nonparametric",
-                                      pairwise.display = "significant", # "none"
-                                      results.subtitle = T,
+                                      pairwise.display = "none", # "none"
+                                      results.subtitle = F,
                                       p.adjust.method = "holm",
                                       nboot = 200,
                                       xlab = "Species",
@@ -767,8 +767,8 @@ aoo_b075_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b075,
                                            y = rs_aoo_b0.75, 
                                            x = species, 
                                            type = "nonparametric",
-                                          pairwise.display = "significant", # "none"
-                                          results.subtitle = T,
+                                          pairwise.display = "none", # "none"
+                                          results.subtitle = F,
                                            nboot = 200,
                                            xlab = "Species",
                                            ylab = bquote("Area of occupancy " (km^2)),
@@ -1369,6 +1369,28 @@ ggpubr::ggarrange(eoo_plot_0.5, aoo_plot_0.5,
                   ncol = 2, nrow = 2, common.legend = T,
                   legend = "top")
 
+## Assessing the amount of change over time
+# Pk (s.l.) - EOO
+getDeclineStats(43459467, 44554032, 2023, 2050, c("ARD", "ARC"))
+getDeclineStats(43459467, 45407759, 2023, 2050, c("ARD", "ARC"))
+getDeclineStats(43459467, 44653815, 2023, 2050, c("ARD", "ARC"))
+getDeclineStats(43459467, 44615018, 2023, 2050, c("ARD", "ARC"))
+
+getDeclineStats(44554032, 44356033, 2050, 2100, c("ARD", "ARC"))
+getDeclineStats(45407759, 45333338, 2050, 2100, c("ARD", "ARC"))
+getDeclineStats(44653815, 44513538, 2050, 2100, c("ARD", "ARC"))
+getDeclineStats(44615018, 48458806, 2050, 2100, c("ARD", "ARC"))
+
+# Pk - EOO
+getDeclineStats(42953426, 44276096, 2023, 2050, c("ARD", "ARC"))
+getDeclineStats(42953426, 43585985, 2023, 2050, c("ARD", "ARC"))
+getDeclineStats(42953426, 43622403, 2023, 2050, c("ARD", "ARC"))
+getDeclineStats(42953426, 44301746, 2023, 2050, c("ARD", "ARC"))
+
+getDeclineStats(44276096, 45620633, 2050, 2100, c("ARD", "ARC"))
+getDeclineStats(43585985, 45492779, 2050, 2100, c("ARD", "ARC"))
+getDeclineStats(43622403, 45081130, 2050, 2100, c("ARD", "ARC"))
+getDeclineStats(44301746, 47779131, 2050, 2100, c("ARD", "ARC"))
 
 ## 3.3 | Environmental niche----
 # Identity tests
