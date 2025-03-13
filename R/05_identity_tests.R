@@ -8,7 +8,7 @@ st <- Sys.time()
 id_test <- identity.test(occurrence, pkn_occurrence,  
                          bg1, bg2,
                          "P. kerguelensis (putative)", "P. kerguelensis",
-                         env = raster::stack(scale(pred_list[[50]])), 
+                         env = terra::stack(scale(pred_list[[50]])), 
                          type = "rf",
                          nreps = 99)
 en <- Sys.time()
@@ -33,7 +33,7 @@ st <- Sys.time()
 pko_pf_id_test <- identity.test(pko_occurrence, pf_occurrence,  
                                 pko_bg, pf_bg,
                                 "P. kerguelensis", "P. fragarius",
-                                env = raster::stack(scale(pred_list[[50]])), 
+                                env = terra::stack(scale(pred_list[[50]])), 
                                 type = "rf",
                                 nreps = 99)
 en <- Sys.time()
@@ -54,7 +54,7 @@ st <- Sys.time()
 pko_pu_id_test <- identity.test(pko_occurrence, pu_occurrence,  
                                 pko_bg, pu_bg,
                                 "P. kerguelensis", "P. unruhi",
-                                env = raster::stack(scale(pred_list[[50]])), 
+                                env = terra::stack(scale(pred_list[[50]])), 
                                 type = "rf",
                                 nreps = 99)
 en <- Sys.time()
@@ -75,7 +75,7 @@ st <- Sys.time()
 pko_pus_id_test <- identity.test(pko_occurrence, pus_occurrence,  
                                 pko_bg, pus_bg,
                                 "P. kerguelensis", "P. uskglass",
-                                env = raster::stack(scale(pred_list[[50]])), 
+                                env = terra::stack(scale(pred_list[[50]])), 
                                 type = "rf",
                                 nreps = 99)
 en <- Sys.time()
@@ -96,7 +96,7 @@ st <- Sys.time()
 pko_pj_id_test <- identity.test(pko_occurrence, pj_occurrence,  
                                  pko_bg, pj_bg,
                                  "P. kerguelensis", "P. joubini",
-                                 env = raster::stack(scale(pred_list[[50]])), 
+                                 env = terra::stack(scale(pred_list[[50]])), 
                                  type = "rf",
                                  nreps = 99)
 en <- Sys.time()
@@ -117,7 +117,7 @@ st <- Sys.time()
 pko_pm_id_test <- identity.test(pko_occurrence, pm_occurrence,  
                                 pko_bg, pm_bg,
                                 "P. kerguelensis (putative)", "P. mawsoni",
-                                env = raster::stack(scale(pred_list[[50]])), 
+                                env = terra::stack(scale(pred_list[[50]])), 
                                 type = "rf",
                                 nreps = 99)
 en <- Sys.time()
@@ -291,7 +291,7 @@ st <- Sys.time()
 pkn_pf_id_test <- identity.test(pkn_occurrence, pf_occurrence,  
                                 pkn_bg, pf_bg,
                                 "P. kerguelensis", "P. fragarius",
-                                env = raster::stack(scale(pred_list[[50]])), 
+                                env = terra::scale(pred_list[[50]]), 
                                 type = "rf",
                                 nreps = 99)
 en <- Sys.time()
@@ -303,7 +303,7 @@ st <- Sys.time()
 pkn_pu_id_test <- identity.test(pkn_occurrence, pu_occurrence,  
                                 pkn_bg, pu_bg,
                                 "P. kerguelensis", "P. unruhi",
-                                env = raster::stack(scale(pred_list[[50]])), 
+                                env = terra::stack(scale(pred_list[[50]])), 
                                 type = "rf",
                                 nreps = 99)
 en <- Sys.time()
@@ -315,7 +315,7 @@ st <- Sys.time()
 pkn_pus_id_test <- identity.test(pkn_occurrence, pus_occurrence,  
                                 pkn_bg, pus_bg,
                                 "P. kerguelensis", "P. uskglass",
-                                env = raster::stack(scale(pred_list[[50]])), 
+                                env = terra::stack(scale(pred_list[[50]])), 
                                 type = "rf",
                                 nreps = 99)
 en <- Sys.time()
@@ -327,7 +327,7 @@ st <- Sys.time()
 pkn_pj_id_test <- identity.test(pkn_occurrence, pj_occurrence,  
                                 pkn_bg, pj_bg,
                                 "P. kerguelensis", "P. joubini",
-                                env = raster::stack(scale(pred_list[[50]])), 
+                                env = terra::stack(scale(pred_list[[50]])), 
                                 type = "rf",
                                 nreps = 99)
 en <- Sys.time()
@@ -339,7 +339,7 @@ st <- Sys.time()
 pkn_pm_id_test <- identity.test(pkn_occurrence, pm_occurrence,  
                                 pkn_bg, pm_bg,
                                 "P. kerguelensis", "P. mawsoni",
-                                env = raster::stack(scale(pred_list[[50]])), 
+                                env = terra::stack(scale(pred_list[[50]])), 
                                 type = "rf",
                                 nreps = 99)
 en <- Sys.time()
@@ -352,7 +352,7 @@ st <- Sys.time()
 pf_pu_id_test <- identity.test(pf_occurrence, pu_occurrence,  
                                 pf_bg, pu_bg,
                                 "P. fragarius", "P. unruhi",
-                                env = raster::stack(scale(pred_list[[50]])), 
+                                env = terra::stack(scale(pred_list[[50]])), 
                                 type = "rf",
                                 nreps = 99)
 en <- Sys.time()
@@ -365,7 +365,7 @@ st <- Sys.time()
 pf_pus_id_test <- identity.test(pf_occurrence, pus_occurrence,  
                                  pf_bg, pus_bg,
                                  "P. fragarius", "P. uskglass",
-                                 env = raster::stack(scale(pred_list[[50]])), 
+                                 env = terra::stack(scale(pred_list[[50]])), 
                                  type = "rf",
                                  nreps = 99)
 en <- Sys.time()
@@ -378,7 +378,7 @@ st <- Sys.time()
 pf_pj_id_test <- identity.test(pf_occurrence, pj_occurrence,  
                                 pf_bg, pj_bg,
                                 "P. fragarius", "P. joubini",
-                                env = raster::stack(scale(pred_list[[50]])), 
+                                env = terra::stack(scale(pred_list[[50]])), 
                                 type = "rf",
                                 nreps = 99)
 en <- Sys.time()
@@ -391,7 +391,7 @@ st <- Sys.time()
 pf_pm_id_test <- identity.test(pf_occurrence, pm_occurrence,  
                                 pf_bg, pm_bg,
                                 "P. fragarius", "P. mawsoni",
-                                env = raster::stack(scale(pred_list[[50]])), 
+                                env = terra::stack(scale(pred_list[[50]])), 
                                 type = "rf",
                                 nreps = 99)
 en <- Sys.time()
@@ -405,7 +405,7 @@ st <- Sys.time()
 pu_pus_id_test <- identity.test(pu_occurrence, pus_occurrence,  
                                 pu_bg, pus_bg,
                                 "P. unruhi", "P. uskglass",
-                                env = raster::stack(scale(pred_list[[50]])), 
+                                env = terra::stack(scale(pred_list[[50]])), 
                                 type = "rf",
                                 nreps = 99)
 en <- Sys.time()
@@ -418,7 +418,7 @@ st <- Sys.time()
 pu_pj_id_test <- identity.test(pu_occurrence, pj_occurrence,  
                                pu_bg, pj_bg,
                                "P. unruhi", "P. joubini",
-                               env = raster::stack(scale(pred_list[[50]])), 
+                               env = terra::stack(scale(pred_list[[50]])), 
                                type = "rf",
                                nreps = 99)
 en <- Sys.time()
@@ -431,7 +431,7 @@ st <- Sys.time()
 pu_pm_id_test <- identity.test(pu_occurrence, pm_occurrence,  
                                pu_bg, pm_bg,
                                "P. unruhi", "P. mawsoni",
-                               env = raster::stack(scale(pred_list[[50]])), 
+                               env = terra::stack(scale(pred_list[[50]])), 
                                type = "rf",
                                nreps = 99)
 en <- Sys.time()
@@ -445,7 +445,7 @@ st <- Sys.time()
 pus_pj_id_test <- identity.test(pus_occurrence, pj_occurrence,  
                                pus_bg, pj_bg,
                                "P. uskglass", "P. joubini",
-                               env = raster::stack(scale(pred_list[[50]])), 
+                               env = terra::stack(scale(pred_list[[50]])), 
                                type = "rf",
                                nreps = 99)
 en <- Sys.time()
@@ -458,7 +458,7 @@ st <- Sys.time()
 pus_pm_id_test <- identity.test(pus_occurrence, pm_occurrence,  
                                pus_bg, pm_bg,
                                "P. uskglass", "P. mawsoni",
-                               env = raster::stack(scale(pred_list[[50]])), 
+                               env = terra::stack(scale(pred_list[[50]])), 
                                type = "rf",
                                nreps = 99)
 en <- Sys.time()
@@ -472,7 +472,7 @@ st <- Sys.time()
 pj_pm_id_test <- identity.test(pj_occurrence, pm_occurrence,  
                                 pj_bg, pm_bg,
                                 "P. joubini", "P. mawsoni",
-                                env = raster::stack(scale(pred_list[[50]])), 
+                                env = terra::stack(scale(pred_list[[50]])), 
                                 type = "rf",
                                 nreps = 99)
 en <- Sys.time()
