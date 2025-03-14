@@ -1168,6 +1168,17 @@ range_df <- data.frame(species = sp,
 #   ylab(bquote("EOO " (km^2))) +
 #   scale_y_continuous(labels = expSup)
 
+fut_2050 <- range_df %>% filter(year == 2050)
+ggstatsplot::grouped_ggbetweenstats(data = fut_2050, 
+                                    y = eoo_0.75, 
+                                    x = species, 
+                                    grouping.var = scenario,
+                                    type = "nonparametric",
+                                    pairwise.display = "significant", # "none"
+                                    results.subtitle = T, 
+                                    p.adjust.method = "holm",
+                                    nboot = 200)
+
 eoo_0.5_box <- ggplot(range_df, aes(y = eoo_0.5, x = scenario, fill = species)) +
   geom_boxplot() +
   scale_fill_carto_d(name = "Species", labels = c("P. kerguelensis (s.s.)", "P. kerguelensis (s.l.)")) +
