@@ -769,6 +769,7 @@ aoo_b075_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b075,
                                            type = "nonparametric",
                                           pairwise.display = "none", # "none"
                                           results.subtitle = F,
+                                          p.adjust.method = "holm",
                                            nboot = 200,
                                            xlab = "Species",
                                            ylab = bquote("Area of occupancy " (km^2)),
