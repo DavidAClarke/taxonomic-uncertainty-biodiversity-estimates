@@ -807,6 +807,55 @@ write.csv(ph_stats, file = here(dirname(here()),"data", "biodiversity",
 ggpubr::ggarrange(eoo_b05_kw, aoo_b05_kw, ncol = 1, nrow = 2, align = "v")
 ggpubr::ggarrange(eoo_b075_kw, aoo_b075_kw, ncol = 1, nrow = 2, align = "v")
 
+ph_stats <- read.csv(here(dirname(here()), "data", "biodiversity", "output", 
+                          "range_size", "ph_stats_diffmodels.csv"))
+
+# eoo_0.5 <- ph_stats %>% filter(metric == "EOO") %>% filter(beta == 0.5)
+# hist(eoo_0.5$VDA)
+# plot(eoo_0.5$VDA ~ eoo_0.5$p.value)
+# abline(v = 0.05, col = "red")
+# abline(h = 0.5, lty = 2) #h = 0 if CD or rg, 0.5 if VDA
+# 
+# eoo_0.75 <- ph_stats %>% filter(metric == "EOO") %>% filter(beta == 0.75)
+# hist(eoo_0.75$VDA)
+# plot(eoo_0.75$VDA ~ eoo_0.75$p.value)
+# abline(v = 0.05, col = "red")
+# abline(h = 0.5, lty = 2) #h = 0 if CD or rg, 0.5 if VDA
+# 
+# aoo_0.5 <- ph_stats %>% filter(metric == "AOO") %>% filter(beta == 0.5)
+# plot(aoo_0.5$VDA ~ aoo_0.5$p.value)
+# abline(v = 0.05, col = "red")
+# abline(h = 0.5, lty = 2) #h = 0 if CD or rg, 0.5 if VDA
+# 
+# aoo_0.75 <- ph_stats %>% filter(metric == "AOO") %>% filter(beta == 0.75)
+# plot(aoo_0.75$VDA ~ aoo_0.75$p.value)
+# abline(v = 0.05, col = "red")
+# abline(h = 0.5, lty = 2) #h = 0 if CD or rg, 0.5 if VDA
+
+g1 <- ph_stats %>% 
+  filter(beta == 0.5) %>% 
+  ggplot(aes(x = p.value, y = VDA)) + 
+  geom_point() + 
+  facet_wrap(~metric) +
+  theme_bw() +
+  theme(panel.grid = element_blank()) +
+  geom_hline(yintercept = 0.5, linetype = 2) +
+  geom_vline(xintercept = 0.05, col = "red")
+
+g2 <- ph_stats %>% 
+  filter(beta == 0.75) %>% 
+  ggplot(aes(x = p.value, y = VDA)) + 
+  geom_point() + 
+  facet_wrap(~metric) +
+  theme_bw() +
+  theme(panel.grid = element_blank()) +
+  geom_hline(yintercept = 0.5, linetype = 2) +
+  geom_vline(xintercept = 0.05, col = "red")
+
+ggpubr::ggarrange(g1, g2, 
+                  labels = c("A", "B"),
+                  ncol = 1, nrow = 2, common.legend = T)
+
 # Future
 fut_lyrs <- list.files(here("data", "biodiversity", "output", "reps_sdm"), 
                        pattern = "fut_model", full.names = T)
@@ -1000,11 +1049,11 @@ for(n in betas){
 #                   fut_pk_210026_range[[1]], fut_pk_210045_range[[1]],
 #                   fut_pk_210060_range[[1]], fut_pk_210085_range[[1]])
 # save(fut_eoo_vals, file = here("data", "biodiversity", "output", "range_size", "fut_eoo_vals.RData"))
-pkcomp_rs_eoo_b0.5 <- loadRData(file = here("data", "biodiversity", "output", "range_size", "fut_rs_eoo_pkcomp_b_0.5.RData"))
-pk_rs_eoo_b0.5 <- loadRData(file = here("data", "biodiversity", "output", "range_size", "fut_rs_eoo_pk_b_0.5.RData"))
+pkcomp_rs_eoo_b0.5 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size", "fut_rs_eoo_pkcomp_b_0.5.RData"))
+pk_rs_eoo_b0.5 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size", "fut_rs_eoo_pk_b_0.5.RData"))
 
-pkcomp_rs_aoo_b0.5 <- loadRData(file = here("data", "biodiversity", "output", "range_size", "fut_rs_aoo_pkcomp_b_0.5.RData"))
-pk_rs_aoo_b0.5 <- loadRData(file = here("data", "biodiversity", "output", "range_size", "fut_rs_aoo_pk_b_0.5.RData"))
+pkcomp_rs_aoo_b0.5 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size", "fut_rs_aoo_pkcomp_b_0.5.RData"))
+pk_rs_aoo_b0.5 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size", "fut_rs_aoo_pk_b_0.5.RData"))
 
 # fut_eoo_vals_0.5 <- c(fut_pk_comp_range_0.5[[1]], fut_pk_comp_205026_range_0.5[[1]],
 #                   fut_pk_comp_205045_range_0.5[[1]], fut_pk_comp_205060_range_0.5[[1]],
@@ -1016,11 +1065,11 @@ pk_rs_aoo_b0.5 <- loadRData(file = here("data", "biodiversity", "output", "range
 #                   fut_pk_210026_range_0.5[[1]], fut_pk_210045_range_0.5[[1]],
 #                   fut_pk_210060_range_0.5[[1]], fut_pk_210085_range_0.5[[1]])
 # save(fut_eoo_vals_0.5, file = here("data", "biodiversity", "output", "range_size", "fut_eoo_vals_0.5.RData"))
-pkcomp_rs_eoo_b0.75 <- loadRData(file = here("data", "biodiversity", "output", "range_size", "fut_rs_eoo_pkcomp_b_0.75.RData"))
-pk_rs_eoo_b0.75 <- loadRData(file = here("data", "biodiversity", "output", "range_size", "fut_rs_eoo_pk_b_0.75.RData"))
+pkcomp_rs_eoo_b0.75 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size", "fut_rs_eoo_pkcomp_b_0.75.RData"))
+pk_rs_eoo_b0.75 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size", "fut_rs_eoo_pk_b_0.75.RData"))
 
-pkcomp_rs_aoo_b0.75 <- loadRData(file = here("data", "biodiversity", "output", "range_size", "fut_rs_aoo_pkcomp_b_0.75.RData"))
-pk_rs_aoo_b0.75 <- loadRData(file = here("data", "biodiversity", "output", "range_size", "fut_rs_aoo_pk_b_0.75.RData"))
+pkcomp_rs_aoo_b0.75 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size", "fut_rs_aoo_pkcomp_b_0.75.RData"))
+pk_rs_aoo_b0.75 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size", "fut_rs_aoo_pk_b_0.75.RData"))
 
 # fut_eoo_vals_0.75 <- c(fut_pk_comp_range_0.75[[1]], fut_pk_comp_205026_range_0.75[[1]],
 #                       fut_pk_comp_205045_range_0.75[[1]], fut_pk_comp_205060_range_0.75[[1]],
@@ -1370,7 +1419,7 @@ ggpubr::ggarrange(eoo_plot_0.5, aoo_plot_0.5,
                   legend = "top")
 
 ## Assessing the amount of change over time
-# Pk (s.l.) - EOO
+# Pk (s.l.) - EOO - 0.5
 getDeclineStats(43459467, 44554032, 2023, 2050, c("ARD", "ARC"))
 getDeclineStats(43459467, 45407759, 2023, 2050, c("ARD", "ARC"))
 getDeclineStats(43459467, 44653815, 2023, 2050, c("ARD", "ARC"))
@@ -1381,7 +1430,7 @@ getDeclineStats(45407759, 45333338, 2050, 2100, c("ARD", "ARC"))
 getDeclineStats(44653815, 44513538, 2050, 2100, c("ARD", "ARC"))
 getDeclineStats(44615018, 48458806, 2050, 2100, c("ARD", "ARC"))
 
-# Pk - EOO
+# Pk - EOO - 0.5
 getDeclineStats(42953426, 44276096, 2023, 2050, c("ARD", "ARC"))
 getDeclineStats(42953426, 43585985, 2023, 2050, c("ARD", "ARC"))
 getDeclineStats(42953426, 43622403, 2023, 2050, c("ARD", "ARC"))
@@ -1391,6 +1440,28 @@ getDeclineStats(44276096, 45620633, 2050, 2100, c("ARD", "ARC"))
 getDeclineStats(43585985, 45492779, 2050, 2100, c("ARD", "ARC"))
 getDeclineStats(43622403, 45081130, 2050, 2100, c("ARD", "ARC"))
 getDeclineStats(44301746, 47779131, 2050, 2100, c("ARD", "ARC"))
+
+# Pk (s.l.) - EOO - 0.75
+getDeclineStats(18856349, 19299378, 2023, 2050, c("ARD", "ARC"))
+getDeclineStats(18856349, 19078893, 2023, 2050, c("ARD", "ARC"))
+getDeclineStats(18856349, 18383465, 2023, 2050, c("ARD", "ARC"))
+getDeclineStats(18856349, 18628302, 2023, 2050, c("ARD", "ARC"))
+
+getDeclineStats(19299378, 18987180, 2050, 2100, c("ARD", "ARC"))
+getDeclineStats(19078893, 18111794, 2050, 2100, c("ARD", "ARC"))
+getDeclineStats(18383465, 17302824, 2050, 2100, c("ARD", "ARC"))
+getDeclineStats(18628302, 15070712, 2050, 2100, c("ARD", "ARC"))
+
+# Pk - EOO - 0.75
+getDeclineStats(18403111, 19035721, 2023, 2050, c("ARD", "ARC"))
+getDeclineStats(18403111, 18713359, 2023, 2050, c("ARD", "ARC"))
+getDeclineStats(18403111, 18707237, 2023, 2050, c("ARD", "ARC"))
+getDeclineStats(18403111, 18606699, 2023, 2050, c("ARD", "ARC"))
+
+getDeclineStats(19035721, 19149978, 2050, 2100, c("ARD", "ARC"))
+getDeclineStats(18713359, 18174239, 2050, 2100, c("ARD", "ARC"))
+getDeclineStats(18707237, 18503023, 2050, 2100, c("ARD", "ARC"))
+getDeclineStats(18606699, 17027890, 2050, 2100, c("ARD", "ARC"))
 
 ## 3.3 | Environmental niche----
 # Identity tests
