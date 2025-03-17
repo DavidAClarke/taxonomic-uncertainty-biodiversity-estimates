@@ -370,8 +370,33 @@ ggplot(var_df, aes(x = Var_name, y = var_rank, fill = Cor_group))+
   ylab("Variable rank")
 
 ## 3.2 | Range size----
-# Current
-#Use model 50 for niche coparisons, different models for range sizes
+## Current
+## Prepare data for raw range size
+p_raw <- range_prepare(bio_data, "genus")
+pk_comp_raw <- range_prepare(bio_data, "comp")
+pk_raw <- as.data.frame(t(raw_range(pk_comp_raw)))
+row.names(pk_raw) <- "Promachocrinus kerguelensis (s.l.)"
+
+species_names <- c("Promachocrinus kerguelensis", "Promachocrinus fragarius", 
+                   "Promachocrinus unruhi", "Promachocrinus uskglass", #uskglassi
+                   "Promachocrinus joubini", "Promachocrinus mawsoni")
+
+range_raw <- data.frame(eoo = c(), aoo = c())
+
+for(s in species_names){
+  
+  dd <- range_prepare(bio_data, "new", s)
+  raw <- as.data.frame(t(raw_range(dd)))
+  row.names(raw) <- s
+  range_raw <- rbind(range_raw, raw)
+  
+}
+
+range_raw <- bind_rows(pk_raw, range_raw)
+
+
+# Modelled
+#Use model 50 for niche comparisons, different models for range sizes
 lyrs <- list.files(here("data", "biodiversity", "output", "reps_sdm"), 
                    pattern = "model_50", full.names = T)
 pk_comp <- list.files(here("data", "biodiversity", "output", "reps_sdm"), 
@@ -1170,7 +1195,7 @@ range_df <- data.frame(species = sp,
 
 fut_2050 <- range_df %>% filter(year == 2050)
 ggstatsplot::grouped_ggbetweenstats(data = fut_2050, 
-                                    y = eoo_0.75, 
+                                    y = aoo_0.5, 
                                     x = species, 
                                     grouping.var = scenario,
                                     type = "nonparametric",
