@@ -48,6 +48,32 @@ get_vars <- function(terrestrial, marine, dataset, ver){
     pull()
   
 }
+
+## Obtain raw predictor values for each occurrence record----
+raw_vals <- function(data, species, preds){
+  
+  occurrence <- data %>% 
+    
+    dplyr::filter(scientificName == species) %>%
+    
+    dplyr::mutate(x = sf::st_coordinates(.)[,1]) %>%
+    
+    dplyr::mutate(y = sf::st_coordinates(.)[,2]) %>%
+    
+    dplyr::select(x,y) %>%
+    
+    sf::st_drop_geometry() 
+  
+  total <- occurrence %>% 
+    
+    terra::extract(preds, .) %>%
+    
+    as.data.frame()
+  
+  return(total)
+}
+
+
 ## For recursive variable selection using `caret`----
 dwsrfRFE <-  list(summary = function(data, lev = NULL, model = NULL){
   
