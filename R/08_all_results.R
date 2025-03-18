@@ -1584,18 +1584,21 @@ colnames(m2) <- c(hv_list[[1]]@Name,hv_list[[2]]@Name,hv_list[[3]]@Name,
 m2[lower.tri(m2,diag=F)] <- min_hv_dists
 
 ## Overlaps
-hv_overlaps <- list()
-hv_set_ops <- list()
-for(i in 1:ncol(hv_combs)){
-  hv_set <- hypervolume_set(hv_list[[hv_combs[,i][1]]],
-                            hv_list[[hv_combs[,i][2]]], 
-                            check.memory=FALSE)
-  hv_set_ops[[i]] <- hv_set
-  hv_overlaps[[i]] <- hypervolume_overlap_statistics(hv_set)
-}
+# hv_overlaps <- list()
+# hv_set_ops <- list()
+# for(i in 1:ncol(hv_combs)){
+#   hv_set <- hypervolume_set(hv_list[[hv_combs[,i][1]]],
+#                             hv_list[[hv_combs[,i][2]]], 
+#                             check.memory=FALSE)
+#   hv_set_ops[[i]] <- hv_set
+#   hv_overlaps[[i]] <- hypervolume_overlap_statistics(hv_set)
+# }
+# 
+# save(hv_overlaps, file = here("data", "biodiversity", "output", "hypervolumes", "hv_overlaps.RData"))
+# save(hv_set_ops, file = here("data", "biodiversity", "output", "hypervolumes", "hv_set_ops.RData"))
 
-save(hv_overlaps, file = here("data", "biodiversity", "output", "hypervolumes", "hv_overlaps.RData"))
-save(hv_set_ops, file = here("data", "biodiversity", "output", "hypervolumes", "hv_set_ops.RData"))
+hv_overlaps <- loadRData(here(dirname(here()),"data", "biodiversity", "output", "hypervolumes", "hv_overlaps.RData"))
+hv_set_ops <- loadRData(here(dirname(here()),"data", "biodiversity", "output", "hypervolumes", "hv_set_ops.RData"))
 
 ov_df <- data.frame(jaccard = numeric(),
                     sorensen = numeric(),
