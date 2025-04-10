@@ -1530,7 +1530,13 @@ plot.HypervolumeList(templist,
                      show.legend = F,
                      names = c("Phosphate (Lt. max)", "Current Velocity (Lt. min)",
                                "Dissolved Oxygen (Min)", "Dissolved Oxygen (Range)",
-                               "Silicate (Range)"))
+                               "Silicate (Range)"),
+                     show.random = F,
+                     show.data = F,
+                     contour.type = "alphahull", #kde = default
+                     contour.alphahull.alpha = 1,
+                     contour.kde.level = 0.005
+                     )
 
 ## Hypervolume overlaps
 # Volumes
