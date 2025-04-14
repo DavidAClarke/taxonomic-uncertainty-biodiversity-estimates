@@ -450,205 +450,56 @@ for(n in betas){
     
   }
   
-  save(rs_eoo, file = here(dirname(here()),"data", "biodiversity", "output", "range_size",
+  save(rs_eoo, file = here(dirname(here()),"data", "biodiversity", "output", 
+                           "range_size", 
                            paste0("rs_eoo_b_",n,"_diff_models.RData")))
-  save(rs_aoo, file = here(dirname(here()),"data", "biodiversity", "output", "range_size",
+  save(rs_aoo, file = here(dirname(here()),"data", "biodiversity", "output", 
+                           "range_size", 
                            paste0("rs_aoo_b_",n,"_diff_models.RData")))
   
 }
 
-rs_eoo_b0.5 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size",
-                 paste0("rs_eoo_b_",0.5,".RData")))
-rs_eoo_b0.75 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size",
+rs_eoo_b0.5 <- loadRData(file = here(dirname(here()),"data", "biodiversity", 
+                                     "output", "range_size", 
+                                     paste0("rs_eoo_b_",0.5,".RData")))
+rs_eoo_b0.75 <- loadRData(file = here(dirname(here()),"data", "biodiversity", 
+                                      "output", "range_size",
                                      paste0("rs_eoo_b_",0.75,".RData")))
-rs_aoo_b0.5 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size",
+rs_aoo_b0.5 <- loadRData(file = here(dirname(here()),"data", "biodiversity", 
+                                     "output", "range_size",
                                      paste0("rs_aoo_b_",0.5,".RData")))
-rs_aoo_b0.75 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size",
+rs_aoo_b0.75 <- loadRData(file = here(dirname(here()),"data", "biodiversity", 
+                                      "output", "range_size",
                                       paste0("rs_aoo_b_",0.75,".RData")))
 
 
 ## From different models
-rs_eoo_b0.5 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size",
+rs_eoo_b0.5 <- loadRData(file = here(dirname(here()),"data", "biodiversity", 
+                                     "output", "range_size",
                                      "rs_eoo_b_0.5diff_models.RData"))
-rs_eoo_b0.75 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size",
+rs_eoo_b0.75 <- loadRData(file = here(dirname(here()),"data", "biodiversity", 
+                                      "output", "range_size",
                                       "rs_eoo_b_0.75diff_models.RData"))
-rs_aoo_b0.5 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size",
+rs_aoo_b0.5 <- loadRData(file = here(dirname(here()),"data", "biodiversity", 
+                                     "output", "range_size",
                                      "rs_aoo_b_0.5diff_models.RData"))
-rs_aoo_b0.75 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size",
+rs_aoo_b0.75 <- loadRData(file = here(dirname(here()),"data", "biodiversity", 
+                                      "output", "range_size",
                                       "rs_aoo_b_0.75diff_models.RData"))
 
-# ## Create range rasters
-# pk_comp_bin <- range_rast(bio_data, "Promachocrinus kerguelensis", 
-#                           sdm_list[[1]], status = "comp", bin_cut_num = 1)
-# pk_bin <- range_rast(bio_data, "Promachocrinus kerguelensis", sdm_list[[2]], 
-#                      status = "new", bin_cut_num = 1)
-# pf_bin <- range_rast(bio_data, "Promachocrinus fragarius", sdm_list[[3]], 
-#                      status = "new", bin_cut_num = 1)
-# pu_bin <- range_rast(bio_data, "Promachocrinus unruhi", sdm_list[[4]], 
-#                      status = "new", bin_cut_num = 1)
-# pus_bin <- range_rast(bio_data, "Promachocrinus uskglassi", sdm_list[[5]], 
-#                       status = "new", bin_cut_num = 1)
-# pj_bin <- range_rast(bio_data, "Promachocrinus joubini", sdm_list[[6]], 
-#                      status = "new", bin_cut_num = 1)
-# pm_bin <- range_rast(bio_data, "Promachocrinus mawsoni", sdm_list[[7]], 
-#                      status = "new", bin_cut_num = 1)
-# 
-# bin_stack <- c(pk_comp_bin, pk_bin, pf_bin, pu_bin, pus_bin, pj_bin, pm_bin)
-# 
-# overlaps <- c()
-# for(i in 1:nlyr(bin_stack)){
-#   for(j in 1:nlyr(bin_stack)){
-#     
-#     ov <- range.ov(bin_stack[[i]], bin_stack[[j]])
-#     overlaps <- c(overlaps, ov)
-#     
-#   }
-# }
-# 
-# ov_mat <- matrix(overlaps, nrow = 7, ncol = 7)
-# colnames(ov_mat) <- c("Promachocrinus kerguelensis (s.l.)", "Promachocrinus kerguelensis",
-#                       "Promachocrinus fragarius", "Promachocrinus unruhi",
-#                       "Promachocrinus uskglassi", "Promachocrinus joubini",
-#                       "Promachocrinus mawsoni")
-# rownames(ov_mat) <- c("Promachocrinus kerguelensis (s.l.)", "Promachocrinus kerguelensis",
-#                       "Promachocrinus fragarius", "Promachocrinus unruhi",
-#                       "Promachocrinus uskglassi", "Promachocrinus joubini",
-#                       "Promachocrinus mawsoni")
-
-# ## Range size metrics using cut offs
-# pk_comp_range_mtp <- range_fun(bio_data, "Promachocrinus kerguelensis", 
-#                                sdm_list[[1]], status = "comp", bin_cut_num = 1)
-# pk_comp_range_p10 <- range_fun(bio_data, "Promachocrinus kerguelensis", 
-#                                sdm_list[[1]], status = "comp", bin_cut_num = 3)
-# pk_range_mtp <- range_fun(bio_data, "Promachocrinus kerguelensis", 
-#                           sdm_list[[2]], status = "new", bin_cut_num = 1)
-# pk_range_p10 <- range_fun(bio_data, "Promachocrinus kerguelensis", 
-#                           sdm_list[[2]], status = "new", bin_cut_num = 3)
-# pf_range_mtp <- range_fun(bio_data, "Promachocrinus fragarius", 
-#                           sdm_list[[3]], status = "new", bin_cut_num = 1)
-# pf_range_p10 <- range_fun(bio_data, "Promachocrinus fragarius", 
-#                           sdm_list[[3]], status = "new", bin_cut_num = 3)
-# pu_range_mtp <- range_fun(bio_data, "Promachocrinus unruhi", 
-#                           sdm_list[[4]], status = "new", bin_cut_num = 1)
-# pu_range_p10 <- range_fun(bio_data, "Promachocrinus unruhi", 
-#                           sdm_list[[4]], status = "new", bin_cut_num = 3)
-# pus_range_mtp <- range_fun(bio_data, "Promachocrinus uskglassi", 
-#                            sdm_list[[5]], status = "new", bin_cut_num = 1)
-# pus_range_p10 <- range_fun(bio_data, "Promachocrinus uskglassi", 
-#                            sdm_list[[5]], status = "new", bin_cut_num = 3)
-# pj_range_mtp <- range_fun(bio_data, "Promachocrinus joubini", 
-#                           sdm_list[[6]], status = "new", bin_cut_num = 1)
-# pj_range_p10 <- range_fun(bio_data, "Promachocrinus joubini", 
-#                           sdm_list[[6]], status = "new", bin_cut_num = 3)
-# pm_range_mtp <- range_fun(bio_data, "Promachocrinus mawsoni", 
-#                           sdm_list[[7]], status = "new", bin_cut_num = 1)
-# pm_range_p10 <- range_fun(bio_data, "Promachocrinus mawsoni", 
-#                           sdm_list[[7]], status = "new", bin_cut_num = 3)
-# 
-# ## Range size metrics using thresholds
-# pk_comp_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", 
-#                            sdm_list[[1]], status = "comp", thresh = 0.5)
-# pk_comp_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", 
-#                             sdm_list[[1]], status = "comp", thresh = 0.75)
-# pk_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", 
-#                           sdm_list[[2]], status = "new", thresh = 0.5)
-# pk_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", 
-#                            sdm_list[[2]], status = "new", thresh = 0.75)
-# pf_range_0.5 <- range_fun(bio_data, "Promachocrinus fragarius", 
-#                           sdm_list[[3]], status = "new", thresh = 0.5)
-# pf_range_0.75 <- range_fun(bio_data, "Promachocrinus fragarius", 
-#                            sdm_list[[3]], status = "new", thresh = 0.75)
-# pu_range_0.5 <- range_fun(bio_data, "Promachocrinus unruhi", 
-#                           sdm_list[[4]], status = "new", thresh = 0.5)
-# pu_range_0.75 <- range_fun(bio_data, "Promachocrinus unruhi", 
-#                            sdm_list[[4]], status = "new", thresh = 0.75)
-# pus_range_0.5 <- range_fun(bio_data, "Promachocrinus uskglassi", 
-#                            sdm_list[[5]], status = "new", thresh = 0.5)
-# pus_range_0.75 <- range_fun(bio_data, "Promachocrinus uskglassi", 
-#                             sdm_list[[5]], status = "new", thresh = 0.75)
-# pj_range_0.5 <- range_fun(bio_data, "Promachocrinus joubini", 
-#                           sdm_list[[6]], status = "new", thresh = 0.5)
-# pj_range_0.75 <- range_fun(bio_data, "Promachocrinus joubini", 
-#                            sdm_list[[6]], status = "new", thresh = 0.75)
-# pm_range_0.5 <- range_fun(bio_data, "Promachocrinus mawsoni", 
-#                           sdm_list[[7]], status = "new", thresh = 0.5)
-# pm_range_0.75 <- range_fun(bio_data, "Promachocrinus mawsoni", 
-#                            sdm_list[[7]], status = "new", thresh = 0.75)
-# 
-# ## Collect EOO values and write to disk
-# eoo_vals_mtp <- c(pk_comp_range_mtp[[1]], pk_range_mtp[[1]], pf_range_mtp[[1]], 
-#                   pu_range_mtp[[1]],  pus_range_mtp[[1]], pj_range_mtp[[1]], 
-#                   pm_range_mtp[[1]])
-# eoo_vals_p10 <- c(pk_comp_range_p10[[1]], pk_range_p10[[1]], pf_range_p10[[1]], 
-#                   pu_range_p10[[1]],  pus_range_p10[[1]], pj_range_p10[[1]], 
-#                   pm_range_p10[[1]])
-# eoo_vals_0.5 <- c(pk_comp_range_0.5[[1]], pk_range_0.5[[1]], pf_range_0.5[[1]], 
-#                   pu_range_0.5[[1]], pus_range_0.5[[1]], pj_range_0.5[[1]], 
-#                   pm_range_0.5[[1]])
-# eoo_vals_0.75 <- c(pk_comp_range_0.75[[1]], pk_range_0.75[[1]], pf_range_0.75[[1]], 
-#                    pu_range_0.75[[1]], pus_range_0.75[[1]], pj_range_0.75[[1]], 
-#                    pm_range_0.75[[1]])
-# 
-# save(eoo_vals_mtp, file = here("data", "biodiversity", "output", "range_size",
-#                                "eoo_vals_mtp.RData"))
-# save(eoo_vals_p10, file = here("data", "biodiversity", "output", "range_size",
-#                                "eoo_vals_p10.RData"))
-# save(eoo_vals_0.5, file = here("data", "biodiversity", "output", "range_size",
-#                                "eoo_vals_0.5.RData"))
-# save(eoo_vals_0.75, file = here("data", "biodiversity", "output", "range_size",
-#                                 "eoo_vals_0.75.RData"))
-# 
-# eoo_vals_mtp <- get(load(here("data", "biodiversity", "output", "range_size",
-#                               "eoo_vals_mtp.RData")))
-# eoo_vals_0.5 <- get(load(here("data", "biodiversity", "output","range_size",
-#                               "eoo_vals_0.5.RData")))
-# eoo_vals_0.75 <- get(load(here("data", "biodiversity", "output","range_size",
-#                               "eoo_vals_0.75.RData")))
-# 
-# ## Collect AOO values and write to disk
-# aoo_vals_mtp <- c(pk_comp_range_mtp[[2]], pk_range_mtp[[2]], pf_range_mtp[[2]], 
-#                   pu_range_mtp[[2]], pus_range_mtp[[2]], pj_range_mtp[[2]], 
-#                   pm_range_mtp[[2]])
-# aoo_vals_p10 <- c(pk_comp_range_p10[[2]], pk_range_p10[[2]], pf_range_p10[[2]], 
-#                   pu_range_p10[[2]], pus_range_p10[[2]], pj_range_p10[[2]], 
-#                   pm_range_p10[[2]])
-# aoo_vals_0.5 <- c(pk_comp_range_0.5[[2]], pk_range_0.5[[2]], pf_range_0.5[[2]], 
-#                   pu_range_0.5[[2]], pus_range_0.5[[2]], pj_range_0.5[[2]], 
-#                   pm_range_0.5[[2]])
-# aoo_vals_0.75 <- c(pk_comp_range_0.75[[2]], pk_range_0.75[[2]], pf_range_0.75[[2]], 
-#                    pu_range_0.75[[2]], pus_range_0.75[[2]], pj_range_0.75[[2]], 
-#                    pm_range_0.75[[2]])
-# 
-# save(aoo_vals_mtp, file = here("data", "biodiversity", "output", "range_size",
-#                                "aoo_vals_mtp.RData"))
-# save(aoo_vals_p10, file = here("data", "biodiversity", "output", "range_size",
-#                                "aoo_vals_p10.RData"))
-# save(aoo_vals_0.5, file = here("data", "biodiversity", "output", "range_size",
-#                                "aoo_vals_0.5.RData"))
-# save(aoo_vals_0.75, file = here("data", "biodiversity", "output", "range_size",
-#                                 "aoo_vals_0.75.RData"))
-# 
-# aoo_vals_mtp <- get(load(here("data", "biodiversity", "output","range_size",
-#                               "aoo_vals_mtp.RData")))
-# aoo_vals_0.5 <- get(load(here("data", "biodiversity", "output","range_size",
-#                               "aoo_vals_0.5.RData")))
-# aoo_vals_0.75 <- get(load(here("data", "biodiversity", "output","range_size",
-#                               "aoo_vals_0.75.RData")))
-
 species <- c(rep("P. kerguelensis (s.l.)",20), 
-             rep("P. kerguelensis",20),
+             rep("P. kerguelensis (s.s.)",20),
              rep("P. fragarius",20),
              rep("P. unruhi",20),
              rep("P. uskglassi",20),
              rep("P. joubini",20),
              rep("P. mawsoni",20))
 
-# rl_df <- data.frame(species, eoo_vals_mtp, eoo_vals_0.5, eoo_vals_0.75,
-#                     aoo_vals_mtp, aoo_vals_0.5, aoo_vals_0.75)
 rl_df <- data.frame(species, 
                     rs_eoo_b0.5, rs_aoo_b0.5, 
                     rs_eoo_b0.75, rs_aoo_b0.75) %>%
-  mutate(species = factor(species, levels = c("P. kerguelensis (s.l.)", "P. kerguelensis",
+  mutate(species = factor(species, levels = c("P. kerguelensis (s.l.)", 
+                                              "P. kerguelensis (s.s.)",
                                               "P. fragarius", "P. unruhi",
                                               "P. uskglassi", "P. joubini",
                                               "P. mawsoni")))
@@ -688,45 +539,31 @@ write.csv(aoo_b075_es, file = here(dirname(here()), "data", "biodiversity", "out
                                    "aoo_b075_es.csv"))
 
 
-
-# rl_eoo <- rl_df_mtp %>% filter(name == "eoo_vals_mtp")
-# rl_eoo_0.5 <- rl_df_0.5 %>% filter(name == "eoo_vals_0.5")
-# rl_eoo_0.75 <- rl_df_0.75 %>% filter(name == "eoo_vals_0.75")
-# 
-# rl_aoo <- rl_df_mtp %>% filter(name == "aoo_vals_mtp") %>% 
-#   mutate(logv = log(value))
-# rl_aoo_0.5 <- rl_df_0.5 %>% filter(name == "aoo_vals_0.5") %>% 
-#   mutate(logv = log(value))
-# rl_aoo_0.75 <- rl_df_0.75 %>% filter(name == "aoo_vals_0.75") %>% 
-#   mutate(logv = log(value))
-
-# rl_med_eoo <-  rl_df %>% filter(name == "med_eoo")
-# rl_med_aoo <-  rl_df %>% filter(name == "med_aoo")
-
-
 # Could remove x axis text for EOO plots and just use AOO text when combining figures
-eoo_b05_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b05, 
-                                      y = rs_eoo_b0.5, 
-                                      x = species, 
-                                      type = "nonparametric",
-                                      pairwise.display = "none", # "none"
-                                      results.subtitle = F,
-                                      p.adjust.method = "holm",
-                                      nboot = 200,
-                                      xlab = "Species",
-                                      ylab = bquote("Extent of occurrence " (km^2)),
-                                      ggtheme = ggplot2::theme_bw(),
-                                      point.args = list(alpha = 1),
-                                      ggsignif.args = list(textsize = 4, 
-                                                           vjust = 0.5),
-                                      centrality.label.args = list(size = 4),
-                                      centrality.plotting = F) +
+eoo_b05_kw <- rl_df_b05 %>% 
+  mutate(rs_eoo_b0.5 = rs_eoo_b0.5/10000000) %>%
+  ggstatsplot::ggbetweenstats(y = rs_eoo_b0.5, 
+        x = species, 
+        type = "nonparametric",
+        pairwise.display = "none", # "none"
+        results.subtitle = F,
+        p.adjust.method = "holm",
+        nboot = 200,
+        xlab = "Species",
+        ylab = expression(Extent~of~occurrence~(x ~ 10^{7} ~ km^{2})),
+        ggtheme = ggplot2::theme_bw(),
+        point.args = list(alpha = 1),
+        ggsignif.args = list(textsize = 4, 
+                             vjust = 0.5),
+        centrality.label.args = list(size = 4),
+        centrality.plotting = F) +
   scale_colour_manual(values = unlist(cartocolors[cartocolors$Name == "Safe",8]),
                       breaks = unique(rl_df_b05$species)) +
-  scale_y_continuous(labels = expSup) +
+  #scale_y_continuous(labels = expSup) +
   theme(axis.title = element_text(size = 18),
+        axis.title.x = element_text(colour = "white"),
         axis.text = element_text(size = 14),
-        axis.text.x = element_text(vjust = 0.5, face = "italic")) +
+        axis.text.x = element_text(vjust = 0.5, face = "italic", colour = "white")) +
   guides(x = guide_axis(n.dodge = 2))
 
 # Note: need to display statistics in figure in order to extract them.
@@ -734,51 +571,71 @@ eoo_b05_kw_stats <- ggstatsplot::extract_stats(eoo_b05_kw)$subtitle_data
 eoo_b05_ph_stats <- ggstatsplot::extract_stats(eoo_b05_kw)$pairwise_comparisons_data %>%
   mutate(metric = "EOO") %>% mutate(beta = 0.5)
 
-eoo_b075_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b075, 
-                                          y = rs_eoo_b0.75, 
-                                          x = species, 
-                                          type = "nonparametric",
-                                          pairwise.display = "none", # "none"
-                                          results.subtitle = F,
-                                          p.adjust.method = "holm",
-                                          nboot = 200,
-                                          xlab = "Species",
-                                          ylab = bquote("Extent of occurrence " (km^2)),
-                                          ggtheme = ggplot2::theme_bw(),
-                                          point.args = list(alpha = 1),
-                                          ggsignif.args = list(textsize = 4, vjust = 0.5),
-                                          centrality.label.args = list(size = 4),
-                                          centrality.plotting = F) +
+## Get letters for plot
+pvs_eoo_b05 <- eoo_b05_ph_stats$p.value
+names(pvs_eoo_b05) <- paste0(eoo_b05_ph_stats$group1,"-",eoo_b05_ph_stats$group2)
+pw_letters_eoo_b05 <- multcompView::multcompLetters(pvs_eoo_b05)
+
+## Adding letters to plot (based on not including statistics)
+eoo_b05_kw +
+  annotate(geom = "text", x = 1:7, y = 4.1, 
+           label = pw_letters_eoo_b05$Letters[c(3,4,1,5,6,2,7)])
+
+eoo_b075_kw <- rl_df_b075 %>%
+  mutate(rs_eoo_b0.75 = rs_eoo_b0.75/1000) %>%
+  ggstatsplot::ggbetweenstats(y = rs_eoo_b0.75, 
+      x = species, 
+      type = "nonparametric",
+      pairwise.display = "none", # "none"
+      results.subtitle = F,
+      p.adjust.method = "holm",
+      nboot = 200,
+      xlab = "Species",
+      ylab = expression(Extent~of~occurrence~(x ~ 10^{7} ~ km^{2})),
+      ggtheme = ggplot2::theme_bw(),
+      point.args = list(alpha = 1),
+      ggsignif.args = list(textsize = 4, vjust = 0.5),
+      centrality.label.args = list(size = 4),
+      centrality.plotting = F) +
   scale_colour_manual(values = unlist(cartocolors[cartocolors$Name == "Safe",8]),
                       breaks = unique(rl_df_b075$species)) +
   scale_y_continuous(labels = expSup) +
   theme(axis.title = element_text(size = 18),
+        axis.title.x = element_text(colour = "white"),
         axis.text = element_text(size = 14),
-        axis.text.x = element_text(vjust = 0.5, face = "italic")) +
+        axis.text.x = element_text(vjust = 0.5, face = "italic", colour = "white")) +
   guides(x = guide_axis(n.dodge = 2))
 
 eoo_b075_kw_stats <- ggstatsplot::extract_stats(eoo_b075_kw)$subtitle_data
 eoo_b075_ph_stats <- ggstatsplot::extract_stats(eoo_b075_kw)$pairwise_comparisons_data %>%
   mutate(metric = "EOO") %>% mutate(beta = 0.75)
 
-aoo_b05_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b05, 
-                                      y = rs_aoo_b0.5, 
-                                      x = species, 
-                                      type = "nonparametric",
-                                      pairwise.display = "none", # "none"
-                                      results.subtitle = F,
-                                      p.adjust.method = "holm",
-                                      nboot = 200,
-                                      xlab = "Species",
-                                      ylab = bquote("Area of occupancy " (km^2)),
-                                      ggtheme = ggplot2::theme_bw(),
-                                      point.args = list(alpha = 1),
-                                      ggsignif.args = list(textsize = 4, vjust = 0.5),
-                                      centrality.label.args = list(size = 4),
-                                      centrality.plotting = F) +
+## Get letters for plot
+pvs <- eoo_b075_ph_stats$p.value
+names(pvs) <- paste0(eoo_b075_ph_stats$group1,"-",eoo_b075_ph_stats$group2)
+pw_letters <- multcompView::multcompLetters(pvs)
+
+## AOO with beta = 0.75
+aoo_b05_kw <- rl_df_b05 %>% 
+  mutate(rs_aoo_b0.5 = rs_aoo_b0.5/10000) %>%
+  ggstatsplot::ggbetweenstats(
+    y = rs_aoo_b0.5, 
+    x = species, 
+    type = "nonparametric",
+    pairwise.display = "none", # "none"
+    results.subtitle = F,
+    p.adjust.method = "holm",
+    nboot = 200,
+    xlab = "Species",
+    ylab = expression(Area~of~occupancy~(x~10^{4}~km^{2})),
+    ggtheme = ggplot2::theme_bw(),
+    point.args = list(alpha = 1),
+    ggsignif.args = list(textsize = 4, vjust = 0.5),
+    centrality.label.args = list(size = 4),
+    centrality.plotting = F) +
   scale_colour_manual(values = unlist(cartocolors[cartocolors$Name == "Safe",8]),
                       breaks = unique(rl_df_b05$species)) +
-  scale_y_continuous(labels = expSup) +
+  #scale_y_continuous(labels = expSup) +
   theme(axis.title = element_text(size = 18),
         axis.text = element_text(size = 14),
         axis.text.x = element_text(vjust = 0.5, face = "italic")) +
@@ -788,21 +645,27 @@ aoo_b05_kw_stats <- ggstatsplot::extract_stats(aoo_b05_kw)$subtitle_data
 aoo_b05_ph_stats <- ggstatsplot::extract_stats(aoo_b05_kw)$pairwise_comparisons_data %>%
   mutate(metric = "AOO") %>% mutate(beta = 0.5)
 
-aoo_b075_kw <- ggstatsplot::ggbetweenstats(data = rl_df_b075, 
-                                           y = rs_aoo_b0.75, 
-                                           x = species, 
-                                           type = "nonparametric",
-                                          pairwise.display = "none", # "none"
-                                          results.subtitle = F,
-                                          p.adjust.method = "holm",
-                                           nboot = 200,
-                                           xlab = "Species",
-                                           ylab = bquote("Area of occupancy " (km^2)),
-                                           ggtheme = ggplot2::theme_bw(),
-                                           point.args = list(alpha = 1),
-                                           ggsignif.args = list(textsize = 4, vjust = 0.5),
-                                           centrality.label.args = list(size = 4),
-                                          centrality.plotting = F) +
+## Get letters for plot
+pvs <- aoo_b05_ph_stats$p.value
+names(pvs) <- paste0(aoo_b05_ph_stats$group1,"-",aoo_b05_ph_stats$group2)
+pw_letters <- multcompView::multcompLetters(pvs)
+
+aoo_b075_kw <- rl_df_b075 %>% 
+  mutate(rs_aoo_b0.75 = rs_aoo_b0.75) %>%
+  ggstatsplot::ggbetweenstats(y = rs_aoo_b0.75, 
+     x = species, 
+     type = "nonparametric",
+    pairwise.display = "none", # "none"
+    results.subtitle = F,
+    p.adjust.method = "holm",
+     nboot = 200,
+     xlab = "Species",
+     ylab = bquote("Area of occupancy " (km^2)),
+     ggtheme = ggplot2::theme_bw(),
+     point.args = list(alpha = 1),
+     ggsignif.args = list(textsize = 4, vjust = 0.5),
+     centrality.label.args = list(size = 4),
+    centrality.plotting = F) +
   scale_colour_manual(values = unlist(cartocolors[cartocolors$Name == "Safe",8]),
                       breaks = unique(rl_df_b075$species)) +
   scale_y_continuous(labels = expSup) +
@@ -815,6 +678,12 @@ aoo_b075_kw_stats <- ggstatsplot::extract_stats(aoo_b075_kw)$subtitle_data
 aoo_b075_ph_stats <- ggstatsplot::extract_stats(aoo_b075_kw)$pairwise_comparisons_data %>%
   mutate(metric = "AOO") %>% mutate(beta = 0.75)
 
+## Get letters for plot
+pvs <- aoo_b05_ph_stats$p.value
+names(pvs) <- paste0(aoo_b05_ph_stats$group1,"-",aoo_b05_ph_stats$group2)
+pw_letters <- multcompView::multcompLetters(pvs)
+
+## Combine statistics
 kw_stats <- as.data.frame(bind_rows(eoo_b05_kw_stats, eoo_b075_kw_stats, 
                       aoo_b05_kw_stats, aoo_b075_kw_stats)) %>%
   dplyr::select(-ncol(.))
@@ -829,7 +698,7 @@ ph_stats <- as.data.frame(bind_rows(eoo_b05_ph_stats, eoo_b075_ph_stats,
 write.csv(ph_stats, file = here(dirname(here()),"data", "biodiversity", 
                                 "output", "range_size", "ph_stats.csv"))
 
-## Need figures made without stats
+## This needs figures made without stats
 ggpubr::ggarrange(eoo_b05_kw, aoo_b05_kw, ncol = 1, nrow = 2, align = "v")
 ggpubr::ggarrange(eoo_b075_kw, aoo_b075_kw, ncol = 1, nrow = 2, align = "v")
 
