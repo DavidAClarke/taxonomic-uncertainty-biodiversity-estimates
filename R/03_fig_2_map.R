@@ -72,7 +72,7 @@ ggplot() +
                                 expression(italic("P. joubini")),
                                 expression(italic("P. mawsoni")))) +
   theme_bw() +
-  theme(panel.background = element_rect(fill = "lightblue"),
+  theme(panel.background = element_rect(fill = "#F0FFFF"),
         legend.key = element_rect(fill = "transparent", colour = "transparent"),
         panel.grid.major = element_line(colour = "transparent"),
         axis.text = element_blank(),
