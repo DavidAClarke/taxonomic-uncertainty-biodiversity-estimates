@@ -8,7 +8,7 @@
 ## Load an Rdata file so to load it under a different name----
 #https://stackoverflow.com/questions/5577221/can-i-load-a-saved-r-object-into-a-new-object-name
 loadRData <- function(fileName){
-  #loads an RData file, and returns it
+  #loads an RData file, and returns it using object name
   load(fileName)
   get(ls()[ls() != "fileName"])
 }
