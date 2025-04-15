@@ -577,12 +577,12 @@ names(pvs_eoo_b05) <- paste0(eoo_b05_ph_stats$group1,"-",eoo_b05_ph_stats$group2
 pw_letters_eoo_b05 <- multcompView::multcompLetters(pvs_eoo_b05)
 
 ## Adding letters to plot (based on not including statistics)
-eoo_b05_kw +
-  annotate(geom = "text", x = 1:7, y = 4.1, 
+eoo_b05_kw <- eoo_b05_kw + 
+  annotate(geom = "text", x = 1:7, y = 5.2, size = 5,
            label = pw_letters_eoo_b05$Letters[c(3,4,1,5,6,2,7)])
 
 eoo_b075_kw <- rl_df_b075 %>%
-  mutate(rs_eoo_b0.75 = rs_eoo_b0.75/1000) %>%
+  mutate(rs_eoo_b0.75 = rs_eoo_b0.75/10000000) %>%
   ggstatsplot::ggbetweenstats(y = rs_eoo_b0.75, 
       x = species, 
       type = "nonparametric",
@@ -599,7 +599,7 @@ eoo_b075_kw <- rl_df_b075 %>%
       centrality.plotting = F) +
   scale_colour_manual(values = unlist(cartocolors[cartocolors$Name == "Safe",8]),
                       breaks = unique(rl_df_b075$species)) +
-  scale_y_continuous(labels = expSup) +
+  #scale_y_continuous(labels = expSup) +
   theme(axis.title = element_text(size = 18),
         axis.title.x = element_text(colour = "white"),
         axis.text = element_text(size = 14),
@@ -611,9 +611,14 @@ eoo_b075_ph_stats <- ggstatsplot::extract_stats(eoo_b075_kw)$pairwise_comparison
   mutate(metric = "EOO") %>% mutate(beta = 0.75)
 
 ## Get letters for plot
-pvs <- eoo_b075_ph_stats$p.value
-names(pvs) <- paste0(eoo_b075_ph_stats$group1,"-",eoo_b075_ph_stats$group2)
-pw_letters <- multcompView::multcompLetters(pvs)
+pvs_eoo_b075 <- eoo_b075_ph_stats$p.value
+names(pvs_eoo_b075) <- paste0(eoo_b075_ph_stats$group1,"-",eoo_b075_ph_stats$group2)
+pw_letters_eoo_b075 <- multcompView::multcompLetters(pvs_eoo_b075)
+
+## Adding letters to plot (based on not including statistics)
+eoo_b075_kw <- eoo_b075_kw + 
+  annotate(geom = "text", x = 1:7, y = 4.1, size = 5,
+           label = pw_letters_eoo_b075$Letters[c(3,4,1,5,6,2,7)])
 
 ## AOO with beta = 0.75
 aoo_b05_kw <- rl_df_b05 %>% 
@@ -646,12 +651,17 @@ aoo_b05_ph_stats <- ggstatsplot::extract_stats(aoo_b05_kw)$pairwise_comparisons_
   mutate(metric = "AOO") %>% mutate(beta = 0.5)
 
 ## Get letters for plot
-pvs <- aoo_b05_ph_stats$p.value
-names(pvs) <- paste0(aoo_b05_ph_stats$group1,"-",aoo_b05_ph_stats$group2)
-pw_letters <- multcompView::multcompLetters(pvs)
+pvs_aoo_b05 <- aoo_b05_ph_stats$p.value
+names(pvs_aoo_b05) <- paste0(aoo_b05_ph_stats$group1,"-",aoo_b05_ph_stats$group2)
+pw_letters_aoo_b05 <- multcompView::multcompLetters(pvs_aoo_b05)
+
+## Adding letters to plot (based on not including statistics)
+aoo_b05_kw <- aoo_b05_kw + 
+  annotate(geom = "text", x = 1:7, y = 2.99, size = 5,
+           label = pw_letters_aoo_b05$Letters[c(3,4,1,5,6,2,7)])
 
 aoo_b075_kw <- rl_df_b075 %>% 
-  mutate(rs_aoo_b0.75 = rs_aoo_b0.75) %>%
+  mutate(rs_aoo_b0.75 = rs_aoo_b0.75/1000) %>%
   ggstatsplot::ggbetweenstats(y = rs_aoo_b0.75, 
      x = species, 
      type = "nonparametric",
@@ -660,7 +670,7 @@ aoo_b075_kw <- rl_df_b075 %>%
     p.adjust.method = "holm",
      nboot = 200,
      xlab = "Species",
-     ylab = bquote("Area of occupancy " (km^2)),
+     ylab = expression(Area~of~occupancy~(x~10^{3}~km^{2})),
      ggtheme = ggplot2::theme_bw(),
      point.args = list(alpha = 1),
      ggsignif.args = list(textsize = 4, vjust = 0.5),
@@ -668,7 +678,7 @@ aoo_b075_kw <- rl_df_b075 %>%
     centrality.plotting = F) +
   scale_colour_manual(values = unlist(cartocolors[cartocolors$Name == "Safe",8]),
                       breaks = unique(rl_df_b075$species)) +
-  scale_y_continuous(labels = expSup) +
+  #scale_y_continuous(labels = expSup) +
   theme(axis.title = element_text(size = 18),
         axis.text = element_text(size = 14),
         axis.text.x = element_text(vjust = 0.5, face = "italic")) +
@@ -679,9 +689,14 @@ aoo_b075_ph_stats <- ggstatsplot::extract_stats(aoo_b075_kw)$pairwise_comparison
   mutate(metric = "AOO") %>% mutate(beta = 0.75)
 
 ## Get letters for plot
-pvs <- aoo_b05_ph_stats$p.value
-names(pvs) <- paste0(aoo_b05_ph_stats$group1,"-",aoo_b05_ph_stats$group2)
-pw_letters <- multcompView::multcompLetters(pvs)
+pvs_aoo_b075 <- aoo_b075_ph_stats$p.value
+names(pvs_aoo_b075) <- paste0(aoo_b075_ph_stats$group1,"-",aoo_b075_ph_stats$group2)
+pw_letters_aoo_b075 <- multcompView::multcompLetters(pvs_aoo_b075)
+
+## Adding letters to plot (based on not including statistics)
+aoo_b075_kw <- aoo_b075_kw + 
+  annotate(geom = "text", x = 1:7, y = 9.99, size = 5,
+           label = pw_letters_aoo_b075$Letters[c(3,4,1,5,6,2,7)])
 
 ## Combine statistics
 kw_stats <- as.data.frame(bind_rows(eoo_b05_kw_stats, eoo_b075_kw_stats, 
@@ -702,30 +717,10 @@ write.csv(ph_stats, file = here(dirname(here()),"data", "biodiversity",
 ggpubr::ggarrange(eoo_b05_kw, aoo_b05_kw, ncol = 1, nrow = 2, align = "v")
 ggpubr::ggarrange(eoo_b075_kw, aoo_b075_kw, ncol = 1, nrow = 2, align = "v")
 
+
+## Effect size figures
 ph_stats <- read.csv(here(dirname(here()), "data", "biodiversity", "output", 
                           "range_size", "ph_stats_diffmodels.csv"))
-
-# eoo_0.5 <- ph_stats %>% filter(metric == "EOO") %>% filter(beta == 0.5)
-# hist(eoo_0.5$VDA)
-# plot(eoo_0.5$VDA ~ eoo_0.5$p.value)
-# abline(v = 0.05, col = "red")
-# abline(h = 0.5, lty = 2) #h = 0 if CD or rg, 0.5 if VDA
-# 
-# eoo_0.75 <- ph_stats %>% filter(metric == "EOO") %>% filter(beta == 0.75)
-# hist(eoo_0.75$VDA)
-# plot(eoo_0.75$VDA ~ eoo_0.75$p.value)
-# abline(v = 0.05, col = "red")
-# abline(h = 0.5, lty = 2) #h = 0 if CD or rg, 0.5 if VDA
-# 
-# aoo_0.5 <- ph_stats %>% filter(metric == "AOO") %>% filter(beta == 0.5)
-# plot(aoo_0.5$VDA ~ aoo_0.5$p.value)
-# abline(v = 0.05, col = "red")
-# abline(h = 0.5, lty = 2) #h = 0 if CD or rg, 0.5 if VDA
-# 
-# aoo_0.75 <- ph_stats %>% filter(metric == "AOO") %>% filter(beta == 0.75)
-# plot(aoo_0.75$VDA ~ aoo_0.75$p.value)
-# abline(v = 0.05, col = "red")
-# abline(h = 0.5, lty = 2) #h = 0 if CD or rg, 0.5 if VDA
 
 g1 <- ph_stats %>% 
   filter(beta == 0.5) %>% 
@@ -758,41 +753,7 @@ fut_lyrs <- list.files(here("data", "biodiversity", "output", "reps_sdm"),
 pk_comp_fut_rasters <- prep_fut_lyrs(fut_lyrs, "comp")
 pk_fut_rasters <- prep_fut_lyrs(fut_lyrs, "new")
 
-# 
-# fut_pk_comp <- fut_lyrs[str_detect(fut_lyrs,"comp")]
-# 
-# fut_pk_comp_cur <- fut_pk_comp[str_detect(fut_pk_comp,"for_fut")]
-# fut_pk_comp_205026 <- fut_pk_comp[str_detect(fut_pk_comp,"2050RCP26")]
-# fut_pk_comp_205045 <- fut_pk_comp[str_detect(fut_pk_comp,"2050RCP45")]
-# fut_pk_comp_205060 <- fut_pk_comp[str_detect(fut_pk_comp,"2050RCP60")]
-# fut_pk_comp_205085 <- fut_pk_comp[str_detect(fut_pk_comp,"2050RCP85")]
-# 
-# fut_pk_comp_sdm <- rast(fut_pk_comp_cur)
-# fut_pk_comp_205026_sdm <- rast(fut_pk_comp_205026)
-# fut_pk_comp_205045_sdm <- rast(fut_pk_comp_205045)
-# fut_pk_comp_205060_sdm <- rast(fut_pk_comp_205060)
-# fut_pk_comp_205085_sdm <- rast(fut_pk_comp_205085)
-# 
-# fut_pk_comp_210026 <- fut_pk_comp[str_detect(fut_pk_comp,"2100RCP26")]
-# fut_pk_comp_210045 <- fut_pk_comp[str_detect(fut_pk_comp,"2100RCP45")]
-# fut_pk_comp_210060 <- fut_pk_comp[str_detect(fut_pk_comp,"2100RCP60")]
-# fut_pk_comp_210085 <- fut_pk_comp[str_detect(fut_pk_comp,"2100RCP85")]
-# 
-# fut_pk_comp_210026_sdm <- rast(fut_pk_comp_210026)
-# fut_pk_comp_210045_sdm <- rast(fut_pk_comp_210045)
-# fut_pk_comp_210060_sdm <- rast(fut_pk_comp_210060)
-# fut_pk_comp_210085_sdm <- rast(fut_pk_comp_210085)
-# 
-# 
-# pk_comp_fut_rasters <- list(fut_pk_comp_sdm, fut_pk_comp_205026_sdm,
-#                          fut_pk_comp_205045_sdm,fut_pk_comp_205060_sdm,
-#                          fut_pk_comp_205085_sdm, fut_pk_comp_210026_sdm,
-#                          fut_pk_comp_210045_sdm,fut_pk_comp_210060_sdm,
-#                          fut_pk_comp_210085_sdm)
-# 
-# rm(fut_pk_comp_sdm, fut_pk_comp_205026_sdm,fut_pk_comp_205045_sdm,
-#    fut_pk_comp_205060_sdm,fut_pk_comp_205085_sdm, fut_pk_comp_210026_sdm,
-#    fut_pk_comp_210045_sdm,fut_pk_comp_210060_sdm, fut_pk_comp_210085_sdm)
+
 
 betas <- c(0.5, 0.75)
 
@@ -836,185 +797,39 @@ for(n in betas){
   
 }
 
-# 
-# fut_pk <- fut_lyrs[str_detect(fut_lyrs,"new")]
-# 
-# fut_pk_cur <- fut_pk[str_detect(fut_pk,"for_fut")]
-# fut_pk_205026 <- fut_pk[str_detect(fut_pk,"2050RCP26")]
-# fut_pk_205045 <- fut_pk[str_detect(fut_pk,"2050RCP45")]
-# fut_pk_205060 <- fut_pk[str_detect(fut_pk,"2050RCP60")]
-# fut_pk_205085 <- fut_pk[str_detect(fut_pk,"2050RCP85")]
-# 
-# fut_pk_sdm <- rast(fut_pk_cur)
-# fut_pk_205026_sdm <-rast(fut_pk_205026)
-# fut_pk_205045_sdm <- rast(fut_pk_205045)
-# fut_pk_205060_sdm <- rast(fut_pk_205060)
-# fut_pk_205085_sdm <- rast(fut_pk_205085)
-# 
-# fut_pk_210026 <- fut_pk[str_detect(fut_pk,"2100RCP26")]
-# fut_pk_210045 <- fut_pk[str_detect(fut_pk,"2100RCP45")]
-# fut_pk_210060 <- fut_pk[str_detect(fut_pk,"2100RCP60")]
-# fut_pk_210085 <- fut_pk[str_detect(fut_pk,"2100RCP85")]
-# 
-# fut_pk_210026_sdm <- rast(fut_pk_210026)
-# fut_pk_210045_sdm <- rast(fut_pk_210045)
-# fut_pk_210060_sdm <- rast(fut_pk_210060)
-# fut_pk_210085_sdm <- rast(fut_pk_210085)
+pkcomp_rs_eoo_b0.5 <- loadRData(file = here(dirname(here()),"data", 
+                                            "biodiversity", "output", 
+                                            "range_size", 
+                                            "fut_rs_eoo_pkcomp_b_0.5.RData"))
+pk_rs_eoo_b0.5 <- loadRData(file = here(dirname(here()),"data", "biodiversity", 
+                                        "output", "range_size", 
+                                        "fut_rs_eoo_pk_b_0.5.RData"))
 
+pkcomp_rs_aoo_b0.5 <- loadRData(file = here(dirname(here()),"data", 
+                                            "biodiversity", "output", 
+                                            "range_size", 
+                                            "fut_rs_aoo_pkcomp_b_0.5.RData"))
+pk_rs_aoo_b0.5 <- loadRData(file = here(dirname(here()),"data", "biodiversity", 
+                                        "output", "range_size", 
+                                        "fut_rs_aoo_pk_b_0.5.RData"))
 
-# pk_fut_rasters <- c(fut_pk_sdm, fut_pk_205026_sdm,
-#                          fut_pk_205045_sdm,fut_pk_205060_sdm,
-#                          fut_pk_205085_sdm, fut_pk_210026_sdm,
-#                          fut_pk_210045_sdm,fut_pk_210060_sdm,
-#                          fut_pk_210085_sdm)
-# 
-# rm(fut_pk_sdm, fut_pk_205026_sdm, fut_pk_205045_sdm,fut_pk_205060_sdm,
-#    fut_pk_205085_sdm, fut_pk_210026_sdm,fut_pk_210045_sdm,fut_pk_210060_sdm,
-#    fut_pk_210085_sdm)
+pkcomp_rs_eoo_b0.75 <- loadRData(file = here(dirname(here()),"data", 
+                                             "biodiversity", "output", 
+                                             "range_size", 
+                                             "fut_rs_eoo_pkcomp_b_0.75.RData"))
+pk_rs_eoo_b0.75 <- loadRData(file = here(dirname(here()),"data", "biodiversity", 
+                                         "output", "range_size", 
+                                         "fut_rs_eoo_pk_b_0.75.RData"))
 
+pkcomp_rs_aoo_b0.75 <- loadRData(file = here(dirname(here()),"data", 
+                                             "biodiversity", "output", 
+                                             "range_size", 
+                                             "fut_rs_aoo_pkcomp_b_0.75.RData"))
+pk_rs_aoo_b0.75 <- loadRData(file = here(dirname(here()),"data", "biodiversity", 
+                                         "output", "range_size", 
+                                         "fut_rs_aoo_pk_b_0.75.RData"))
 
-
-# # P. kerguelensis (sensu lato)
-# fut_pk_comp_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_sdm, status = "comp")
-# fut_pk_comp_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_sdm, status = "comp", thresh = 0.5)
-# fut_pk_comp_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_sdm, status = "comp", thresh = 0.75)
-# fut_pk_comp_205026_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205026_sdm, status = "comp")
-# fut_pk_comp_205026_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205026_sdm, status = "comp", thresh = 0.5)
-# fut_pk_comp_205026_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205026_sdm, status = "comp", thresh = 0.75)
-# fut_pk_comp_205045_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205045_sdm, status = "comp")
-# fut_pk_comp_205045_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205045_sdm, status = "comp", thresh = 0.5)
-# fut_pk_comp_205045_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205045_sdm, status = "comp", thresh = 0.75)
-# fut_pk_comp_205060_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205060_sdm, status = "comp")
-# fut_pk_comp_205060_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205060_sdm, status = "comp", thresh = 0.5)
-# fut_pk_comp_205060_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205060_sdm, status = "comp", thresh = 0.75)
-# fut_pk_comp_205085_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205085_sdm, status = "comp")
-# fut_pk_comp_205085_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205085_sdm, status = "comp", thresh = 0.5)
-# fut_pk_comp_205085_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_205085_sdm, status = "comp", thresh = 0.75)
-# fut_pk_comp_210026_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210026_sdm, status = "comp")
-# fut_pk_comp_210026_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210026_sdm, status = "comp", thresh = 0.5)
-# fut_pk_comp_210026_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210026_sdm, status = "comp", thresh = 0.75)
-# fut_pk_comp_210045_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210045_sdm, status = "comp")
-# fut_pk_comp_210045_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210045_sdm, status = "comp", thresh = 0.5)
-# fut_pk_comp_210045_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210045_sdm, status = "comp", thresh = 0.75)
-# fut_pk_comp_210060_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210060_sdm, status = "comp")
-# fut_pk_comp_210060_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210060_sdm, status = "comp", thresh = 0.5)
-# fut_pk_comp_210060_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210060_sdm, status = "comp", thresh = 0.75)
-# fut_pk_comp_210085_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210085_sdm, status = "comp")
-# fut_pk_comp_210085_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210085_sdm, status = "comp", thresh = 0.5)
-# fut_pk_comp_210085_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_comp_210085_sdm, status = "comp", thresh = 0.75)
-# 
-# 
-# 
-# # P. kerguelensis
-# fut_pk_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_sdm, status = "new")
-# fut_pk_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_sdm, status = "new", thresh = 0.5)
-# fut_pk_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_sdm, status = "new", thresh = 0.75)
-# fut_pk_205026_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205026_sdm, status = "new")
-# fut_pk_205026_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205026_sdm, status = "new", thresh = 0.5)
-# fut_pk_205026_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205026_sdm, status = "new", thresh = 0.75)
-# fut_pk_205045_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205045_sdm, status = "new")
-# fut_pk_205045_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205045_sdm, status = "new", thresh = 0.5)
-# fut_pk_205045_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205045_sdm, status = "new", thresh = 0.75)
-# fut_pk_205060_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205060_sdm, status = "new")
-# fut_pk_205060_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205060_sdm, status = "new", thresh = 0.5)
-# fut_pk_205060_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205060_sdm, status = "new", thresh = 0.75)
-# fut_pk_205085_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205085_sdm, status = "new")
-# fut_pk_205085_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205085_sdm, status = "new", thresh = 0.5)
-# fut_pk_205085_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_205085_sdm, status = "new", thresh = 0.75)
-# fut_pk_210026_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210026_sdm, status = "new")
-# fut_pk_210026_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210026_sdm, status = "new", thresh = 0.5)
-# fut_pk_210026_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210026_sdm, status = "new", thresh = 0.75)
-# fut_pk_210045_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210045_sdm, status = "new")
-# fut_pk_210045_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210045_sdm, status = "new", thresh = 0.5)
-# fut_pk_210045_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210045_sdm, status = "new", thresh = 0.75)
-# fut_pk_210060_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210060_sdm, status = "new")
-# fut_pk_210060_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210060_sdm, status = "new", thresh = 0.5)
-# fut_pk_210060_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210060_sdm, status = "new", thresh = 0.75)
-# fut_pk_210085_range <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210085_sdm, status = "new")
-# fut_pk_210085_range_0.5 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210085_sdm, status = "new", thresh = 0.5)
-# fut_pk_210085_range_0.75 <- range_fun(bio_data, "Promachocrinus kerguelensis", fut_pk_210085_sdm, status = "new", thresh = 0.75)
-# 
-# fut_eoo_vals <- c(fut_pk_comp_range[[1]], fut_pk_comp_205026_range[[1]],
-#                   fut_pk_comp_205045_range[[1]], fut_pk_comp_205060_range[[1]],
-#                   fut_pk_comp_205085_range[[1]], fut_pk_comp_210026_range[[1]],
-#                   fut_pk_comp_210045_range[[1]], fut_pk_comp_210060_range[[1]],
-#                   fut_pk_comp_210085_range[[1]], fut_pk_range[[1]],
-#                   fut_pk_205026_range[[1]], fut_pk_205045_range[[1]],
-#                   fut_pk_205060_range[[1]], fut_pk_205085_range[[1]],
-#                   fut_pk_210026_range[[1]], fut_pk_210045_range[[1]],
-#                   fut_pk_210060_range[[1]], fut_pk_210085_range[[1]])
-# save(fut_eoo_vals, file = here("data", "biodiversity", "output", "range_size", "fut_eoo_vals.RData"))
-pkcomp_rs_eoo_b0.5 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size", "fut_rs_eoo_pkcomp_b_0.5.RData"))
-pk_rs_eoo_b0.5 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size", "fut_rs_eoo_pk_b_0.5.RData"))
-
-pkcomp_rs_aoo_b0.5 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size", "fut_rs_aoo_pkcomp_b_0.5.RData"))
-pk_rs_aoo_b0.5 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size", "fut_rs_aoo_pk_b_0.5.RData"))
-
-# fut_eoo_vals_0.5 <- c(fut_pk_comp_range_0.5[[1]], fut_pk_comp_205026_range_0.5[[1]],
-#                   fut_pk_comp_205045_range_0.5[[1]], fut_pk_comp_205060_range_0.5[[1]],
-#                   fut_pk_comp_205085_range_0.5[[1]], fut_pk_comp_210026_range_0.5[[1]],
-#                   fut_pk_comp_210045_range_0.5[[1]], fut_pk_comp_210060_range_0.5[[1]],
-#                   fut_pk_comp_210085_range_0.5[[1]], fut_pk_range_0.5[[1]],
-#                   fut_pk_205026_range_0.5[[1]], fut_pk_205045_range_0.5[[1]],
-#                   fut_pk_205060_range_0.5[[1]], fut_pk_205085_range_0.5[[1]],
-#                   fut_pk_210026_range_0.5[[1]], fut_pk_210045_range_0.5[[1]],
-#                   fut_pk_210060_range_0.5[[1]], fut_pk_210085_range_0.5[[1]])
-# save(fut_eoo_vals_0.5, file = here("data", "biodiversity", "output", "range_size", "fut_eoo_vals_0.5.RData"))
-pkcomp_rs_eoo_b0.75 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size", "fut_rs_eoo_pkcomp_b_0.75.RData"))
-pk_rs_eoo_b0.75 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size", "fut_rs_eoo_pk_b_0.75.RData"))
-
-pkcomp_rs_aoo_b0.75 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size", "fut_rs_aoo_pkcomp_b_0.75.RData"))
-pk_rs_aoo_b0.75 <- loadRData(file = here(dirname(here()),"data", "biodiversity", "output", "range_size", "fut_rs_aoo_pk_b_0.75.RData"))
-
-# fut_eoo_vals_0.75 <- c(fut_pk_comp_range_0.75[[1]], fut_pk_comp_205026_range_0.75[[1]],
-#                       fut_pk_comp_205045_range_0.75[[1]], fut_pk_comp_205060_range_0.75[[1]],
-#                       fut_pk_comp_205085_range_0.75[[1]], fut_pk_comp_210026_range_0.75[[1]],
-#                       fut_pk_comp_210045_range_0.75[[1]], fut_pk_comp_210060_range_0.75[[1]],
-#                       fut_pk_comp_210085_range_0.75[[1]], fut_pk_range_0.75[[1]],
-#                       fut_pk_205026_range_0.75[[1]], fut_pk_205045_range_0.75[[1]],
-#                       fut_pk_205060_range_0.75[[1]], fut_pk_205085_range_0.75[[1]],
-#                       fut_pk_210026_range_0.75[[1]], fut_pk_210045_range_0.75[[1]],
-#                       fut_pk_210060_range_0.75[[1]], fut_pk_210085_range_0.75[[1]])
-# save(fut_eoo_vals_0.75, file = here("data", "biodiversity", "output", "range_size", "fut_eoo_vals_0.75.RData"))
-#load(file = here("data", "biodiversity", "output", "range_size", "fut_eoo_vals_0.75.RData"))
-
-# fut_aoo_vals <- c(fut_pk_comp_range[[2]], fut_pk_comp_205026_range[[2]],
-#                   fut_pk_comp_205045_range[[2]], fut_pk_comp_205060_range[[2]],
-#                   fut_pk_comp_205085_range[[2]], fut_pk_comp_210026_range[[2]],
-#                   fut_pk_comp_210045_range[[2]], fut_pk_comp_210060_range[[2]],
-#                   fut_pk_comp_210085_range[[2]], fut_pk_range[[2]],
-#                   fut_pk_205026_range[[2]], fut_pk_205045_range[[2]],
-#                   fut_pk_205060_range[[2]], fut_pk_205085_range[[2]],
-#                   fut_pk_210026_range[[2]], fut_pk_210045_range[[2]],
-#                   fut_pk_210060_range[[2]], fut_pk_210085_range[[2]])
-# save(fut_aoo_vals, file = here("data", "biodiversity", "output", "range_size", "fut_aoo_vals.RData"))
-# #load(file = here("data", "biodiversity", "output", "range_size", "fut_aoo_vals.RData"))
-# 
-# fut_aoo_vals_0.5 <- c(fut_pk_comp_range_0.5[[2]], fut_pk_comp_205026_range_0.5[[2]],
-#                       fut_pk_comp_205045_range_0.5[[2]], fut_pk_comp_205060_range_0.5[[2]],
-#                       fut_pk_comp_205085_range_0.5[[2]], fut_pk_comp_210026_range_0.5[[2]],
-#                       fut_pk_comp_210045_range_0.5[[2]], fut_pk_comp_210060_range_0.5[[2]],
-#                       fut_pk_comp_210085_range_0.5[[2]], fut_pk_range_0.5[[2]],
-#                       fut_pk_205026_range_0.5[[2]], fut_pk_205045_range_0.5[[2]],
-#                       fut_pk_205060_range_0.5[[2]], fut_pk_205085_range_0.5[[2]],
-#                       fut_pk_210026_range_0.5[[2]], fut_pk_210045_range_0.5[[2]],
-#                       fut_pk_210060_range_0.5[[2]], fut_pk_210085_range_0.5[[2]])
-# save(fut_aoo_vals_0.5, file = here("data", "biodiversity", "output", "range_size", "fut_aoo_vals_0.5.RData"))
-# #load(file = here("data", "biodiversity", "output", "range_size", "fut_aoo_vals_0.5.RData"))
-# 
-# fut_aoo_vals_0.75 <- c(fut_pk_comp_range_0.75[[2]], fut_pk_comp_205026_range_0.75[[2]],
-#                        fut_pk_comp_205045_range_0.75[[2]], fut_pk_comp_205060_range_0.75[[2]],
-#                        fut_pk_comp_205085_range_0.75[[2]], fut_pk_comp_210026_range_0.75[[2]],
-#                        fut_pk_comp_210045_range_0.75[[2]], fut_pk_comp_210060_range_0.75[[2]],
-#                        fut_pk_comp_210085_range_0.75[[2]], fut_pk_range_0.75[[2]],
-#                        fut_pk_205026_range_0.75[[2]], fut_pk_205045_range_0.75[[2]],
-#                        fut_pk_205060_range_0.75[[2]], fut_pk_205085_range_0.75[[2]],
-#                        fut_pk_210026_range_0.75[[2]], fut_pk_210045_range_0.75[[2]],
-#                        fut_pk_210060_range_0.75[[2]], fut_pk_210085_range_0.75[[2]])
-# save(fut_aoo_vals_0.75, file = here("data", "biodiversity", "output", "range_size", "fut_aoo_vals_0.75.RData"))
-# #load(file = here("data", "biodiversity", "output", "range_size", "fut_aoo_vals_0.75.RData"))
-
-sp <- c(rep("P. kerguelensis (s.l.)", 180), rep("P. kerguelensis", 180))
+sp <- c(rep("P. kerguelensis (s.l.)", 180), rep("P. kerguelensis (s.s.)", 180))
 year <- rep(c(rep("2023",20), rep("2050", 80), rep("2100", 80)),2)
 scenario <- rep(c(rep("Current",20),
                   rep(c(rep("RCP 2.6",20), 
@@ -1027,15 +842,6 @@ fut_eoo_vals_0.75 <- c(pkcomp_rs_eoo_b0.75, pk_rs_eoo_b0.75)
 fut_aoo_vals_0.5 <- c(pkcomp_rs_aoo_b0.5, pk_rs_aoo_b0.5)
 fut_aoo_vals_0.75 <- c(pkcomp_rs_aoo_b0.75, pk_rs_aoo_b0.75)
 
-# range_df <- data.frame(species = sp,
-#                  year = year,
-#                  scenario = scenario,
-#                  EOO_mtp = fut_eoo_vals,
-#                  AOO_mtp = fut_aoo_vals,
-#                  EOO_0.5 = fut_eoo_vals_0.5,
-#                  AOO_0.5 = fut_aoo_vals_0.5,
-#                  EOO_0.75 = fut_eoo_vals_0.75,
-#                  AOO_0.75 = fut_aoo_vals_0.75)
 
 range_df <- data.frame(species = sp,
                        year = year,
@@ -1046,22 +852,7 @@ range_df <- data.frame(species = sp,
                        aoo_0.75 = fut_aoo_vals_0.75)
 
 ## Boxplots for supplementary information
-# EOO
-# eoo_mtp_box <- ggplot(range_df, aes(y = EOO_mtp, x = scenario, fill = species)) +
-#   geom_boxplot() +
-#   scale_fill_carto_d(name = "Species", labels = c("P. kerguelensis (s.s.)", "P. kerguelensis (s.l.)")) +
-#   facet_wrap(~year) +
-#   theme_bw() +
-#   theme(axis.text.x = element_text(angle = 45, vjust = 0.5),
-#         legend.text = element_text(face = "italic", size = 16),
-#         legend.title = element_text(size = 18),
-#         axis.text = element_text(size = 16),
-#         axis.title = element_text(size = 18),
-#         strip.text = element_text(size = 16)) +
-#   xlab("Scenario") +
-#   ylab(bquote("EOO " (km^2))) +
-#   scale_y_continuous(labels = expSup)
-
+## Extent of occurrence
 fut_2050 <- range_df %>% filter(year == 2050)
 ggstatsplot::grouped_ggbetweenstats(data = fut_2050, 
                                     y = aoo_0.5, 
@@ -1107,21 +898,7 @@ ggpubr::ggarrange(eoo_0.5_box, eoo_0.75_box,
                   labels = c("A", "B"),
                   ncol = 1, nrow = 2, common.legend = T)
 
-# AOO
-# aoo_mtp_box <- ggplot(range_df, aes(y = AOO_mtp, x = scenario, fill = species)) +
-#   geom_boxplot() +
-#   scale_fill_carto_d(name = "Species", labels = c("P. kerguelensis (s.s.)", "P. kerguelensis (s.l.)")) +
-#   facet_wrap(~year) +
-#   theme_bw() +
-#   theme(axis.text.x = element_text(angle = 45, vjust = 0.5),
-#         legend.text = element_text(face = "italic", size = 16),
-#         legend.title = element_text(size = 18),
-#         axis.text = element_text(size = 16),
-#         axis.title = element_text(size = 18),
-#         strip.text = element_text(size = 16)) +
-#   xlab("Scenario") +
-#   ylab(bquote("AOO " (km^2)))
-
+## Area of occupancy
 aoo_0.5_box <- ggplot(range_df, aes(y = aoo_0.5, x = scenario, fill = species)) +
   geom_boxplot() +
   scale_fill_carto_d(name = "Species", labels = c("P. kerguelensis (s.s.)", "P. kerguelensis (s.l.)")) +
@@ -1200,22 +977,24 @@ eoo_0.5_df <- eoo_0.5_df %>% add_row(nr2, .before = 14)
 eoo_0.5_df <- eoo_0.5_df %>%
   mutate(scenario = rep(c("RCP 2.6", "RCP 4.5", "RCP 6.0", "RCP 8.5"),6))
 
-eoo_plot_0.5 <- ggplot(eoo_0.5_df, aes(x = as.numeric(year), y = eoo_mean))+
-  geom_point(aes(col = scenario, pch = species), size = 2) +
-  geom_line(aes(col = scenario, linetype = species), linewidth = 1) +
-  theme_bw() +
-  scale_color_manual(values = rev(PNWColors::pnw_palette("Moth", 4, type = "discrete"))) +
-  scale_y_continuous(labels = expSup) +
-  theme(legend.text = element_text(size = 12),
-        legend.title = element_text(size = 14),
-        axis.text = element_text(size = 14),
-        axis.title = element_text(size = 16),
-        panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(),
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black")) +
-  xlab("Year") +
-  ylab(bquote("Mean EOO " (km^2)))
+eoo_plot_0.5 <- eoo_0.5_df %>%
+  mutate(eoo_mean = eoo_mean/10000000) %>%
+  ggplot(aes(x = as.numeric(year), y = eoo_mean))+
+    geom_point(aes(col = species, pch = species), size = 2) +
+    geom_line(aes(col = species, linetype = scenario), linewidth = 1) +
+    theme_bw() +
+    scale_color_manual(values = c("#88CCEE", "#CC6677")) +
+    #scale_y_continuous(labels = expSup) +
+    theme(legend.text = element_text(size = 12),
+          legend.title = element_text(size = 14),
+          axis.text = element_text(size = 14),
+          axis.title = element_text(size = 16),
+          panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(), 
+          axis.line = element_line(colour = "black")) +
+    xlab("Year") +
+    ylab(expression(Mean~EOO~(x ~ 10^{7} ~ km^{2})))
 
 
 nr1 <- eoo_0.75_df %>% slice(rep(1, each = 3))
@@ -1225,27 +1004,24 @@ eoo_0.75_df <- eoo_0.75_df %>% add_row(nr2, .before = 14)
 eoo_0.75_df <- eoo_0.75_df %>%
   mutate(scenario = rep(c("RCP 2.6", "RCP 4.5", "RCP 6.0", "RCP 8.5"),6))
 
-eoo_plot_0.75 <- ggplot(eoo_0.75_df, aes(x = as.numeric(year), y = eoo_mean))+
-  geom_point(aes(col = scenario, pch = species), size = 2) +
-  geom_line(aes(col = scenario, linetype = species), linewidth = 1) +
-  theme_bw() +
-  scale_color_manual(values = rev(PNWColors::pnw_palette("Moth", 4, type = "discrete"))) +
-  scale_y_continuous(labels = expSup) +
-  theme(legend.text = element_text(size = 12),
-        legend.title = element_text(size = 14),
-        axis.text = element_text(size = 14),
-        axis.title = element_text(size = 16),
-        panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(),
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black")) +
-  xlab("Year") +
-  ylab(bquote("Mean EOO " (km^2)))
-
-# ggpubr::ggarrange(eoo_plot_MTP, eoo_plot_0.5, eoo_plot_0.75,
-#                   labels = c("A", "B", "C"),
-#                   ncol = 3, nrow = 1, common.legend = T)
-
+eoo_plot_0.75 <- eoo_0.75_df %>%
+  mutate(eoo_mean = eoo_mean/10000000) %>%
+  ggplot(aes(x = as.numeric(year), y = eoo_mean))+
+    geom_point(aes(col = species, pch = species), size = 2) +
+    geom_line(aes(col = species, linetype = scenario), linewidth = 1) +
+    theme_bw() +
+    scale_color_manual(values = c("#88CCEE", "#CC6677")) +
+    #scale_y_continuous(labels = expSup) +
+    theme(legend.text = element_text(size = 12),
+          legend.title = element_text(size = 14),
+          axis.text = element_text(size = 14),
+          axis.title = element_text(size = 16),
+          panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(), 
+          axis.line = element_line(colour = "black")) +
+    xlab("Year") +
+    ylab(expression(Mean~EOO~(x ~ 10^{7} ~ km^{2})))
 
 aoo_0.5_df <- range_df %>% 
   group_by(species , year, scenario) %>%
@@ -1263,22 +1039,24 @@ aoo_0.5_df <- aoo_0.5_df %>% add_row(nr2, .before = 14)
 aoo_0.5_df <- aoo_0.5_df %>%
   mutate(scenario = rep(c("RCP 2.6", "RCP 4.5", "RCP 6.0", "RCP 8.5"),6))
 
-aoo_plot_0.5 <- ggplot(aoo_0.5_df, aes(x = as.numeric(year), y = aoo_mean))+
-  geom_point(aes(col = scenario, pch = species), size = 2) +
-  geom_line(aes(col = scenario, linetype = species), linewidth = 1) +
-  scale_color_manual(values = rev(PNWColors::pnw_palette("Moth", 4, type = "discrete"))) +
-  scale_y_continuous(labels = expSup) +
-  theme_bw() +
-  theme(legend.text = element_text(size = 12),
-        legend.title = element_text(size = 14),
-        axis.text = element_text(size = 14),
-        axis.title = element_text(size = 16),
-        panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(),
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black")) +
-  xlab("Year") +
-  ylab(bquote("Mean AOO " (km^2)))
+aoo_plot_0.5 <- aoo_0.5_df %>%
+  mutate(aoo_mean = aoo_mean/10000) %>%
+  ggplot(aes(x = as.numeric(year), y = aoo_mean))+
+    geom_point(aes(col = species, pch = species), size = 2) +
+    geom_line(aes(col = species, linetype = scenario), linewidth = 1) +
+    scale_color_manual(values = c("#88CCEE", "#CC6677")) +
+    #scale_y_continuous(labels = expSup) +
+    theme_bw() +
+    theme(legend.text = element_text(size = 12),
+          legend.title = element_text(size = 14),
+          axis.text = element_text(size = 14),
+          axis.title = element_text(size = 16),
+          panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(), 
+          axis.line = element_line(colour = "black")) +
+    xlab("Year") +
+    ylab(expression(Mean~AOO~(x ~ 10^{4} ~ km^{2})))
 
 aoo_0.75_df <- range_df %>% 
   group_by(species , year, scenario) %>%
@@ -1296,31 +1074,28 @@ aoo_0.75_df <- aoo_0.75_df %>% add_row(nr2, .before = 14)
 aoo_0.75_df <- aoo_0.75_df %>%
   mutate(scenario = rep(c("RCP 2.6", "RCP 4.5", "RCP 6.0", "RCP 8.5"),6))
 
-aoo_plot_0.75 <- ggplot(aoo_0.75_df, aes(x = as.numeric(year), y = aoo_mean))+
-  geom_point(aes(col = scenario, pch = species), size = 2) +
-  geom_line(aes(col = scenario, linetype = species), linewidth = 1) +
-  scale_color_manual(values = rev(PNWColors::pnw_palette("Moth", 4, type = "discrete"))) +
-  scale_y_continuous(labels = expSup) +
-  theme_bw() +
-  theme(legend.text = element_text(size = 12),
-        legend.title = element_text(size = 14),
-        axis.text = element_text(size = 14),
-        axis.title = element_text(size = 16),
-        panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(),
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black")) +
-  xlab("Year") +
-  ylab(bquote("Mean AOO " (km^2)))
+aoo_plot_0.75 <- aoo_0.75_df %>%
+  mutate(aoo_mean = aoo_mean/1000) %>%
+  ggplot(aes(x = as.numeric(year), y = aoo_mean))+
+    geom_point(aes(col = species, pch = species), size = 2) +
+    geom_line(aes(col = species, linetype = scenario), linewidth = 1) +
+    scale_color_manual(values = c("#88CCEE", "#CC6677")) +
+    #scale_y_continuous(labels = expSup) +
+    theme_bw() +
+    theme(legend.text = element_text(size = 12),
+          legend.title = element_text(size = 14),
+          axis.text = element_text(size = 14),
+          axis.title = element_text(size = 16),
+          panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(), 
+          axis.line = element_line(colour = "black")) +
+    xlab("Year") +
+    ylab(expression(Mean~AOO~(x ~ 10^{3} ~ km^{2})))
 
-# ggpubr::ggarrange(eoo_plot_MTP, eoo_plot_0.5, eoo_plot_0.75,
-#                   aoo_plot_MTP, aoo_plot_0.5, aoo_plot_0.75,
-#                   #labels = c("A", "B", "C", "D", "E", "F"),
-#                   ncol = 3, nrow = 2, common.legend = T)
-
-ggpubr::ggarrange(eoo_plot_0.5, aoo_plot_0.5,
-                  eoo_plot_0.75,aoo_plot_0.75,
-                  labels = c("A", "C", "B", "D"),
+ggpubr::ggarrange(eoo_plot_0.5, eoo_plot_0.75,
+                  aoo_plot_0.5,aoo_plot_0.75,
+                  labels = c("A", "B", "C", "D"),
                   ncol = 2, nrow = 2, common.legend = T,
                   legend = "top")
 
@@ -1499,21 +1274,6 @@ species_2 <- c(hv_list[[2]]@Name,hv_list[[3]]@Name,hv_list[[4]]@Name,
                hv_list[[6]]@Name,hv_list[[7]]@Name,
                hv_list[[7]]@Name)
 fin_ov_df <- data.frame(species_1, species_2, round(ov_df,2))
-
-# minmaxdf <- data.frame("Species 1" = c("min", "max"),
-#                        "Species 2" = c("min", "max"),
-#                        "Jaccard" = c(0,1),
-#                        "Sorensen" = c(0,1),
-#                        "Frac unique sp1" = c(0,1),
-#                        "Frac unique sp2" = c(0,1)) %>%
-#             rename("Species 1" = "Species.1") %>%
-#             rename("Species 2" = "Species.2") %>%
-#             rename("Frac unique sp1" = "Frac.unique.sp1") %>%
-#             rename("Frac unique sp2" = "Frac.unique.sp2") %>%
-#             mutate(id1 = c(10,11)) %>%
-#             relocate(id1) %>%
-#             mutate(id2 = c(10,11)) %>%
-#             relocate(id2, .before = "Species 2")
 
 fin_ov_df_clean <- fin_ov_df %>%
   rename("Species 1" = "species_1") %>%
