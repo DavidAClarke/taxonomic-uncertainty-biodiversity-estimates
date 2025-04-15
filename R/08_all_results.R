@@ -1213,6 +1213,25 @@ colnames(m) <- c(hv_list[[1]]@Name,hv_list[[2]]@Name,hv_list[[3]]@Name,
                  hv_list[[4]]@Name,hv_list[[5]]@Name,hv_list[[6]]@Name)
 m[lower.tri(m,diag=F)] <- cen_hv_dists
 
+## Chord diagram
+dfm <- data.frame(from = rep(rownames(m), times = ncol(m)),
+                  to = rep(colnames(m), each = nrow(m)),
+                  value = as.vector(m),
+                  stringsAsFactors = FALSE)
+cd_df <- dfm %>% 
+  drop_na(value)
+
+cd_cols <- c("#CC6677", "#DDCC77", "#117733", "#332288", "#AA4499", "#888888","#88CCEE")
+
+#remove 'name' from annotationTrack to remove labels
+(cendist_cd <- circlize::chordDiagram(cd_df, 
+                                      grid.col = cd_cols, 
+                                      transparency = 0.5, 
+                                      annotationTrack = c("grid", "name"), 
+                                      annotationTrackHeight = c(0.03, 0.03)))
+text(1,1,labels = "Centroid distance")
+text(1,0.9, labels = "Range: 0.30-1.30")
+
 # minimum
 min_hv_dists <- list()
 for(i in 1:ncol(hv_combs)){
@@ -1232,6 +1251,25 @@ rownames(m2) <- c(hv_list[[1]]@Name,hv_list[[2]]@Name,hv_list[[3]]@Name,
 colnames(m2) <- c(hv_list[[1]]@Name,hv_list[[2]]@Name,hv_list[[3]]@Name,
                   hv_list[[4]]@Name,hv_list[[5]]@Name,hv_list[[6]]@Name)
 m2[lower.tri(m2,diag=F)] <- min_hv_dists
+
+## Chord diagram
+dfm2 <- data.frame(from = rep(rownames(m2), times = ncol(m2)),
+                  to = rep(colnames(m2), each = nrow(m2)),
+                  value = as.vector(m2),
+                  stringsAsFactors = FALSE)
+md_df <- dfm2 %>% 
+  drop_na(value)
+
+md_cols <- c("#CC6677", "#DDCC77", "#117733", "#332288", "#AA4499", "#888888","#88CCEE")
+
+#remove 'name' from annotationTrack to remove labels
+(cendist_cd <- circlize::chordDiagram(md_df, 
+                                      grid.col = md_cols, 
+                                      transparency = 0.5, 
+                                      annotationTrack = c("grid", "name"), 
+                                      annotationTrackHeight = c(0.03, 0.03)))
+text(1,1,labels = "Minimum distance")
+text(1,0.9, labels = "Range: 0.08-0.24")
 
 ## Overlaps
 # hv_overlaps <- list()
