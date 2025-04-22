@@ -25,7 +25,8 @@ fronts <- st_read(here(shared_data, "southern_ocean_fronts",
     DISPLAY == "Polar Front" ~ "PF",
     DISPLAY == "Southern boundary" ~ "sACCF",
     DISPLAY == "Southern Antarctic Circumpolar Current Front" ~ "ACCF",
-    DISPLAY == "Subtropical Front" ~ "STF"))
+    DISPLAY == "Subtropical Front" ~ "STF")) %>%
+  dplyr::filter(CODE == "PF")
 
 ## Make map
 ggplot() +
@@ -48,18 +49,19 @@ ggplot() +
   geom_sf(
     data = fronts,
     aes(linetype = CODE),
-    show.legend = T
+    show.legend = F
   ) +
   
-  scale_linetype_manual(guide = guide_legend(theme = theme(
-    legend.position = "bottom"),
-    nrow = 2, ncol = 3),
-    name = "Front",
-    values = c(1,3,5,2,4)) +
+  # scale_linetype_manual(guide = guide_legend(theme = theme(
+  #   legend.position = "bottom"),
+  #   nrow = 2, ncol = 3),
+  #   name = "Front",
+  #   values = c(1,3,5,2,4)) +
   
   geom_sf(
     data = bio_data_map,
     aes(col = scientificName),
+    size = 2,
     show.legend = T
   ) +
   scale_color_manual("Species",
