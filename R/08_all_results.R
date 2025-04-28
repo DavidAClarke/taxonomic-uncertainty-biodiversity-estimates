@@ -843,9 +843,9 @@ fut_aoo_vals_0.5 <- c(pkcomp_rs_aoo_b0.5, pk_rs_aoo_b0.5)
 fut_aoo_vals_0.75 <- c(pkcomp_rs_aoo_b0.75, pk_rs_aoo_b0.75)
 
 
-range_df <- data.frame(species = sp,
+range_df <- data.frame(Species = sp,
                        year = year,
-                       scenario = scenario,
+                       Scenario = scenario,
                        eoo_0.5 = fut_eoo_vals_0.5,
                        eoo_0.75 = fut_eoo_vals_0.75,
                        aoo_0.5 = fut_aoo_vals_0.5,
@@ -933,7 +933,7 @@ ggpubr::ggarrange(aoo_0.5_box, aoo_0.75_box,
 
 # Line plots using median/mean
 eoo_0.5_df <- range_df %>% 
-  group_by(species , year, scenario) %>%
+  group_by(Species , year, Scenario) %>%
   mutate(eoo_mean = mean(eoo_0.5)) %>%
   mutate(eoo_med = median(eoo_0.5)) %>%
   mutate(eoo_sd = sd(eoo_0.5)) %>%
@@ -942,7 +942,7 @@ eoo_0.5_df <- range_df %>%
   ungroup()
 
 eoo_0.75_df <- range_df %>% 
-  group_by(species , year, scenario) %>%
+  group_by(Species , year, Scenario) %>%
   mutate(eoo_mean = mean(eoo_0.75)) %>%
   mutate(eoo_med = median(eoo_0.75)) %>%
   mutate(eoo_sd = sd(eoo_0.75)) %>%
@@ -975,18 +975,18 @@ eoo_0.5_df <- eoo_0.5_df %>% add_row(nr1, .before = 2)
 nr2 <- eoo_0.5_df %>% slice(rep(13, each = 3))
 eoo_0.5_df <- eoo_0.5_df %>% add_row(nr2, .before = 14)
 eoo_0.5_df <- eoo_0.5_df %>%
-  mutate(scenario = rep(c("RCP 2.6", "RCP 4.5", "RCP 6.0", "RCP 8.5"),6))
+  mutate(Scenario = rep(c("RCP 2.6", "RCP 4.5", "RCP 6.0", "RCP 8.5"),6))
 
 eoo_plot_0.5 <- eoo_0.5_df %>%
   mutate(eoo_mean = eoo_mean/10000000) %>%
   ggplot(aes(x = as.numeric(year), y = eoo_mean))+
-    geom_point(aes(col = species, pch = species), size = 2) +
-    geom_line(aes(col = species, linetype = scenario), linewidth = 1) +
+    geom_point(aes(col = Species, pch = Species), size = 2) +
+    geom_line(aes(col = Species, linetype = Scenario), linewidth = 1) +
     theme_bw() +
     scale_color_manual(values = c("#88CCEE", "#CC6677")) +
     #scale_y_continuous(labels = expSup) +
-    theme(legend.text = element_text(size = 12),
-          legend.title = element_text(size = 14),
+    theme(legend.text = element_text(size = 14),
+          legend.title = element_text(size = 16),
           axis.text = element_text(size = 14),
           axis.title = element_text(size = 16),
           panel.grid.major = element_blank(), 
@@ -1002,18 +1002,18 @@ eoo_0.75_df <- eoo_0.75_df %>% add_row(nr1, .before = 2)
 nr2 <- eoo_0.75_df %>% slice(rep(13, each = 3))
 eoo_0.75_df <- eoo_0.75_df %>% add_row(nr2, .before = 14)
 eoo_0.75_df <- eoo_0.75_df %>%
-  mutate(scenario = rep(c("RCP 2.6", "RCP 4.5", "RCP 6.0", "RCP 8.5"),6))
+  mutate(Scenario = rep(c("RCP 2.6", "RCP 4.5", "RCP 6.0", "RCP 8.5"),6))
 
 eoo_plot_0.75 <- eoo_0.75_df %>%
   mutate(eoo_mean = eoo_mean/10000000) %>%
   ggplot(aes(x = as.numeric(year), y = eoo_mean))+
-    geom_point(aes(col = species, pch = species), size = 2) +
-    geom_line(aes(col = species, linetype = scenario), linewidth = 1) +
+    geom_point(aes(col = Species, pch = Species), size = 2) +
+    geom_line(aes(col = Species, linetype = Scenario), linewidth = 1) +
     theme_bw() +
     scale_color_manual(values = c("#88CCEE", "#CC6677")) +
     #scale_y_continuous(labels = expSup) +
-    theme(legend.text = element_text(size = 12),
-          legend.title = element_text(size = 14),
+    theme(legend.text = element_text(size = 14),
+          legend.title = element_text(size = 16),
           axis.text = element_text(size = 14),
           axis.title = element_text(size = 16),
           panel.grid.major = element_blank(), 
@@ -1024,7 +1024,7 @@ eoo_plot_0.75 <- eoo_0.75_df %>%
     ylab(expression(Mean~EOO~(x ~ 10^{7} ~ km^{2})))
 
 aoo_0.5_df <- range_df %>% 
-  group_by(species , year, scenario) %>%
+  group_by(Species , year, Scenario) %>%
   mutate(aoo_mean = mean(aoo_0.5)) %>%
   mutate(aoo_med = median(aoo_0.5)) %>%
   mutate(aoo_sd = sd(aoo_0.5)) %>%
@@ -1037,18 +1037,18 @@ aoo_0.5_df <- aoo_0.5_df %>% add_row(nr1, .before = 2)
 nr2 <- aoo_0.5_df %>% slice(rep(13, each = 3))
 aoo_0.5_df <- aoo_0.5_df %>% add_row(nr2, .before = 14)
 aoo_0.5_df <- aoo_0.5_df %>%
-  mutate(scenario = rep(c("RCP 2.6", "RCP 4.5", "RCP 6.0", "RCP 8.5"),6))
+  mutate(Scenario = rep(c("RCP 2.6", "RCP 4.5", "RCP 6.0", "RCP 8.5"),6))
 
 aoo_plot_0.5 <- aoo_0.5_df %>%
   mutate(aoo_mean = aoo_mean/10000) %>%
   ggplot(aes(x = as.numeric(year), y = aoo_mean))+
-    geom_point(aes(col = species, pch = species), size = 2) +
-    geom_line(aes(col = species, linetype = scenario), linewidth = 1) +
+    geom_point(aes(col = Species, pch = Species), size = 2) +
+    geom_line(aes(col = Species, linetype = Scenario), linewidth = 1) +
     scale_color_manual(values = c("#88CCEE", "#CC6677")) +
     #scale_y_continuous(labels = expSup) +
     theme_bw() +
-    theme(legend.text = element_text(size = 12),
-          legend.title = element_text(size = 14),
+    theme(legend.text = element_text(size = 14),
+          legend.title = element_text(size = 16),
           axis.text = element_text(size = 14),
           axis.title = element_text(size = 16),
           panel.grid.major = element_blank(), 
@@ -1059,7 +1059,7 @@ aoo_plot_0.5 <- aoo_0.5_df %>%
     ylab(expression(Mean~AOO~(x ~ 10^{4} ~ km^{2})))
 
 aoo_0.75_df <- range_df %>% 
-  group_by(species , year, scenario) %>%
+  group_by(Species , year, Scenario) %>%
   mutate(aoo_mean = mean(aoo_0.75)) %>%
   mutate(aoo_med = median(aoo_0.75)) %>%
   mutate(aoo_sd = sd(aoo_0.75)) %>%
@@ -1072,18 +1072,18 @@ aoo_0.75_df <- aoo_0.75_df %>% add_row(nr1, .before = 2)
 nr2 <- aoo_0.75_df %>% slice(rep(13, each = 3))
 aoo_0.75_df <- aoo_0.75_df %>% add_row(nr2, .before = 14)
 aoo_0.75_df <- aoo_0.75_df %>%
-  mutate(scenario = rep(c("RCP 2.6", "RCP 4.5", "RCP 6.0", "RCP 8.5"),6))
+  mutate(Scenario = rep(c("RCP 2.6", "RCP 4.5", "RCP 6.0", "RCP 8.5"),6))
 
 aoo_plot_0.75 <- aoo_0.75_df %>%
   mutate(aoo_mean = aoo_mean/1000) %>%
   ggplot(aes(x = as.numeric(year), y = aoo_mean))+
-    geom_point(aes(col = species, pch = species), size = 2) +
-    geom_line(aes(col = species, linetype = scenario), linewidth = 1) +
+    geom_point(aes(col = Species, pch = Species), size = 2) +
+    geom_line(aes(col = Species, linetype = Scenario), linewidth = 1) +
     scale_color_manual(values = c("#88CCEE", "#CC6677")) +
     #scale_y_continuous(labels = expSup) +
     theme_bw() +
-    theme(legend.text = element_text(size = 12),
-          legend.title = element_text(size = 14),
+    theme(legend.text = element_text(size = 14),
+          legend.title = element_text(size = 16),
           axis.text = element_text(size = 14),
           axis.title = element_text(size = 16),
           panel.grid.major = element_blank(), 
