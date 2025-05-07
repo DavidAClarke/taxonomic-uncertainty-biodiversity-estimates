@@ -67,7 +67,7 @@ ggplot() +
   scale_color_manual("Species",
                      values = unlist(cartocolors[cartocolors$Name == "Safe",8])[-1],
                      breaks = unique(bio_data_map$scientificName),
-                     labels = c(expression(italic("P. kerguelensis")),
+                     labels = c(expression(italic("P. kerguelensis (s.s.)")),
                                 expression(italic("P. fragarius")),
                                 expression(italic("P. unruhi")),
                                 expression(italic("P. uskglassi")),
@@ -84,6 +84,7 @@ ggplot() +
         legend.text = element_text(size = 14),
         legend.title = element_text(size = 16)) +
   scale_y_continuous(expand = c(0,0)) +
-  scale_x_continuous(expand = c(0,0))
+  scale_x_continuous(expand = c(0,0)) +
+  ggspatial::annotation_scale()
 
 rm(bio_data_map, fronts, gadm, lvl_0)
